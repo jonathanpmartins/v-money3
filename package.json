@@ -1,7 +1,7 @@
 {
   "name": "v-money3",
-  "version": "1.0.0",
-  "description": "",
+  "version": "3.0.0",
+  "description": "Vue3 currency input/directive mask",
   "main": "./dist/v-money3.umd.js",
   "module": "./dist/v-money3.es.js",
   "exports": {
@@ -16,8 +16,15 @@
   "files": [
     "dist"
   ],
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "vue",
+    "input",
+    "mask",
+    "directive",
+    "currency",
+    "money"
+  ],
+  "author": "Jonathan Martins <web@jonathanmartins.com.br>",
   "license": "MIT",
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.2",
