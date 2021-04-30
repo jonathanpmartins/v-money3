@@ -149,9 +149,9 @@ Must use `v-model.lazy` to bind works properly.
 | suffix    | false    | String  | ""      | Percentage for example: " %"                            |
 | masked    | false    | Boolean | false   | If the component output should include the mask or not  |
 | disable-negative | false | Boolean | false | Component does not allow negative values              |
+| disabled  | false    | Boolean | false   | Disable the inner input tag                             |
 | min       | false    | Number  | Number.MIN_SAFE_INTEGER | The min value allowed                   |
 | max       | false    | Number  | Number.MAX_SAFE_INTEGER | The max value allowed                   |
-| disabled  | false    | Boolean | false   | Disable the inner input tag                             |
 
 ### References
 
