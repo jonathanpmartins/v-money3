@@ -7,7 +7,15 @@ function format(input, opt = defaults) {
   const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : ''
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '')
   const numbers = onlyNumbers(filtered)
-  const currency = numbersToCurrency(numbers, opt.precision)
+
+  let currency = Number(numbersToCurrency(numbers, opt.precision));
+  if (currency > opt.max) {
+    currency = opt.max
+  } else if (input < opt.min) {
+    currency = opt.min
+  }
+  currency = currency.toFixed(fixed(opt.precision))
+
   const parts = toStr(currency).split('.')
   let integer = parts[0]
   const decimal = parts[1]
