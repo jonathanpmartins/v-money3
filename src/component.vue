@@ -3,6 +3,7 @@
     :id="id"
     :value="data.formattedValue"
     @change="change"
+    @blur="blur"
     v-money3="{precision, decimal, thousands, prefix, suffix, disableNegative, min, max}"
     class="v-money3" />
 </template>
@@ -86,9 +87,14 @@ export default defineComponent({
       emit('update:model-value', props.masked ? evt.target.value : unformat(evt.target.value, props))
     }
 
+    function blur(evt) {
+      emit('blur', evt)
+    }
+
     return {
       data,
-      change
+      change,
+      blur
     }
   },
 })
