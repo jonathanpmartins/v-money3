@@ -97,6 +97,7 @@ app.component('money3', Money3Component)
           disabled: false,
           min: Number.MIN_SAFE_INTEGER,
           max: Number.MAX_SAFE_INTEGER,
+          allowBlank: false,
         }
       }
     }
@@ -131,6 +132,7 @@ Must use `v-model.lazy` to bind works properly.
           disabled: false,
           min: Number.MIN_SAFE_INTEGER,
           max: Number.MAX_SAFE_INTEGER,
+          allowBlank: false,
         }
       }
     },
@@ -154,6 +156,7 @@ Must use `v-model.lazy` to bind works properly.
 | disabled  | false    | Boolean | false   | Disable the inner input tag                             |
 | min       | false    | Number  | Number.MIN_SAFE_INTEGER | The min value allowed                   |
 | max       | false    | Number  | Number.MAX_SAFE_INTEGER | The max value allowed                   |
+| allowBlank | false   | Boolean | false   | If the field can start blank and be cleared out by user |
 
 ### References
 

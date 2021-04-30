@@ -1,9 +1,15 @@
 import defaults from './options'
 
 function format(input, opt = defaults) {
+
+  if (opt.allowBlank && isNormalInteger(input)) {
+    input = numbersToCurrency(input, fixed(opt.precision))
+  }
+
   if (!isNaN(input)) {
     input = Number(input).toFixed(fixed(opt.precision))
   }
+
   const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : ''
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '')
   const numbers = onlyNumbers(filtered)
@@ -14,9 +20,12 @@ function format(input, opt = defaults) {
   } else if (input < opt.min) {
     currency = opt.min
   }
-  currency = currency.toFixed(fixed(opt.precision))
+  const num = currency.toFixed(fixed(opt.precision))
+  if (num === '0.00' && opt.allowBlank) {
+    return ''
+  }
 
-  const parts = toStr(currency).split('.')
+  const parts = toStr(num).split('.')
   let integer = parts[0]
   const decimal = parts[1]
   integer = addThousandSeparator(integer, opt.thousands)
@@ -81,6 +90,11 @@ function event(name) {
   const evt = document.createEvent('Event')
   evt.initEvent(name, true, true)
   return evt
+}
+
+function isNormalInteger(str) {
+  const n = Math.floor(Number(str));
+  return n !== Infinity && String(n) === str && n >= 0;
 }
 
 export {

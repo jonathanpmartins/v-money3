@@ -4,7 +4,17 @@
     :value="data.formattedValue"
     :disabled="disabled"
     v-bind="listeners"
-    v-money3="{precision, decimal, thousands, prefix, suffix, disableNegative, min, max}"
+    v-money3="{
+      precision,
+      decimal,
+      thousands,
+      prefix,
+      suffix,
+      disableNegative,
+      min,
+      max,
+      allowBlank
+    }"
     class="v-money3" />
 </template>
 
@@ -56,6 +66,10 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     max: {
       type: Number,
       default: () => defaults.max
@@ -64,9 +78,9 @@ export default defineComponent({
       type: Number,
       default: () => defaults.min
     },
-    disabled: {
+    allowBlank: {
       type: Boolean,
-      default: false
+      default: () => defaults.allowBlank
     },
   },
 
