@@ -84,7 +84,6 @@ export default defineComponent({
     )
 
     const listeners = computed(() => {
-      console.log('this.$attrs', attrs);
       return {
         ...attrs,
         change: (evt) => {
