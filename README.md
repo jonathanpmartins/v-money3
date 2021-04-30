@@ -26,6 +26,49 @@ Feel free to open an issue or post a pull request!
 npm i v-money3 --save
 ```
 
+
+### Register Globally
+
+```js
+import Vue from 'vue'
+import money from 'v-money'
+
+const app = Vue.createApp({
+    /* options */
+})
+
+// register directive v-money3 and component <money3>
+app.use(money)
+```
+
+#### Only Directive
+
+```js
+import Vue from 'vue'
+import Money3Directive from 'v-money'
+
+const app = Vue.createApp({
+    /* options */
+})
+
+// register directive v-money3
+app.directive('money3', Money3Directive)
+```
+
+#### Only Component
+
+```js
+import Vue from 'vue'
+import Money3Component from 'v-money'
+
+const app = Vue.createApp({
+    /* options */
+})
+
+// register component <money3>
+app.component('money3', Money3Component)
+```
+
 ### Use as component
 
 ```html
@@ -36,10 +79,10 @@ npm i v-money3 --save
 </template>
 
 <script>
-  import { Money3 } from 'v-money3'
+  import { Money3Component } from 'v-money3'
 
   export default {
-    components: { Money3 },
+    components: { money3: Money3Component },
     data () {
       return {
         amount: 123.45,
@@ -70,7 +113,7 @@ Must use `v-model.lazy` to bind works properly.
 </template>
 
 <script>
-  import { VMoney3 } from 'v-money3'
+  import { Money3Directive } from 'v-money3'
 
   export default {
     data () {
@@ -90,7 +133,7 @@ Must use `v-model.lazy` to bind works properly.
       }
     },
 
-    directives: { money3: VMoney3 }
+    directives: { money3: Money3Directive }
   }
 </script>
 ```

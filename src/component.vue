@@ -9,7 +9,7 @@
 
 <script>
 import { defineComponent, reactive, watch, computed } from 'vue'
-import money3 from './directive'
+import Money3Directive from './directive'
 import defaults from './options'
 import {format, unformat} from './utils'
 
@@ -65,7 +65,7 @@ export default defineComponent({
     },
   },
 
-  directives: { money3 },
+  directives: { money3: Money3Directive },
 
   setup(props, { emit, attrs }) {
 
