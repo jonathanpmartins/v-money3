@@ -61,7 +61,7 @@ npm i v-money3 --save
 ```
 
 ### Use as directive
-Must use `vmodel.lazy` to bind works properly.
+Must use `v-model.lazy` to bind works properly.
 ```html
 <template>
   <div>
