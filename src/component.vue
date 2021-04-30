@@ -2,19 +2,19 @@
   <input type="tel"
     :id="id"
     :value="data.formattedValue"
-    @change="change"
-    @blur="blur"
+    v-bind="listeners"
     v-money3="{precision, decimal, thousands, prefix, suffix, disableNegative, min, max}"
     class="v-money3" />
 </template>
 
 <script>
-import { defineComponent, reactive, watch } from 'vue'
+import { defineComponent, reactive, watch, computed } from 'vue'
 import money3 from './directive'
 import defaults from './options'
 import {format, unformat} from './utils'
 
 export default defineComponent({
+  inheritAttrs: false,
   name: 'Money3',
   props: {
     id: {
@@ -67,7 +67,7 @@ export default defineComponent({
 
   directives: { money3 },
 
-  setup(props, { emit }) {
+  setup(props, { emit, attrs }) {
 
     const data = reactive({
       formattedValue: ''
@@ -83,18 +83,19 @@ export default defineComponent({
         }
     )
 
-    function change(evt) {
-      emit('update:model-value', props.masked ? evt.target.value : unformat(evt.target.value, props))
-    }
-
-    function blur(evt) {
-      emit('blur', evt)
-    }
+    const listeners = computed(() => {
+      console.log('this.$attrs', attrs);
+      return {
+        ...attrs,
+        change: (evt) => {
+          emit('update:model-value', props.masked ? evt.target.value : unformat(evt.target.value, props))
+        }
+      }
+    })
 
     return {
       data,
-      change,
-      blur
+      listeners,
     }
   },
 })
