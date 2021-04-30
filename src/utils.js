@@ -1,8 +1,8 @@
 import defaults from './options'
 
 function format(input, opt = defaults) {
-  if (typeof input === 'number') {
-    input = input.toFixed(fixed(opt.precision))
+  if (!isNaN(input)) {
+    input = Number(input).toFixed(fixed(opt.precision))
   }
   const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : ''
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '')
