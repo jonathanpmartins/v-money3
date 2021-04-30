@@ -48,7 +48,8 @@ npm i v-money3 --save
           prefix: 'R$ ',
           suffix: ' #',
           precision: 2,
-          masked: false
+          masked: false,
+          disableNegative: false,
         }
       }
     }
@@ -78,7 +79,8 @@ Must use `vmodel.lazy` to bind works properly.
           prefix: 'R$ ',
           suffix: ' #',
           precision: 2,
-          masked: false /* doesn't work with directive */
+          masked: false /* doesn't work with directive */,
+          disableNegative: false,
         }
       }
     },
