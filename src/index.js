@@ -4,6 +4,11 @@ import Money3Directive from './directive'
 export {
   Money3Component,
   Money3Directive,
+  // backwards compatibility
+  Money3Component as Money3,
+  Money3Directive as VMoney3,
+  Money3Component as Money,
+  Money3Directive as VMoney,
 }
 
 export default {
