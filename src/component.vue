@@ -65,7 +65,7 @@ export default defineComponent({
     )
 
     function change(evt) {
-      emit('update:model-value', props.masked ? evt.target.value : unformat(evt.target.value, props.precision))
+      emit('update:model-value', props.masked ? evt.target.value : unformat(evt.target.value, props))
     }
 
     return {
