@@ -2,6 +2,7 @@
   <input type="tel"
     :id="id"
     :value="data.formattedValue"
+    :disabled="disabled"
     v-bind="listeners"
     v-money3="{precision, decimal, thousands, prefix, suffix, disableNegative, min, max}"
     class="v-money3" />
@@ -62,6 +63,10 @@ export default defineComponent({
     min: {
       type: Number,
       default: () => defaults.min
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     },
   },
 
