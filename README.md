@@ -98,6 +98,7 @@ Must use `vmodel.lazy` to bind works properly.
 | prefix    | false    | String  | ""      | Currency symbol followed by a Space, like "R$ "         |
 | suffix    | false    | String  | ""      | Percentage for example: " %"                            |
 | masked    | false    | Boolean | false   | If the component output should include the mask or not  |
+| disable-negative | false | Boolean | false | Component does not allow negative values                  |
 
 ### References
 

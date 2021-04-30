@@ -3,7 +3,7 @@
     :id="id"
     :value="data.formattedValue"
     @change="change"
-    v-money3="{precision, decimal, thousands, prefix, suffix}"
+    v-money3="{precision, decimal, thousands, prefix, suffix, disableNegative}"
     class="v-money3" />
 </template>
 
@@ -49,6 +49,10 @@ export default defineComponent({
     suffix: {
       type: String,
       default: () => defaults.suffix
+    },
+    disableNegative: {
+      type: Boolean,
+      default: false
     }
   },
 

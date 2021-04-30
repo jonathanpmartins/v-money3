@@ -4,7 +4,7 @@ function format(input, opt = defaults) {
   if (typeof input === 'number') {
     input = input.toFixed(fixed(opt.precision))
   }
-  const negative = input.indexOf('-') >= 0 ? '-' : ''
+  const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : ''
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '')
   const numbers = onlyNumbers(filtered)
   const currency = numbersToCurrency(numbers, opt.precision)
@@ -16,7 +16,7 @@ function format(input, opt = defaults) {
 }
 
 function unformat(input, opt = defaults) {
-  const negative = input.indexOf('-') >= 0 ? -1 : 1
+  const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? -1 : 1) : 1;
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '')
   const numbers = onlyNumbers(filtered)
   const currency = numbersToCurrency(numbers, opt.precision)
