@@ -19,6 +19,12 @@ Feel free to open an issue or post a pull request!
 
 ## Usage
 
+### Installation
+
+```
+npm i v-money3 --save
+```
+
 ### Use as component
 
 ```html
