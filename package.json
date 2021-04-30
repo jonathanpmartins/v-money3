@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "prepublish": "npm run build",
+    "publish": "vite build && npm publish",
     "test": "jest"
   },
   "files": [

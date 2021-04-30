@@ -16,6 +16,7 @@ Feel free to open an issue or post a pull request!
 - Component or Directive flavors
 - Accept copy/paste
 - Editable
+- Min / Max Limits
 
 ## Usage
 
@@ -50,6 +51,8 @@ npm i v-money3 --save
           precision: 2,
           masked: false,
           disableNegative: false,
+          min: Number.MIN_SAFE_INTEGER,
+          max: Number.MAX_SAFE_INTEGER,
         }
       }
     }
@@ -81,6 +84,8 @@ Must use `vmodel.lazy` to bind works properly.
           precision: 2,
           masked: false /* doesn't work with directive */,
           disableNegative: false,
+          min: Number.MIN_SAFE_INTEGER,
+          max: Number.MAX_SAFE_INTEGER,
         }
       }
     },
@@ -100,7 +105,9 @@ Must use `vmodel.lazy` to bind works properly.
 | prefix    | false    | String  | ""      | Currency symbol followed by a Space, like "R$ "         |
 | suffix    | false    | String  | ""      | Percentage for example: " %"                            |
 | masked    | false    | Boolean | false   | If the component output should include the mask or not  |
-| disable-negative | false | Boolean | false | Component does not allow negative values                  |
+| disable-negative | false | Boolean | false | Component does not allow negative values              |
+| min       | false    | Number  | Number.MIN_SAFE_INTEGER | The min value allowed                   |
+| max       | false    | Number  | Number.MAX_SAFE_INTEGER | The max value allowed                   |
 
 ### References
 
