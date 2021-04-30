@@ -1,5 +1,6 @@
 <template>
   <input type="tel"
+    :id="id"
     :value="data.formattedValue"
     @change="change"
     v-money3="{precision, decimal, thousands, prefix, suffix}"
@@ -15,10 +16,15 @@ import {format, unformat} from './utils'
 export default defineComponent({
   name: 'Money3',
   props: {
-    modelValue: {
-      required: true,
+    id: {
+      required: false,
       type: [Number, String],
       default: 0
+    },
+    modelValue: {
+      required: true,
+      type: [Number, String, undefined],
+      default: undefined
     },
     masked: {
       type: Boolean,
