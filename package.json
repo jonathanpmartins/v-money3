@@ -12,6 +12,7 @@
   },
   "scripts": {
     "build": "vite build",
+    "prepublish": "npm run build",
     "test": "jest"
   },
   "files": [
