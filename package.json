@@ -1,0 +1,27 @@
+{
+  "name": "v-money3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/v-money3.umd.js",
+  "module": "./dist/v-money3.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/v-money3.es.js",
+      "require": "./dist/v-money3.umd.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.2.2",
+    "@vue/compiler-sfc": "^3.0.11",
+    "vite": "^2.2.3"
+  }
+}
