@@ -16,6 +16,10 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonathanpmartins/v-money3.git"
+  },
   "keywords": [
     "vue",
     "input",
@@ -26,6 +30,10 @@
   ],
   "author": "Jonathan Martins <web@jonathanmartins.com.br>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jonathanpmartins/v-money3/issues"
+  },
+  "homepage": "https://github.com/jonathanpmartins/v-money3#readme",
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.2",
     "@vue/compiler-sfc": "^3.0.11",
