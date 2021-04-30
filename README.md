@@ -94,6 +94,7 @@ app.component('money3', Money3Component)
           precision: 2,
           masked: false,
           disableNegative: false,
+          disabled: false,
           min: Number.MIN_SAFE_INTEGER,
           max: Number.MAX_SAFE_INTEGER,
         }
@@ -127,6 +128,7 @@ Must use `v-model.lazy` to bind works properly.
           precision: 2,
           masked: false /* doesn't work with directive */,
           disableNegative: false,
+          disabled: false,
           min: Number.MIN_SAFE_INTEGER,
           max: Number.MAX_SAFE_INTEGER,
         }
