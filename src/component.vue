@@ -3,6 +3,7 @@
     :id="id"
     :value="data.formattedValue"
     :disabled="disabled"
+    @change="change"
     v-bind="listeners"
     v-money3="{
       precision,
@@ -102,18 +103,25 @@ export default defineComponent({
         }
     )
 
+    function change(evt) {
+      emit('update:model-value', props.masked ? evt.target.value : unformat(evt.target.value, props))
+    }
+
     const listeners = computed(() => {
-      return {
-        ...attrs,
-        change: (evt) => {
-          emit('update:model-value', props.masked ? evt.target.value : unformat(evt.target.value, props))
-        }
+
+      const payload = {
+        ...attrs
       }
+
+      delete payload['onUpdate:modelValue'];
+
+      return payload;
     })
 
     return {
       data,
       listeners,
+      change
     }
   },
 })
