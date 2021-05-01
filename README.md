@@ -30,43 +30,45 @@ npm i v-money3 --save
 ### Register Globally
 
 ```js
-import Vue from 'vue'
-import money from 'v-money'
+import { createApp } from "vue";
+import money from 'v-money3'
 
-const app = Vue.createApp({
-    /* options */
-})
+const app = createApp({/* options */})
 
 // register directive v-money3 and component <money3>
 app.use(money)
 ```
 
-#### Only Directive
-
-```js
-import Vue from 'vue'
-import Money3Directive from 'v-money'
-
-const app = Vue.createApp({
-    /* options */
-})
-
-// register directive v-money3
-app.directive('money3', Money3Directive)
-```
-
 #### Only Component
 
 ```js
-import Vue from 'vue'
-import Money3Component from 'v-money'
-
-const app = Vue.createApp({
-    /* options */
-})
-
 // register component <money3>
-app.component('money3', Money3Component)
+
+import { createApp } from "vue";
+import Money3Component from 'v-money3'
+
+const app = createApp({/* options */})
+
+// register an options object
+app.component("money3", Money3Component)
+// retrieve a registered component and use it in the app
+app.use(app.component("money3"))
+```
+
+#### Only Directive
+
+```js
+// register directive v-money3
+
+import { createApp } from "vue";
+import Money3Directive from 'v-money3'
+
+const app = createApp({/* options */})
+
+// register directive
+app.directive('money3', Money3Directive)
+// getter, return the directive definition and use it in the app
+app.use(app.directive("money3"))
 ```
 
 ### Use as component
@@ -136,7 +138,6 @@ Must use `v-model.lazy` to bind works properly.
         }
       }
     },
-
     directives: { money3: Money3Directive }
   }
 </script>
