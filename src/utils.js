@@ -2,12 +2,18 @@ import defaults from './options'
 
 function format(input, opt = defaults) {
 
+  if (defaults.debug) console.log('U1 format input entry', input)
+
   if (opt.allowBlank && isNormalInteger(input)) {
     input = numbersToCurrency(input, fixed(opt.precision))
+
+    if (defaults.debug) console.log('U2 format input allowBlank', input)
   }
 
   if (!isNaN(input)) {
     input = Number(input).toFixed(fixed(opt.precision))
+
+    if (defaults.debug) console.log('U2 format input !isNaN (is number)', input)
   }
 
   const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : ''
@@ -20,16 +26,26 @@ function format(input, opt = defaults) {
   } else if (input < opt.min) {
     currency = opt.min
   }
-  const num = currency.toFixed(fixed(opt.precision))
-  if (num === '0.00' && opt.allowBlank) {
+
+  if (defaults.debug) console.log('U2 format currency number', currency)
+
+  currency = currency.toFixed(fixed(opt.precision))
+  if (currency === '0.00' && opt.allowBlank) {
     return ''
   }
 
-  const parts = toStr(num).split('.')
+  if (defaults.debug) console.log('U2 format currency string', currency)
+
+  const parts = toStr(currency).split('.')
   let integer = parts[0]
   const decimal = parts[1]
   integer = addThousandSeparator(integer, opt.thousands)
-  return opt.prefix + negative + joinIntegerAndDecimal(integer, decimal, opt.decimal) + opt.suffix
+
+  const result = opt.prefix + negative + joinIntegerAndDecimal(integer, decimal, opt.decimal) + opt.suffix
+
+  if (defaults.debug) console.log('U2 format result', result)
+
+  return result
 }
 
 function unformat(input, opt = defaults) {

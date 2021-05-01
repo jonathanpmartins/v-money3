@@ -4,8 +4,7 @@ import defaults from './options'
 
 export default function (el, binding) {
 
-  if (!binding.value)
-  {
+  if (!binding.value) {
     return
   }
 
