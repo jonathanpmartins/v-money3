@@ -81,7 +81,7 @@ function setCursor(el, position) {
   }
   if (el === document.activeElement) {
     setSelectionRange()
-    clearTimeout(setTimeout(setSelectionRange, 1)) // Android Fix
+    setTimeout(setSelectionRange, 1); // Android Fix
   }
 }
 
