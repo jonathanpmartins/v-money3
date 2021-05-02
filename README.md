@@ -22,12 +22,12 @@ Feel free to open an issue or post a pull request!
 
 ### Installation
 
-```
+```bash
 npm i v-money3 --save
 ```
 
 
-### Register Globally
+### Register Globally ([view codesandbox](https://codesandbox.io/s/v-money3-global-registering-lv1jv?file=/src/main.js))
 
 ```js
 import { createApp } from "vue";
@@ -39,45 +39,35 @@ const app = createApp({/* options */})
 app.use(money)
 ```
 
-#### Only Component
+### Only Global Component ([view codesandbox](https://codesandbox.io/s/v-money3-global-registering-only-component-dibmu?file=/src/main.js))
 
 ```js
+import { createApp } from "vue";
+import { Money3Component } from 'v-money3'
+
+const app = createApp({/* options */})
+
 // register component <money3>
-
-import { createApp } from "vue";
-import Money3Component from 'v-money3'
-
-const app = createApp({/* options */})
-
-// register an options object
 app.component("money3", Money3Component)
-// retrieve a registered component and use it in the app
-app.use(app.component("money3"))
 ```
 
-#### Only Directive
+### Only Global Directive ([view codesandbox](https://codesandbox.io/s/v-money3-global-registering-only-directive-3n638?file=/src/main.js))
 
 ```js
-// register directive v-money3
-
 import { createApp } from "vue";
-import Money3Directive from 'v-money3'
+import { Money3Directive } from 'v-money3'
 
 const app = createApp({/* options */})
 
-// register directive
+// register directive v-money3
 app.directive('money3', Money3Directive)
-// getter, return the directive definition and use it in the app
-app.use(app.directive("money3"))
 ```
 
-### Use as component
+### Use as component ([view codesandbox](https://codesandbox.io/s/v-money3-use-as-component-oqdc6?file=/src/App.vue))
 
 ```html
 <template>
-  <div>
-    <money3 v-model="amount" v-bind="config"></money3> {{ amount }}
-  </div>
+  <money3 v-model="amount" v-bind="config"></money3> {{ amount }}
 </template>
 
 <script>
@@ -107,13 +97,11 @@ app.use(app.directive("money3"))
 </script>
 ```
 
-### Use as directive
+### Use as directive ([view codesandbox](https://codesandbox.io/s/v-money3-use-as-directive-e7ror?file=/src/App.vue))
 Must use `v-model.lazy` to bind works properly.
 ```html
 <template>
-  <div>
-    <input v-model.lazy="amount" v-money3="config" /> {{ amount }}
-  </div>
+  <input v-model.lazy="amount" v-money3="config" /> {{ amount }}
 </template>
 
 <script>
