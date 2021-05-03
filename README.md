@@ -147,7 +147,7 @@ Must use `v-model.lazy` to bind works properly.
 | disabled  | false    | Boolean | false   | Disable the inner input tag                             |
 | min       | false    | Number  | Number.MIN_SAFE_INTEGER | The min value allowed                   |
 | max       | false    | Number  | Number.MAX_SAFE_INTEGER | The max value allowed                   |
-| allowBlank | false   | Boolean | false   | If the field can start blank and be cleared out by user |
+| allow-blank | false  | Boolean | false   | If the field can start blank and be cleared out by user |
 
 ## Don't want to use a package manager?
 
