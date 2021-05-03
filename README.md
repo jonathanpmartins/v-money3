@@ -1,3 +1,5 @@
+![workflow](https://github.com/jonathanpmartins/v-money3/actions/workflows/main.yml/badge.svg)
+
 # Money Mask for Vue 3
 
 ![The Mask Money](https://cdn-images-1.medium.com/max/600/1*Rpc289FpghuHrnzyVpOUig.gif)
