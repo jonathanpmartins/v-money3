@@ -175,3 +175,18 @@ test('Test allow-blank attribute', async () => {
 
     expect(input.element.value).toBe('')
 })
+
+test('Change event is emitted', async () => {
+
+    const component = mountComponent();
+    const input = component.find('input');
+
+    await input.setValue(123.45)
+
+    expect(component.emitted()).toHaveProperty('change')
+
+    const incrementEvent = component.emitted('change')
+    incrementEvent.forEach((item) => {
+        expect(item[0].target.value).toBe('123.45')
+    });
+})
