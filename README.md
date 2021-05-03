@@ -147,6 +147,16 @@ Must use `v-model.lazy` to bind works properly.
 | max       | false    | Number  | Number.MAX_SAFE_INTEGER | The max value allowed                   |
 | allowBlank | false   | Boolean | false   | If the field can start blank and be cleared out by user |
 
+## Don't want to use a package manager?
+
+Use it directly in the browser! 
+
+```html
+<script src="https://unpkg.com/v-money3@3.10.2/dist/v-money3.umd.js"></script>
+```
+
+Take a look at this ([codesandbox](https://codesandbox.io/s/mystifying-paper-bpfyn?file=/index.html)).
+
 ### References
 
 - https://github.com/vuejs-tips/v-money (based on `v-money`)
