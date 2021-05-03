@@ -9,5 +9,4 @@ export default {
   min: Number.MIN_SAFE_INTEGER,
   max: Number.MAX_SAFE_INTEGER,
   allowBlank: false,
-  debug: false,
 }
