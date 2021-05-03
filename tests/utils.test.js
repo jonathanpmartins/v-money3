@@ -25,6 +25,8 @@ test ('format function should parse numbers and strings', () => {
     expect(format(10.01, {...defaults, max: 10})).toBe('10.00')
 
     expect(format('', {...defaults, allowBlank: true})).toBe('')
+
+    expect(format(123.45, {...defaults, minimumNumberOfCharacters: 7})).toBe('00,123.45')
 })
 
 test ('unformat number should strip the string', () => {

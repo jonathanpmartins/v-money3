@@ -92,6 +92,7 @@ app.directive('money3', Money3Directive)
           min: Number.MIN_SAFE_INTEGER,
           max: Number.MAX_SAFE_INTEGER,
           allowBlank: false,
+          minimumNumberOfCharacters: 0,
         }
       }
     }
@@ -125,6 +126,7 @@ Must use `v-model.lazy` to bind works properly.
           min: Number.MIN_SAFE_INTEGER,
           max: Number.MAX_SAFE_INTEGER,
           allowBlank: false,
+          minimumNumberOfCharacters: 0,
         }
       }
     },
@@ -148,6 +150,7 @@ Must use `v-model.lazy` to bind works properly.
 | min       | false    | Number  | Number.MIN_SAFE_INTEGER | The min value allowed                   |
 | max       | false    | Number  | Number.MAX_SAFE_INTEGER | The max value allowed                   |
 | allow-blank | false  | Boolean | false   | If the field can start blank and be cleared out by user |
+| minimum-number-of-characters | false | Number | 0 | The minimum number of characters that the mask should show |
 
 ## Don't want to use a package manager?
 

@@ -191,3 +191,14 @@ test('Change event is emitted', async () => {
         expect(item[0].target.value).toBe('123.45')
     });
 })
+
+test('Test minimum-number-of-characters attribute', async () => {
+
+    const minimumNumberOfCharacters = 8;
+
+    const input = mountComponent({ minimumNumberOfCharacters }).find('input');
+
+    await input.setValue(123.45)
+
+    expect(input.element.value).toBe('000,123.45')
+})

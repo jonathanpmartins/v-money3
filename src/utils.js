@@ -27,6 +27,17 @@ function format(input, opt = defaults) {
   }
 
   const parts = toStr(currency).split('.')
+
+  if (opt.minimumNumberOfCharacters > 0) {
+    const currentLength = (parts[0] + '').length + (parts[1] + '').length;
+    const diff = opt.minimumNumberOfCharacters - currentLength;
+    if (diff > 0) {
+      for (let i = 0; i < diff; i++) {
+        parts[0] = '0' + parts[0];
+      }
+    }
+  }
+
   let integer = parts[0]
   const decimal = parts[1]
   integer = addThousandSeparator(integer, opt.thousands)

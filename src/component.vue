@@ -14,7 +14,8 @@
       disableNegative,
       min,
       max,
-      allowBlank
+      allowBlank,
+      minimumNumberOfCharacters,
     }"
     class="v-money3" />
 </template>
@@ -82,6 +83,10 @@ export default defineComponent({
     allowBlank: {
       type: Boolean,
       default: () => defaults.allowBlank
+    },
+    minimumNumberOfCharacters: {
+      type: Number,
+      default: () => defaults.minimumNumberOfCharacters
     },
   },
 
