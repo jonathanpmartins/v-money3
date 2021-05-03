@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import Money3Component from '../src/component'
 import Money3Directive from '../src/directive'
+import {setCursor} from "../src/utils";
 
 function mountComponent(attr = {}) {
     const props = {
@@ -124,7 +125,7 @@ test('Test disable attribute', async () => {
 
     const input = mountComponent({ disabled }).find('input');
 
-    expect(input.wrapperElement.disabled).toBe(disabled)
+    expect(input.element.disabled).toBe(disabled)
 })
 
 test('Test min attribute', async () => {
