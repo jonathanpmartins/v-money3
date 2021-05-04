@@ -95,7 +95,7 @@ export default defineComponent({
   setup(props, { emit, attrs }) {
 
     const data = reactive({
-      formattedValue: ''
+      formattedValue: format(props.modelValue, props)
     });
 
     watch(
