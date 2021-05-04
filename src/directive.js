@@ -3,7 +3,6 @@ import assign from './assign'
 import defaults from './options'
 
 const setValue = (el, opt) => {
-  console.log('D oninput', el.value);
   let positionFromEnd = el.value.length - el.selectionEnd
   el.value = format(el.value, opt)
   positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right
