@@ -2,6 +2,17 @@ import {format, unformat, setCursor, event} from './utils'
 import assign from './assign'
 import defaults from './options'
 
+const setValue = (el, opt) => {
+  console.log('D oninput', el.value);
+  let positionFromEnd = el.value.length - el.selectionEnd
+  el.value = format(el.value, opt)
+  positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right
+  positionFromEnd = el.value.length - positionFromEnd
+  positionFromEnd = Math.max(positionFromEnd, opt.prefix.length + 1) // left
+  setCursor(el, positionFromEnd)
+  el.dispatchEvent(event('change')) // v-model.lazy
+}
+
 export default {
   mounted(el, binding) {
 
@@ -31,23 +42,23 @@ export default {
     }
 
     el.oninput = function () {
-      let positionFromEnd = el.value.length - el.selectionEnd
-      el.value = format(el.value, opt)
-      positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right
-      positionFromEnd = el.value.length - positionFromEnd
-      positionFromEnd = Math.max(positionFromEnd, opt.prefix.length + 1) // left
-      setCursor(el, positionFromEnd)
-      el.dispatchEvent(event('change')) // v-model.lazy
+      setValue(el, opt);
     }
 
     el.onfocus = function () {
       setCursor(el, el.value.length - opt.suffix.length)
     }
 
-    el.oninput() // force format after initialization
+    setValue(el, opt);
   },
-  updated(el) {
-    el.oninput();
+  updated(el, binding) {
+    if (!binding.value) {
+      return
+    }
+
+    const opt = assign(defaults, binding.value)
+
+    setValue(el, opt);
   },
   beforeUnmount(el) {
     el.onkeydown = null;
