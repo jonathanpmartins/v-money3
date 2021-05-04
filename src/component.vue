@@ -99,8 +99,7 @@ export default defineComponent({
     });
 
     watch(
-        () => props.modelValue,
-        (newValue) => {
+        () => props.modelValue, (newValue, oldValue) => {
           const formatted = format(newValue, props)
           if (formatted !== data.formattedValue) {
             data.formattedValue = formatted
