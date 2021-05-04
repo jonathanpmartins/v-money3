@@ -2,6 +2,8 @@
 
 # Money Mask for Vue 3
 
+### [View Demo](https://jonathanpmartins.github.io/v-money3/example/)
+
 ![The Mask Money](https://cdn-images-1.medium.com/max/600/1*Rpc289FpghuHrnzyVpOUig.gif)
 
 ## Disclaimer
