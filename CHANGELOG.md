@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.13.6] / 2021-06-02
+
+### Fixing a problem with v-model type when entering a `null value.
+
+## [3.13.5] / 2021-05-13
+
+### `console.log` removed from production code
+
 ## [3.13.4] / 2021-05-04
 
 ### Added
