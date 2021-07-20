@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.13.7] / 2021-07-20
+
+Fixing a problem with cursor position when deleting a digit.
+
 ## [3.13.6] / 2021-06-02
 
 ### Fixing a problem with v-model type when entering a `null value.
@@ -156,6 +160,7 @@ All notable changes to this project will be documented in this file.
 
 - First Release with Vue 3 integration.
 
+[3.13.7]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.6...v3.13.7
 [3.13.6]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.5...v3.13.6
 [3.13.5]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.4...v3.13.5
 [3.13.4]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.3...v3.13.4

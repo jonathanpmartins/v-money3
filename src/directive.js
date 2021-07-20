@@ -7,7 +7,7 @@ const setValue = (el, opt) => {
   el.value = format(el.value, opt)
   positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right
   positionFromEnd = el.value.length - positionFromEnd
-  positionFromEnd = Math.max(positionFromEnd, opt.prefix.length + 1) // left
+  positionFromEnd = Math.max(positionFromEnd, opt.prefix.length) // left
   setCursor(el, positionFromEnd)
   el.dispatchEvent(event('change')) // v-model.lazy
 }
