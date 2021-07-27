@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [3.13.8] / 2021-07-27
 
-### Bug
+### Bug + Tests
 
 - Fix `null` v-model is throwing an exception.
 - Component setup watch typo
