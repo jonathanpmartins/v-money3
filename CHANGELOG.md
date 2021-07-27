@@ -4,20 +4,28 @@ All notable changes to this project will be documented in this file.
 
 ## [3.13.8] / 2021-07-27
 
+### Bug
+
 - Fix `null` v-model is throwing an exception.
 - Component setup watch typo
 
 ## [3.13.7] / 2021-07-20
 
+### Bug
+
 Fixing a problem with cursor position when deleting a digit.
 
 ## [3.13.6] / 2021-06-02
+
+### Bug
 
 ### Fixing a problem with v-model type when entering a `null value.
 
 ## [3.13.5] / 2021-05-13
 
-### `console.log` removed from production code
+### Improvement
+
+- `console.log` removed from production code
 
 ## [3.13.4] / 2021-05-04
 
