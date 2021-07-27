@@ -36,9 +36,9 @@ export default defineComponent({
       default: 0
     },
     modelValue: {
-      required: true,
+      required: false,
       type: [Number, String, undefined, null],
-      default: undefined
+      default: null
     },
     masked: {
       type: Boolean,
@@ -99,8 +99,8 @@ export default defineComponent({
     });
 
     watch(
-        () => props.modelValue, (newValue, oldValue) => {
-          const formatted = format(newValue, props)
+        () => props.modelValue, (val) => {
+          const formatted = format(val, props)
           if (formatted !== data.formattedValue) {
             data.formattedValue = formatted
           }

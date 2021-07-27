@@ -1,6 +1,9 @@
 import defaults from './options'
 
 function format(input, opt = defaults) {
+  if (input === null) {
+    input = 0;
+  }
 
   if (opt.allowBlank && isNormalInteger(input)) {
     input = numbersToCurrency(input, fixed(opt.precision))

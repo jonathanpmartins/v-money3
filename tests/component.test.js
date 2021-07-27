@@ -1,12 +1,11 @@
 import { mount } from '@vue/test-utils'
 import Money3Component from '../src/component'
 import Money3Directive from '../src/directive'
-import {setCursor} from "../src/utils";
 
 function mountComponent(attr = {}) {
     const props = {
         ...attr,
-        modelValue: '0',
+        modelValue: null,
     }
     const global = {
         directives: {
@@ -201,4 +200,17 @@ test('Test minimum-number-of-characters attribute', async () => {
     await input.setValue(123.45)
 
     expect(input.element.value).toBe('000,123.45')
+})
+
+
+test('Test if null v-model is turned into zero', async () => {
+
+    const input = mountComponent({
+        modelValue: null,
+        precision: 0,
+    }).find('input');
+
+    await input.setValue(null);
+
+    expect(input.element.value).toBe('0')
 })
