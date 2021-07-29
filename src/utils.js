@@ -117,5 +117,7 @@ export {
   format,
   unformat,
   setCursor,
-  event
+  event,
+  fixed,
+  numbersToCurrency,
 }

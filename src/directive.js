@@ -1,4 +1,4 @@
-import {format, unformat, setCursor, event} from './utils'
+import {format, unformat, setCursor, event, fixed, numbersToCurrency} from './utils'
 import assign from './assign'
 import defaults from './options'
 
@@ -47,11 +47,10 @@ export default {
     }
 
     el.oninput = function () {
+      if (/^[1-9]$/.test(el.value)) {
+        el.value = numbersToCurrency(el.value, fixed(opt.precision));
+      }
       setValue(el, opt);
-    }
-
-    el.onfocus = function () {
-      setCursor(el, el.value.length - opt.suffix.length)
     }
 
     setValue(el, opt);

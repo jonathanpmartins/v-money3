@@ -105,17 +105,43 @@ test('Test precision attribute', async () => {
     }
 })
 
+test('Test default integer model', async () => {
+
+    const input = mountComponent({
+        modelValue: 1,
+        'model-value': 1,
+        precision: 2,
+    }).find('input');
+
+    expect(input.element.value).toBe('1.00')
+});
+
+test('Test oninput pre-format integers', async () => {
+
+    const input = mountComponent({
+        modelValue: 2,
+        'model-value': 2,
+        precision: 2,
+    }).find('input');
+
+    expect(input.element.value).toBe('2.00')
+
+    await input.setValue(1);
+
+    expect(input.element.value).toBe('0.01')
+})
+
 test('Test disable-negative attribute', async () => {
 
     const input = mountComponent({ disableNegative: true }).find('input');
 
-    await input.setValue(1)
+    await input.setValue('1.1')
 
-    expect(input.element.value).toBe('1.00')
+    expect(input.element.value).toBe('1.10')
 
-    await input.setValue(-1)
+    await input.setValue('-1.1')
 
-    expect(input.element.value).toBe('1.00')
+    expect(input.element.value).toBe('1.10')
 })
 
 test('Test disable attribute', async () => {
@@ -152,15 +178,19 @@ test('Test max attribute', async () => {
 
     const input = mountComponent({ max }).find('input');
 
-    await input.setValue(9)
+    await input.setValue('9.01')
 
-    expect(input.element.value).toBe('9.00')
+    expect(input.element.value).toBe('9.01')
 
-    await input.setValue(11)
+    await input.setValue('9.99')
+
+    expect(input.element.value).toBe('9.99')
+
+    await input.setValue('11.1')
 
     expect(input.element.value).toBe('10.00')
 
-    await input.setValue(10.01)
+    await input.setValue('10.01')
 
     expect(input.element.value).toBe('10.00')
 });
@@ -205,10 +235,7 @@ test('Test minimum-number-of-characters attribute', async () => {
 
 test('Test if null v-model is turned into zero', async () => {
 
-    const input = mountComponent({
-        modelValue: null,
-        precision: 0,
-    }).find('input');
+    const input = mountComponent({ precision: 0 }).find('input');
 
     await input.setValue(null);
 

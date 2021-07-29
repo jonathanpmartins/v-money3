@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.14.0] / 2021-07-29
+
+### Change
+
+- Directive does not set cursor position on focus anymore. [#20](https://github.com/jonathanpmartins/v-money3/issues/20)
+- Component respect cursor position when focus through mouse click. [#20](https://github.com/jonathanpmartins/v-money3/issues/20)
+- Fix odd behavior when replacing value after input selection. [#21](https://github.com/jonathanpmartins/v-money3/issues/21)
+
 ## [3.13.9] / 2021-07-27
 
 ### Change
@@ -179,6 +187,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.14.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.9...v3.14.0
 [3.13.9]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.8...v3.13.9
 [3.13.8]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.7...v3.13.8
 [3.13.7]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.6...v3.13.7
