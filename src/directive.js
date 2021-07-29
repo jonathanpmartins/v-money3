@@ -2,9 +2,15 @@ import {format, unformat, setCursor, event} from './utils'
 import assign from './assign'
 import defaults from './options'
 
+let lastKnownValue = null;
+
 const setValue = (el, opt) => {
+  if (lastKnownValue === el.value) {
+    return;
+  }
   let positionFromEnd = el.value.length - el.selectionEnd
   el.value = format(el.value, opt)
+  lastKnownValue = el.value;
   positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right
   positionFromEnd = el.value.length - positionFromEnd
   positionFromEnd = Math.max(positionFromEnd, opt.prefix.length) // left
