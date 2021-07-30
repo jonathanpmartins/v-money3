@@ -93,13 +93,13 @@ test('Test precision attribute', async () => {
 
     for (let precision = 0; precision < 10; precision++) {
 
-        const input = mountComponent({ precision, masked: false }).find('input');
+        const input = mountComponent({ precision, thousands: '' }).find('input');
 
-        const number = 1234567891234 / (!precision ? 1 : Math.pow(10, precision))
+        const number = 1234567891234
 
         await input.setValue(number)
 
-        const toBe = parseFloat(number).toFixed(precision)
+        const toBe = (number / Math.pow(10, precision)).toFixed(precision)
 
         expect(input.element.value).toBe(toBe)
     }
@@ -257,14 +257,17 @@ test('Test if US format works correctly', async () => {
 
 test('Test if non masked values are correctly translated', async () => {
 
-    let input = mountComponent({
+    let component = mountComponent({
         decimal: '.',
         thousands: ',',
         precision: 2,
         masked: false,
-    }).find('input');
+    });
+    let input = component.find('input');
 
     await input.setValue('5971513.15');
 
-    expect(input.element.value).toBe('5971513.15');
+    let updates = component.emitted()['update:model-value'];
+    expect(updates[updates.length - 1][0]).toBe('5971513.15');
+    expect(input.element.value).toBe('5,971,513.15');
 })
