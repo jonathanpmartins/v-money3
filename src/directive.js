@@ -9,7 +9,7 @@ const setValue = (el, opt, caller) => {
     return;
   }
   let positionFromEnd = el.value.length - el.selectionEnd
-  el.value = opt.masked ? format(el.value, opt, caller) : unformat(el.value, opt, caller)
+  el.value = format(el.value, opt, caller)
   lastKnownValue = el.value;
   positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right
   positionFromEnd = el.value.length - positionFromEnd

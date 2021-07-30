@@ -16,7 +16,6 @@
       max,
       allowBlank,
       minimumNumberOfCharacters,
-      masked,
       debug,
     }"
     class="v-money3" />
@@ -49,7 +48,7 @@ export default defineComponent({
     },
     masked: {
       type: Boolean,
-      default: true
+      default: false
     },
     precision: {
       type: Number,
@@ -102,14 +101,14 @@ export default defineComponent({
   setup(props, { emit, attrs }) {
 
     const data = reactive({
-      formattedValue: props.masked ? format(props.modelValue, props, 'setup') : props.modelValue,
+      formattedValue: format(props.modelValue, props, 'setup'),
     });
 
     watch(
         () => props.modelValue, (val) => {
-          const value = props.masked ? format(val, props, 'watch') : val;
-          if (value !== data.formattedValue) {
-            data.formattedValue = value;
+          const formatted = format(val, props, 'watch');
+          if (formatted !== data.formattedValue) {
+            data.formattedValue = formatted;
           }
         }
     )
