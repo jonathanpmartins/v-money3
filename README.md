@@ -159,7 +159,7 @@ Must use `v-model.lazy` to bind works properly.
 Use it directly in the browser! 
 
 ```html
-<script src="https://unpkg.com/v-money3@3.14.1/dist/v-money3.umd.js"></script>
+<script src="https://unpkg.com/v-money3@3.14.2/dist/v-money3.umd.js"></script>
 ```
 
 Take a look at issue [#15](https://github.com/jonathanpmartins/v-money3/issues/15#issuecomment-830988807) and also this [codesandbox](https://codesandbox.io/s/mystifying-paper-bpfyn?file=/index.html) working example. 

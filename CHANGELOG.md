@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.14.2] / 2021-07-30
+
+### Bug
+
+- Fixing an issue that broke a directive feature in the last release. [#23](https://github.com/jonathanpmartins/v-money3/pull/23) 
+
 ## [3.14.1] / 2021-07-30
 
 ### Bug
@@ -194,6 +200,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.14.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.1...v3.14.2
 [3.14.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.0...v3.14.1
 [3.14.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.9...v3.14.0
 [3.13.9]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.8...v3.13.9
