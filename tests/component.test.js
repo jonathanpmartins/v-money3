@@ -27,7 +27,7 @@ test('Renders the component', async () => {
 
     const input = component.find('input')
 
-    await input.setValue('1123.45')
+    await input.setValue('1123.450')
 
     expect(input.element.value).toBe('R$ 1,123.450.000')
 })
@@ -68,10 +68,10 @@ test('Test thousands attribute', async () => {
 
         const input = mountComponent({ thousands }).find('input');
 
-        await input.setValue(9999999999999)
+        await input.setValue('9999999999999')
 
         expect(input.element.value)
-            .toBe(`9${thousands}999${thousands}999${thousands}999${thousands}999.00`)
+            .toBe(`99${thousands}999${thousands}999${thousands}999.99`)
     }
 })
 
@@ -83,7 +83,7 @@ test('Test decimal attribute', async () => {
 
         const input = mountComponent({ decimal }).find('input');
 
-        await input.setValue(123.45)
+        await input.setValue('123.45')
 
         expect(input.element.value).toBe(`123${decimal}45`)
     }
@@ -93,13 +93,13 @@ test('Test precision attribute', async () => {
 
     for (let precision = 0; precision < 10; precision++) {
 
-        const input = mountComponent({ precision }).find('input');
+        const input = mountComponent({ precision, masked: false }).find('input');
 
-        const number = 123.4567891234
+        const number = 1234567891234 / (!precision ? 1 : Math.pow(10, precision))
 
         await input.setValue(number)
 
-        const toBe = number.toFixed(precision)
+        const toBe = parseFloat(number).toFixed(precision)
 
         expect(input.element.value).toBe(toBe)
     }
@@ -135,11 +135,11 @@ test('Test disable-negative attribute', async () => {
 
     const input = mountComponent({ disableNegative: true }).find('input');
 
-    await input.setValue('1.1')
+    await input.setValue('1.10')
 
     expect(input.element.value).toBe('1.10')
 
-    await input.setValue('-1.1')
+    await input.setValue('-1.10')
 
     expect(input.element.value).toBe('1.10')
 })
@@ -159,15 +159,15 @@ test('Test min attribute', async () => {
 
     const input = mountComponent({ min }).find('input');
 
-    await input.setValue(11)
+    await input.setValue('11.00')
 
     expect(input.element.value).toBe('11.00')
 
-    await input.setValue(9)
+    await input.setValue('9.00')
 
     expect(input.element.value).toBe('10.00')
 
-    await input.setValue(9.99)
+    await input.setValue('9.99')
 
     expect(input.element.value).toBe('10.00')
 })
@@ -186,7 +186,7 @@ test('Test max attribute', async () => {
 
     expect(input.element.value).toBe('9.99')
 
-    await input.setValue('11.1')
+    await input.setValue('11.10')
 
     expect(input.element.value).toBe('10.00')
 
@@ -223,11 +223,9 @@ test('Change event is emitted', async () => {
 
 test('Test minimum-number-of-characters attribute', async () => {
 
-    const minimumNumberOfCharacters = 8;
+    const input = mountComponent({ minimumNumberOfCharacters: 8 }).find('input');
 
-    const input = mountComponent({ minimumNumberOfCharacters }).find('input');
-
-    await input.setValue(123.45)
+    await input.setValue('123.45')
 
     expect(input.element.value).toBe('000,123.45')
 })
@@ -240,4 +238,33 @@ test('Test if null v-model is turned into zero', async () => {
     await input.setValue(null);
 
     expect(input.element.value).toBe('0')
+})
+
+
+test('Test if US format works correctly', async () => {
+
+    let input = mountComponent({
+        decimal: '.',
+        thousands: ',',
+        precision: 2,
+        masked: true,
+    }).find('input');
+
+    await input.setValue('1513.15');
+
+    expect(input.element.value).toBe('1,513.15');
+})
+
+test('Test if non masked values are correctly translated', async () => {
+
+    let input = mountComponent({
+        decimal: '.',
+        thousands: ',',
+        precision: 2,
+        masked: false,
+    }).find('input');
+
+    await input.setValue('5971513.15');
+
+    expect(input.element.value).toBe('5971513.15');
 })

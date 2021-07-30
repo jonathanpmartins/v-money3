@@ -16,6 +16,8 @@
       max,
       allowBlank,
       minimumNumberOfCharacters,
+      masked,
+      debug,
     }"
     class="v-money3" />
 </template>
@@ -30,6 +32,11 @@ export default defineComponent({
   inheritAttrs: false,
   name: 'Money3',
   props: {
+    debug: {
+      required: false,
+      type: Boolean,
+      default: false,
+    },
     id: {
       required: false,
       type: [Number, String],
@@ -42,7 +49,7 @@ export default defineComponent({
     },
     masked: {
       type: Boolean,
-      default: false
+      default: true
     },
     precision: {
       type: Number,
@@ -95,20 +102,21 @@ export default defineComponent({
   setup(props, { emit, attrs }) {
 
     const data = reactive({
-      formattedValue: format(props.modelValue, props)
+      formattedValue: props.masked ? format(props.modelValue, props, 'setup') : props.modelValue,
     });
 
     watch(
         () => props.modelValue, (val) => {
-          const formatted = format(val, props)
-          if (formatted !== data.formattedValue) {
-            data.formattedValue = formatted
+          const value = props.masked ? format(val, props, 'watch') : val;
+          if (value !== data.formattedValue) {
+            data.formattedValue = value;
           }
         }
     )
 
     function change(evt) {
-      emit('update:model-value', props.masked ? evt.target.value : unformat(evt.target.value, props))
+      const value = props.masked ? evt.target.value : unformat(evt.target.value, props, 'change');
+      emit('update:model-value', value)
     }
 
     const listeners = computed(() => {

@@ -1,4 +1,6 @@
 export default {
+  debug: false,
+  masked: true,
   prefix: '',
   suffix: '',
   thousands: ',',

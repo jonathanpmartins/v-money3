@@ -4,12 +4,12 @@ import defaults from './options'
 
 let lastKnownValue = null;
 
-const setValue = (el, opt) => {
+const setValue = (el, opt, caller) => {
   if (lastKnownValue === el.value) {
     return;
   }
   let positionFromEnd = el.value.length - el.selectionEnd
-  el.value = format(el.value, opt)
+  el.value = opt.masked ? format(el.value, opt, caller) : unformat(el.value, opt, caller)
   lastKnownValue = el.value;
   positionFromEnd = Math.max(positionFromEnd, opt.suffix.length) // right
   positionFromEnd = el.value.length - positionFromEnd
@@ -50,19 +50,17 @@ export default {
       if (/^[1-9]$/.test(el.value)) {
         el.value = numbersToCurrency(el.value, fixed(opt.precision));
       }
-      setValue(el, opt);
+      setValue(el, opt, 'oninput');
     }
 
-    setValue(el, opt);
+    setValue(el, opt, 'mounted');
   },
   updated(el, binding) {
     if (!binding.value) {
       return
     }
-
     const opt = assign(defaults, binding.value)
-
-    setValue(el, opt);
+    setValue(el, opt, 'mounted');
   },
   beforeUnmount(el) {
     el.onkeydown = null;

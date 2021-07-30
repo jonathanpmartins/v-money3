@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.14.1] / 2021-07-30
+
+### Bug
+
+- Fixing bug where component were unusable with US format. [#22](https://github.com/jonathanpmartins/v-money3/issues/22)
+- Fixing a problem with component that continues to mask the input value even if masked were set to `false`.
+
 ## [3.14.0] / 2021-07-29
 
 ### Change
@@ -187,6 +194,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.14.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.0...v3.14.1
 [3.14.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.9...v3.14.0
 [3.13.9]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.8...v3.13.9
 [3.13.8]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.7...v3.13.8

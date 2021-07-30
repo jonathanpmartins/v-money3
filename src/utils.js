@@ -1,6 +1,9 @@
 import defaults from './options'
 
-function format(input, opt = defaults) {
+function format(input, opt = defaults, caller) {
+
+  if (opt.debug) console.log('----------------- format caller', caller);
+
   if (input === null) {
     input = 0;
   }
@@ -10,7 +13,11 @@ function format(input, opt = defaults) {
   }
 
   if (!isNaN(input)) {
-    input = Number(input).toFixed(fixed(opt.precision))
+    if (opt.decimal === '.' && !Number.isInteger(input)) {
+      input += ''; // transform to string
+    } else {
+      input = Number(input).toFixed(fixed(opt.precision))
+    }
   }
 
   const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : ''
@@ -48,12 +55,23 @@ function format(input, opt = defaults) {
   return opt.prefix + negative + joinIntegerAndDecimal(integer, decimal, opt.decimal) + opt.suffix
 }
 
-function unformat(input, opt = defaults) {
+function unformat(input, opt = defaults, caller) {
+
+  if (opt.debug) console.log('----------------- unformat caller', caller);
+
   const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? -1 : 1) : 1;
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '')
   const numbers = onlyNumbers(filtered)
-  const currency = numbersToCurrency(numbers, opt.precision)
-  return parseFloat(currency) * negative
+  let currency = numbersToCurrency(numbers, opt.precision);
+  currency = parseFloat(currency) * negative;
+
+  if (currency > opt.max) {
+    currency = opt.max
+  } else if (input < opt.min) {
+    currency = opt.min
+  }
+
+  return Number(currency).toFixed(fixed(opt.precision));
 }
 
 function onlyNumbers(input) {
