@@ -11,6 +11,7 @@
     }
   },
   "scripts": {
+    "lint": "eslint --ext .js,.vue ./",
     "build": "vite build",
     "prepublish": "npm run build",
     "test": "jest"
@@ -43,6 +44,10 @@
     "@vue/compiler-sfc": "^3.1.5",
     "@vue/test-utils": "^2.0.0-rc.10",
     "babel-jest": "^26.6.3",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-vue": "^7.15.0",
     "jest": "^26.6.3",
     "ts-jest": "^26.5.5",
     "vite": "^2.4.3",

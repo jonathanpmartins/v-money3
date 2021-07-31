@@ -1,14 +1,14 @@
-import Money3Component from './component.vue'
-import Money3Directive from './directive'
+import Money3Component from './component.vue';
+import Money3Directive from './directive';
 
 const money = {
   install: (app) => {
-    app.component('money3', Money3Component)
-    app.directive('money3', Money3Directive)
-  }
+    app.component('money3', Money3Component);
+    app.directive('money3', Money3Directive);
+  },
 };
 
-export default money
+export default money;
 
 export {
   Money3Component,
@@ -18,4 +18,4 @@ export {
   Money3Directive as VMoney3,
   Money3Component as Money,
   Money3Directive as VMoney,
-}
+};

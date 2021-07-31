@@ -12,4 +12,4 @@ export default {
   max: Number.MAX_SAFE_INTEGER,
   allowBlank: false,
   minimumNumberOfCharacters: 0,
-}
+};

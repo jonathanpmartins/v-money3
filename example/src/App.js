@@ -1,26 +1,26 @@
 export default {
-    name: "App",
-    data() {
-        return {
-            componentAmount: 1234.50,
-            directiveAmount: 6543.21,
-            config: {
-                decimal: ",",
-                thousands: ".",
-                prefix: "R$ ",
-                suffix: " #",
-                precision: 2,
-                masked: false, /* doesn't work with directive */
-                disableNegative: false,
-                disabled: false,
-                min: Number.MIN_SAFE_INTEGER,
-                max: Number.MAX_SAFE_INTEGER,
-                allowBlank: false,
-                minimumNumberOfCharacters: 0,
-            }
-        };
-    },
-    template: `
+  name: 'App',
+  data() {
+    return {
+      componentAmount: 1234.50,
+      directiveAmount: 6543.21,
+      config: {
+        decimal: ',',
+        thousands: '.',
+        prefix: 'R$ ',
+        suffix: ' #',
+        precision: 2,
+        masked: false, /* doesn't work with directive */
+        disableNegative: false,
+        disabled: false,
+        min: Number.MIN_SAFE_INTEGER,
+        max: Number.MAX_SAFE_INTEGER,
+        allowBlank: false,
+        minimumNumberOfCharacters: 0,
+      },
+    };
+  },
+  template: `
       <div>
       <section class="hero is-small is-success">
         <div class="hero-body">
@@ -179,5 +179,5 @@ export default {
         </div>
       </section>
       </div>
-  `
+  `,
 };
