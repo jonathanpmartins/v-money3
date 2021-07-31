@@ -54,11 +54,11 @@ export default {
       if (/^[1-9]$/.test(el.value)) {
         el.value = numbersToCurrency(el.value, fixed(opt.precision));
       }
-      setValue(el, opt, 'oninput');
+      setValue(el, opt, 'directive oninput');
     };
 
     if (opt.debug) console.log('directive mounted() - el.value', el.value);
-    setValue(el, opt, 'mounted');
+    setValue(el, opt, 'directive mounted');
   },
   updated(el, binding) {
     if (!binding.value) {
@@ -66,7 +66,7 @@ export default {
     }
     const opt = assign(defaults, binding.value);
     if (opt.debug) console.log('directive updated() - el.value', el.value);
-    setValue(el, opt, 'updated');
+    setValue(el, opt, 'directive updated');
   },
   beforeUnmount(el) {
     el.onkeydown = null;

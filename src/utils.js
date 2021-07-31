@@ -38,7 +38,7 @@ function joinIntegerAndDecimal(integer, decimal, separator) {
 
 function format(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils format() - caller', caller);
-  if (opt.debug) console.log('utils format() - input', input);
+  if (opt.debug) console.log('utils format() - input1', input);
 
   if (input === null) {
     input = 0;
@@ -56,16 +56,20 @@ function format(input, opt = defaults, caller) {
     }
   }
 
+  if (opt.debug) console.log('utils format() - input2', input);
+
   const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : '';
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
   const numbers = onlyNumbers(filtered);
 
   let currency = Number(numbersToCurrency(numbers, opt.precision));
+  if (opt.debug) console.log('utils format() - currency1', currency);
   if (currency > opt.max) {
     currency = opt.max;
   } else if (input < opt.min) {
     currency = opt.min;
   }
+  if (opt.debug) console.log('utils format() - currency2', currency);
 
   currency = currency.toFixed(fixed(opt.precision));
   if (currency === '0.00' && opt.allowBlank) {
@@ -88,14 +92,16 @@ function format(input, opt = defaults, caller) {
   const decimal = parts[1];
   integer = addThousandSeparator(integer, opt.thousands);
 
-  const result = opt.prefix
+  if (opt.debug) console.log('utils format() - integer', integer);
+
+  const output = opt.prefix
       + negative
       + joinIntegerAndDecimal(integer, decimal, opt.decimal)
       + opt.suffix;
 
-  if (opt.debug) console.log('utils format() - result', result);
+  if (opt.debug) console.log('utils format() - output', output);
 
-  return result;
+  return output;
 }
 
 function unformat(input, opt = defaults, caller) {
@@ -114,11 +120,11 @@ function unformat(input, opt = defaults, caller) {
     currency = opt.min;
   }
 
-  const result = Number(currency).toFixed(fixed(opt.precision));
+  const output = Number(currency).toFixed(fixed(opt.precision));
 
-  if (opt.debug) console.log('utils unformat() - result', result);
+  if (opt.debug) console.log('utils unformat() - output', output);
 
-  return result;
+  return output;
 }
 
 function setCursor(el, position) {

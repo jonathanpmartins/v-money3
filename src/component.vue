@@ -104,7 +104,7 @@ export default defineComponent({
     if (props.debug) console.log('component setup()', props);
 
     const data = reactive({
-      formattedValue: format(props.modelValue, props, 'setup'),
+      formattedValue: format(props.modelValue, props, 'component setup'),
     });
 
     if (props.debug) console.log('component setup() - data.formattedValue', data.formattedValue);
@@ -112,7 +112,7 @@ export default defineComponent({
     watch(
       () => props.modelValue, (val) => {
         if (props.debug) console.log('component watch() -> val', val);
-        const formatted = format(val, props, 'watch');
+        const formatted = format(val, props, 'component watch');
         if (formatted !== data.formattedValue) {
           if (props.debug) console.log('component watch() changed -> formatted', formatted);
           data.formattedValue = formatted;
@@ -122,7 +122,7 @@ export default defineComponent({
 
     function change(evt) {
       if (props.debug) console.log('component change() -> evt.target.value', evt.target.value);
-      const value = props.masked ? evt.target.value : unformat(evt.target.value, props, 'change');
+      const value = props.masked ? evt.target.value : unformat(evt.target.value, props, 'component change');
       if (props.debug) console.log('component change() -> update:model-value', value);
       emit('update:model-value', value);
     }
