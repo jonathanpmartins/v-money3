@@ -1,4 +1,5 @@
-import App from './App';
+// eslint-disable-next-line import/extensions
+import App from './App.js';
 
 const app = window.Vue.createApp({
   render: () => window.Vue.h(App),
