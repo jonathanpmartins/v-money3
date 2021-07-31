@@ -28,6 +28,8 @@ export default {
 
     const opt = assign(defaults, binding.value);
 
+    if (opt.debug) console.log('directive mounted() - opt', opt);
+
     // v-money3 used on a component that's not a input
     if (el.tagName.toLocaleUpperCase() !== 'INPUT') {
       const els = el.getElementsByTagName('input');
@@ -55,6 +57,7 @@ export default {
       setValue(el, opt, 'oninput');
     };
 
+    if (opt.debug) console.log('directive mounted() - el.value', el.value);
     setValue(el, opt, 'mounted');
   },
   updated(el, binding) {
@@ -62,7 +65,8 @@ export default {
       return;
     }
     const opt = assign(defaults, binding.value);
-    setValue(el, opt, 'mounted');
+    if (opt.debug) console.log('directive updated() - el.value', el.value);
+    setValue(el, opt, 'updated');
   },
   beforeUnmount(el) {
     el.onkeydown = null;

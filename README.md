@@ -14,7 +14,7 @@ Feel free to open an issue or post a pull request!
 
 ## Features
 
-- Lightweight (<2KB gzipped)
+- Lightweight (<3KB gzipped)
 - Dependency free
 - Mobile support
 - Component or Directive flavors

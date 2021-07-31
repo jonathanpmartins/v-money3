@@ -101,21 +101,29 @@ export default defineComponent({
   directives: { money3: Money3Directive },
 
   setup(props, { emit, attrs }) {
+    if (props.debug) console.log('component setup()', props);
+
     const data = reactive({
       formattedValue: format(props.modelValue, props, 'setup'),
     });
 
+    if (props.debug) console.log('component setup() - data.formattedValue', data.formattedValue);
+
     watch(
       () => props.modelValue, (val) => {
+        if (props.debug) console.log('component watch() -> val', val);
         const formatted = format(val, props, 'watch');
         if (formatted !== data.formattedValue) {
+          if (props.debug) console.log('component watch() changed -> formatted', formatted);
           data.formattedValue = formatted;
         }
       },
     );
 
     function change(evt) {
+      if (props.debug) console.log('component change() -> evt.target.value', evt.target.value);
       const value = props.masked ? evt.target.value : unformat(evt.target.value, props, 'change');
+      if (props.debug) console.log('component change() -> update:model-value', value);
       emit('update:model-value', value);
     }
 

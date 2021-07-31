@@ -37,7 +37,8 @@ function joinIntegerAndDecimal(integer, decimal, separator) {
 }
 
 function format(input, opt = defaults, caller) {
-  if (opt.debug) console.log('----------------- format caller', caller);
+  if (opt.debug) console.log('utils format() - caller', caller);
+  if (opt.debug) console.log('utils format() - input', input);
 
   if (input === null) {
     input = 0;
@@ -87,11 +88,19 @@ function format(input, opt = defaults, caller) {
   const decimal = parts[1];
   integer = addThousandSeparator(integer, opt.thousands);
 
-  return opt.prefix + negative + joinIntegerAndDecimal(integer, decimal, opt.decimal) + opt.suffix;
+  const result = opt.prefix
+      + negative
+      + joinIntegerAndDecimal(integer, decimal, opt.decimal)
+      + opt.suffix;
+
+  if (opt.debug) console.log('utils format() - result', result);
+
+  return result;
 }
 
 function unformat(input, opt = defaults, caller) {
-  if (opt.debug) console.log('----------------- unformat caller', caller);
+  if (opt.debug) console.log('utils unformat() - caller', caller);
+  if (opt.debug) console.log('utils unformat() - input', input);
 
   const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? -1 : 1) : 1;
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
@@ -105,7 +114,11 @@ function unformat(input, opt = defaults, caller) {
     currency = opt.min;
   }
 
-  return Number(currency).toFixed(fixed(opt.precision));
+  const result = Number(currency).toFixed(fixed(opt.precision));
+
+  if (opt.debug) console.log('utils unformat() - result', result);
+
+  return result;
 }
 
 function setCursor(el, position) {
