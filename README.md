@@ -162,7 +162,36 @@ Use it directly in the browser!
 <script src="https://unpkg.com/v-money3@3.14.3/dist/v-money3.umd.js"></script>
 ```
 
-Take a look at issue [#15](https://github.com/jonathanpmartins/v-money3/issues/15#issuecomment-830988807) and also this [codesandbox](https://codesandbox.io/s/mystifying-paper-bpfyn?file=/index.html) working example. 
+Take a look at issue [#15](https://github.com/jonathanpmartins/v-money3/issues/15#issuecomment-830988807) and also this [codesandbox](https://codesandbox.io/s/mystifying-paper-bpfyn?file=/index.html) working example.
+
+## Use the internal mask functions
+
+```javascript
+import { format, unformat } from 'v-money3';
+
+const config = {
+    decimal: ',',
+    thousands: '.',
+    prefix: 'R$ ',
+    suffix: ' #',
+    precision: 2,
+    masked: false /* doesn't work with directive */,
+    disableNegative: false,
+    disabled: false,
+    min: Number.MIN_SAFE_INTEGER,
+    max: Number.MAX_SAFE_INTEGER,
+    allowBlank: false,
+    minimumNumberOfCharacters: 0,
+}
+
+const formatted = format(1234.56, config);
+console.log(formatted);
+// output string: 'R$ 1.234,56 #'
+
+const unformatted = unformat(formatted, config);
+console.log(unformatted);
+// output float: 1234.56
+```
 
 ### References
 
