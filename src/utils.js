@@ -58,7 +58,7 @@ function format(input, opt = defaults, caller) {
     if (isNormalInteger(input)) {
       input = Number(input).toFixed(fixed(opt.precision));
     } else if (isValidFloat(input)) {
-      if (caller === 'component setup' || caller === 'directive mounted') {
+      if (!caller || caller === 'component setup' || caller === 'directive mounted') {
         input = Number(input).toFixed(fixed(opt.precision));
       }
     }
