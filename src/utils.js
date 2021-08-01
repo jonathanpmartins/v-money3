@@ -129,7 +129,7 @@ function unformat(input, opt = defaults, caller) {
 
   if (opt.debug) console.log('utils unformat() - output', output);
 
-  return output;
+  return parseFloat(output);
 }
 
 function setCursor(el, position) {
