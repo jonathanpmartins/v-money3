@@ -5,6 +5,10 @@ function isNormalInteger(str) {
   return n !== Infinity && String(n) === str && n >= 0;
 }
 
+function isValidFloat(str) {
+  return (/^-?[\d]*(\.[\d]+)?$/g).test(str);
+}
+
 function between(min, n, max) {
   return Math.max(min, Math.min(n, max));
 }
@@ -48,16 +52,13 @@ function format(input, opt = defaults, caller) {
     input = numbersToCurrency(input, fixed(opt.precision));
   }
 
-  if (!Number.isNaN(input)) {
-    if (opt.decimal === '.' && !Number.isInteger(input)) {
-      input += ''; // transform to string
-    } else {
-      const parsed = parseFloat(input);
-      if (Number.isNaN(parsed)) {
-        input += ''; // transform to string
-      } else {
-        input = Number(input).toFixed(fixed(opt.precision));
-      }
+  if (typeof input === 'number') {
+    input = Number(input).toFixed(fixed(opt.precision));
+  } else if (!Number.isNaN(input)) {
+    if (isNormalInteger(input)) {
+      input = Number(input).toFixed(fixed(opt.precision));
+    } else if (isValidFloat(input)) {
+      input = Number(input).toFixed(fixed(opt.precision));
     }
   }
 
