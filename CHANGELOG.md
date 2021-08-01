@@ -215,6 +215,7 @@ Fixing a problem with cursor position when deleting a digit.
 - First Release with Vue 3 integration.
 
 [3.15.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.3...v3.15.0
+[3.14.3]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.2...v3.14.3
 [3.14.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.1...v3.14.2
 [3.14.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.0...v3.14.1
 [3.14.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.9...v3.14.0
