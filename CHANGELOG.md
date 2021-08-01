@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.14.3] / 2021-08-01
+
+### Changes
+
+- Setup tests with puppeteer.
+- Returning a float instead of a string to the model. [#27](https://github.com/jonathanpmartins/v-money3/issues/27)
+- Fixing issues catch in the new tests that the old test didn't.
+
 ## [3.14.2] / 2021-07-30
 
 ### Bug
