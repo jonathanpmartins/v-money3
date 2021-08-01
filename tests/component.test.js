@@ -64,7 +64,7 @@ test('Test thousands attribute', async () => {
     await input.setValue('9999999999999');
 
     expect(input.element.value)
-      .toBe(`99${thousands}999${thousands}999${thousands}999.99`);
+      .toBe(`9${thousands}999${thousands}999${thousands}999${thousands}999.00`);
   }
 });
 
@@ -81,14 +81,14 @@ test('Test decimal attribute', async () => {
 });
 
 test('Test precision attribute', async () => {
-  for (let precision = 0; precision < 10; precision += 1) {
+  for (let precision = 2; precision < 10; precision += 1) {
     const input = mountComponent({ precision, thousands: '' }).find('input');
 
-    const number = 1234567891234;
+    const number = 1234567891234 / (!precision ? 1 : 10 ** precision);
 
-    await input.setValue(number);
+    await input.setValue(`${number}`);
 
-    const toBe = (number / (10 ** precision)).toFixed(precision);
+    const toBe = parseFloat(number).toFixed(precision);
 
     expect(input.element.value).toBe(toBe);
   }
