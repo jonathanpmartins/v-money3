@@ -6,8 +6,12 @@ describe('Puppeteer Tests', () => {
   const serverUrl = 'http://127.0.0.1:12345';
 
   beforeAll(async () => {
-    jest.setTimeout(30000);
+    jest.setTimeout(60000);
   });
+
+  async function getValue() {
+    return page.$eval('#component', (input) => input.value);
+  }
 
   it('Test prefix attribute', async () => {
     const data = ['R$ ', '$', '€', '₿', '1\\', '2\\'];
@@ -18,9 +22,7 @@ describe('Puppeteer Tests', () => {
       await page.focus('#component');
       await page.type('#component', '12345');
 
-      const value = await page.$eval('#component', (input) => input.value);
-
-      expect(value).toBe(`${prefix}123.45`);
+      expect(await getValue()).toBe(`${prefix}123.45`);
     }
   });
 
@@ -37,9 +39,7 @@ describe('Puppeteer Tests', () => {
       await page.focus('#component');
       await page.type('#component', '123456');
 
-      const value = await page.$eval('#component', (input) => input.value);
-
-      expect(value).toBe(`1,234.56${suffix}`);
+      expect(await getValue()).toBe(`1,234.56${suffix}`);
     }
   });
 
@@ -54,9 +54,7 @@ describe('Puppeteer Tests', () => {
       await page.focus('#component');
       await page.type('#component', '9999999999999');
 
-      const value = await page.$eval('#component', (input) => input.value);
-
-      expect(value).toBe(`99${thousands}999${thousands}999${thousands}999.99`);
+      expect(await getValue()).toBe(`99${thousands}999${thousands}999${thousands}999.99`);
     }
   });
 
@@ -73,9 +71,7 @@ describe('Puppeteer Tests', () => {
       await page.focus('#component');
       await page.type('#component', '12345.67');
 
-      const value = await page.$eval('#component', (input) => input.value);
-
-      expect(value).toBe(`12,345${decimal}67`);
+      expect(await getValue()).toBe(`12,345${decimal}67`);
     }
   });
 
@@ -88,7 +84,7 @@ describe('Puppeteer Tests', () => {
       await page.focus('#component');
       await page.type('#component', `${number}`);
 
-      const value = await page.$eval('#component', (input) => input.value);
+      const value = await getValue();
 
       const toBe = (number / (10 ** precision)).toFixed(precision);
 
@@ -99,34 +95,26 @@ describe('Puppeteer Tests', () => {
   it('Test default integer model', async () => {
     await page.goto(`${serverUrl}?amount=12`);
 
-    const value = await page.$eval('#component', (input) => input.value);
-
-    expect(value).toBe('12.00');
+    expect(await getValue()).toBe('12.00');
   });
 
   it('Test default float model', async () => {
     await page.goto(`${serverUrl}?amount=12.1`);
 
-    const value = await page.$eval('#component', (input) => input.value);
-
-    expect(value).toBe('12.10');
+    expect(await getValue()).toBe('12.10');
   });
 
   it('Test disable-negative attribute', async () => {
-    let value;
-
     await page.goto(`${serverUrl}`);
 
     await page.focus('#component');
     await page.type('#component', '62185');
 
-    value = await page.$eval('#component', (input) => input.value);
-    expect(value).toBe('621.85');
+    expect(await getValue()).toBe('621.85');
 
     await page.type('#component', '-');
 
-    value = await page.$eval('#component', (input) => input.value);
-    expect(value).toBe('-621.85');
+    expect(await getValue()).toBe('-621.85');
 
     // ---------
 
@@ -135,14 +123,11 @@ describe('Puppeteer Tests', () => {
     await page.focus('#component');
     await page.type('#component', '35684');
 
-    value = await page.$eval('#component', (input) => input.value);
-
-    expect(value).toBe('356.84');
+    expect(await getValue()).toBe('356.84');
 
     await page.type('#component', '-');
 
-    value = await page.$eval('#component', (input) => input.value);
-    expect(value).toBe('356.84');
+    expect(await getValue()).toBe('356.84');
   });
 
   it('Test disable attribute', async () => {
@@ -154,7 +139,6 @@ describe('Puppeteer Tests', () => {
   });
 
   it('Test min attribute', async () => {
-    let value;
     const min = 3;
 
     await page.goto(`${serverUrl}?min=${min}`);
@@ -163,32 +147,27 @@ describe('Puppeteer Tests', () => {
     await page.keyboard.press('ArrowLeft');
     await page.type('#component', '1');
 
-    value = await page.$eval('#component', (input) => input.value);
-    expect(value).toBe('30.10');
+    expect(await getValue()).toBe('30.10');
 
     await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('ArrowLeft');
 
     await page.type('#component', '2');
-    value = await page.$eval('#component', (input) => input.value);
-    expect(value).toBe('320.10');
+    expect(await getValue()).toBe('320.10');
 
     await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('Delete');
 
-    value = await page.$eval('#component', (input) => input.value);
-    expect(value).toBe('20.10');
+    expect(await getValue()).toBe('20.10');
 
     await page.keyboard.press('Delete');
 
-    value = await page.$eval('#component', (input) => input.value);
-    expect(value).toBe('3.00');
+    expect(await getValue()).toBe('3.00');
   });
 
   it('Test max attribute', async () => {
-    let value;
     const max = 10;
 
     await page.goto(`${serverUrl}?max=${max}`);
@@ -196,48 +175,43 @@ describe('Puppeteer Tests', () => {
     await page.focus('#component');
     await page.type('#component', '123');
 
-    value = await page.$eval('#component', (input) => input.value);
-    expect(value).toBe('1.23');
+    expect(await getValue()).toBe('1.23');
 
     await page.type('#component', '4');
 
-    value = await page.$eval('#component', (input) => input.value);
-    expect(value).toBe('10.00');
+    expect(await getValue()).toBe('10.00');
   });
 
   it('Test allow-blank attribute', async () => {
-    let value;
-
     await page.goto(`${serverUrl}?allowBlank=true`);
 
-    value = await page.$eval('#component', (input) => input.value);
-
-    expect(value).toBe('');
+    expect(await getValue()).toBe('');
 
     await page.focus('#component');
     await page.type('#component', '5');
 
-    value = await page.$eval('#component', (input) => input.value);
-
-    expect(value).toBe('0.05');
+    expect(await getValue()).toBe('0.05');
 
     await page.keyboard.press('Backspace');
 
-    value = await page.$eval('#component', (input) => input.value);
-
-    expect(value).toBe('');
+    expect(await getValue()).toBe('');
 
     await page.type('#component', '6');
 
-    value = await page.$eval('#component', (input) => input.value);
-
-    expect(value).toBe('0.06');
+    expect(await getValue()).toBe('0.06');
 
     await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('Delete');
 
-    value = await page.$eval('#component', (input) => input.value);
+    expect(await getValue()).toBe('');
+  });
 
-    expect(value).toBe('');
+  it('Test minimum-number-of-characters attribute', async () => {
+    await page.goto(`${serverUrl}?minimumNumberOfCharacters=8`);
+
+    await page.focus('#component');
+    await page.type('#component', '123456');
+
+    expect(await getValue()).toBe('001,234.56');
   });
 });

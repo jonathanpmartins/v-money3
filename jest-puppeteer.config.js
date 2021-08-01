@@ -7,7 +7,7 @@ module.exports = {
     // dumpio: true,
     // headless: process.env.HEADLESS !== 'false',
     headless: false,
-    slowMo: 30,
+    slowMo: 35,
     product: 'chrome',
   },
   browserContext: 'default',

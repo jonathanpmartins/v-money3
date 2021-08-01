@@ -35,7 +35,7 @@ const config = reactive({
   min: Number(get('min', Number.MIN_SAFE_INTEGER)),
   max: Number(get('max', Number.MAX_SAFE_INTEGER)),
   allowBlank: !!get('allowBlank', false),
-  minimumNumberOfCharacters: get('precision', 0),
+  minimumNumberOfCharacters: get('minimumNumberOfCharacters', 0),
 });
 
 // eslint-disable-next-line no-unused-vars
