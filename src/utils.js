@@ -52,7 +52,12 @@ function format(input, opt = defaults, caller) {
     if (opt.decimal === '.' && !Number.isInteger(input)) {
       input += ''; // transform to string
     } else {
-      input = Number(input).toFixed(fixed(opt.precision));
+      const parsed = parseFloat(input);
+      if (Number.isNaN(parsed)) {
+        input += ''; // transform to string
+      } else {
+        input = Number(input).toFixed(fixed(opt.precision));
+      }
     }
   }
 
