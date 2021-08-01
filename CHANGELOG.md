@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.15.0] / 2021-08-01
+
+### Feature
+
+- Exposing internal mask function. [#28](https://github.com/jonathanpmartins/v-money3/issues/28)
+
 ## [3.14.3] / 2021-08-01
 
 ### Changes
@@ -208,6 +214,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.15.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.3...v3.15.0
 [3.14.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.1...v3.14.2
 [3.14.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.0...v3.14.1
 [3.14.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.13.9...v3.14.0
