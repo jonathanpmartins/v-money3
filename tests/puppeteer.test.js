@@ -56,15 +56,12 @@ describe('Puppeteer Tests', () => {
 
       const value = await page.$eval('#component', (input) => input.value);
 
-      // await page.waitForResponse(30000);
-
       expect(value).toBe(`99${thousands}999${thousands}999${thousands}999.99`);
     }
   });
 
   it('Test decimal attribute', async () => {
-    // const data = ['.', ',', '-', '#', ';', '\''];
-    const data = [',', '.', '-', '#', ';', '\'', '/'];
+    const data = [',', '.', '#', ';', '\'', '/'];
 
     for (const decimal of data) {
       const treated = decimal
@@ -78,7 +75,7 @@ describe('Puppeteer Tests', () => {
 
       const value = await page.$eval('#component', (input) => input.value);
 
-      await page.waitForResponse(30000);
+      // await page.waitForResponse(30000);
 
       expect(value).toBe(`12,345${decimal}67`);
     }

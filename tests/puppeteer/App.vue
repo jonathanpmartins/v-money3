@@ -26,7 +26,7 @@ const config = reactive({
   prefix: get('prefix', ''),
   suffix: get('suffix', ''),
   thousands: get('thousands', ','),
-  decimal: get('decimal', ','),
+  decimal: get('decimal', '.'),
   // precision: 2,
   // disableNegative: false,
   // disabled: false,
