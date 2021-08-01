@@ -21,12 +21,12 @@ function get(key, value) {
 
 const amount = ref(get('amount', 0));
 const config = reactive({
-  // debug: false,
+  debug: true,
   // masked: false,
   prefix: get('prefix', ''),
   suffix: get('suffix', ''),
-  // thousands: '.',
-  // decimal: ',',
+  thousands: get('thousands', ','),
+  decimal: get('decimal', ','),
   // precision: 2,
   // disableNegative: false,
   // disabled: false,

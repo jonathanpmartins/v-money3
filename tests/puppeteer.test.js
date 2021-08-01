@@ -42,4 +42,45 @@ describe('Puppeteer Tests', () => {
       expect(value).toBe(`1,234.56${suffix}`);
     }
   });
+
+  it('Test thousands attribute', async () => {
+    const data = [',', '.', '|', '#', ';'];
+
+    for (const thousands of data) {
+      const treated = thousands.replace('#', '%23');
+
+      await page.goto(`${serverUrl}?thousands=${treated}`);
+
+      await page.focus('#component');
+      await page.type('#component', '9999999999999');
+
+      const value = await page.$eval('#component', (input) => input.value);
+
+      // await page.waitForResponse(30000);
+
+      expect(value).toBe(`99${thousands}999${thousands}999${thousands}999.99`);
+    }
+  });
+
+  it('Test decimal attribute', async () => {
+    // const data = ['.', ',', '-', '#', ';', '\''];
+    const data = [',', '.', '-', '#', ';', '\'', '/'];
+
+    for (const decimal of data) {
+      const treated = decimal
+        .replace('#', '%23')
+        .replace(',', '%2C');
+
+      await page.goto(`${serverUrl}?decimal=${treated}`);
+
+      await page.focus('#component');
+      await page.type('#component', '12345.67');
+
+      const value = await page.$eval('#component', (input) => input.value);
+
+      await page.waitForResponse(30000);
+
+      expect(value).toBe(`12,345${decimal}67`);
+    }
+  });
 });
