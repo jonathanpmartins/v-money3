@@ -16,8 +16,12 @@ import VMoney3 from '../../src/component.vue';
 function get(key, value) {
   const url = new URL(window.location.href);
   const params = url.searchParams;
-  return params.get(key) || value;
+  console.log('key', key);
+  console.log('params.get(key)', params.get(key));
+  return params.get(key) === 'empty' ? '' : params.get(key) || value;
 }
+
+console.log('get(\'thousands\')', get('thousands'));
 
 const amount = ref(get('amount', 0));
 const config = reactive({
@@ -27,7 +31,7 @@ const config = reactive({
   suffix: get('suffix', ''),
   thousands: get('thousands', ','),
   decimal: get('decimal', '.'),
-  // precision: 2,
+  precision: get('precision', 2),
   // disableNegative: false,
   // disabled: false,
   // min: Number.MIN_SAFE_INTEGER,

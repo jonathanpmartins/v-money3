@@ -75,9 +75,24 @@ describe('Puppeteer Tests', () => {
 
       const value = await page.$eval('#component', (input) => input.value);
 
-      // await page.waitForResponse(30000);
-
       expect(value).toBe(`12,345${decimal}67`);
+    }
+  });
+
+  it('Test precision attribute', async () => {
+    const number = 1234567891234;
+
+    for (let precision = 0; precision < 10; precision += 1) {
+      await page.goto(`${serverUrl}?thousands=empty&precision=${precision}`);
+
+      await page.focus('#component');
+      await page.type('#component', `${number}`);
+
+      const value = await page.$eval('#component', (input) => input.value);
+
+      const toBe = (number / (10 ** precision)).toFixed(precision);
+
+      expect(value).toBe(`${toBe}`);
     }
   });
 });
