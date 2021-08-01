@@ -3,19 +3,43 @@
  */
 
 describe('Puppeteer Tests', () => {
+  const serverUrl = 'http://127.0.0.1:12345';
+
   beforeAll(async () => {
-    await page.goto('http://127.0.0.1:12345');
+    jest.setTimeout(30000);
   });
 
-  it('should test if it works', async () => {
-    const value = '123456789';
+  it('Test prefix attribute', async () => {
+    const data = ['R$ ', '$', '€', '₿', '1\\', '2\\'];
 
-    await page.focus('#component');
-    await page.keyboard.type(value);
+    for (const prefix of data) {
+      await page.goto(`${serverUrl}?prefix=${prefix.replace(' ', '+')}`);
 
-    const result = await page.$eval('#component', (input) => input.value);
+      await page.focus('#component');
+      await page.type('#component', '12345');
 
-    // Matcher error: received value must be a promise
-    await expect(Promise.resolve(result)).resolves.toMatch('1,234,567.89');
+      const value = await page.$eval('#component', (input) => input.value);
+
+      expect(value).toBe(`${prefix}123.45`);
+    }
+  });
+
+  it('Test suffix attribute', async () => {
+    const data = ['#', '%', '$', '€', '₿', '.00', '($)', '/3'];
+
+    for (const suffix of data) {
+      const treated = suffix
+        .replace('%', '%25')
+        .replace('#', '%23');
+
+      await page.goto(`${serverUrl}?suffix=${treated}`);
+
+      await page.focus('#component');
+      await page.type('#component', '123456');
+
+      const value = await page.$eval('#component', (input) => input.value);
+
+      expect(value).toBe(`1,234.56${suffix}`);
+    }
   });
 });

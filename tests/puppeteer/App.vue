@@ -13,10 +13,9 @@
 import { ref, reactive, defineEmit } from 'vue';
 import VMoney3 from '../../src/component.vue';
 
-const url = new URL(window.location.href);
-const params = url.searchParams;// .get('amount')
-
 function get(key, value) {
+  const url = new URL(window.location.href);
+  const params = url.searchParams;
   return params.get(key) || value;
 }
 
@@ -24,8 +23,8 @@ const amount = ref(get('amount', 0));
 const config = reactive({
   // debug: false,
   // masked: false,
-  // prefix: 'R$ ',
-  // suffix: '',
+  prefix: get('prefix', ''),
+  suffix: get('suffix', ''),
   // thousands: '.',
   // decimal: ',',
   // precision: 2,
@@ -37,6 +36,7 @@ const config = reactive({
   // minimumNumberOfCharacters: 0,
 });
 
+// eslint-disable-next-line no-unused-vars
 const emit = defineEmit(['update:modelValue']);
 
 const updateValue = (value) => {

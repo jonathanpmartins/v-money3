@@ -2,6 +2,13 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
+    jest: true,
+  },
+  globals: {
+    page: true,
+    browser: true,
+    context: true,
+    jestPuppeteer: true,
   },
   extends: [
     // 'plugin:vue/essential',
