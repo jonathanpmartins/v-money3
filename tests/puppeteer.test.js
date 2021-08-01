@@ -214,4 +214,31 @@ describe('Puppeteer Tests', () => {
 
     expect(await getValue()).toBe('001,234.56');
   });
+
+  it('Change event is emitted', async () => {
+    const events = [];
+
+    await page.exposeFunction('onCustomEvent', (event, value) => {
+      events.push(value);
+    });
+
+    await page.goto(`${serverUrl}`);
+
+    await page.$eval('#component', (input) => {
+      input.addEventListener('change', (event, detail) => {
+        console.log('event', event);
+        console.log('detail', detail);
+        window.onCustomEvent(event, event.target.value);
+      });
+    });
+
+    await page.focus('#component');
+    await page.type('#component', '123');
+
+    expect(events.length).toBe(3);
+
+    expect(events[0]).toBe('0.01');
+    expect(events[1]).toBe('0.12');
+    expect(events[2]).toBe('1.23');
+  });
 });
