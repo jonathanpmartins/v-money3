@@ -58,7 +58,9 @@ function format(input, opt = defaults, caller) {
     if (isNormalInteger(input)) {
       input = Number(input).toFixed(fixed(opt.precision));
     } else if (isValidFloat(input)) {
-      input = Number(input).toFixed(fixed(opt.precision));
+      if (caller === 'component setup' || caller === 'directive mounted') {
+        input = Number(input).toFixed(fixed(opt.precision));
+      }
     }
   }
 
@@ -97,8 +99,6 @@ function format(input, opt = defaults, caller) {
   let integer = parts[0];
   const decimal = parts[1];
   integer = addThousandSeparator(integer, opt.thousands);
-
-  if (opt.debug) console.log('utils format() - integer', integer);
 
   const output = opt.prefix
       + negative
