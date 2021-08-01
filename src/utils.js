@@ -74,7 +74,7 @@ function format(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils format() - currency1', currency);
   if (currency > opt.max) {
     currency = opt.max;
-  } else if (input < opt.min) {
+  } else if (currency < opt.min) {
     currency = opt.min;
   }
   if (opt.debug) console.log('utils format() - currency2', currency);
