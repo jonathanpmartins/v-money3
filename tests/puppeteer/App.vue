@@ -21,8 +21,6 @@ function get(key, value) {
   return params.get(key) === 'empty' ? '' : params.get(key) || value;
 }
 
-console.log('get(\'thousands\')', get('thousands'));
-
 const amount = ref(get('amount', 0));
 const config = reactive({
   debug: true,
@@ -31,13 +29,13 @@ const config = reactive({
   suffix: get('suffix', ''),
   thousands: get('thousands', ','),
   decimal: get('decimal', '.'),
-  precision: get('precision', 2),
-  // disableNegative: false,
-  // disabled: false,
-  // min: Number.MIN_SAFE_INTEGER,
-  // max: Number.MAX_SAFE_INTEGER,
-  // allowBlank: false,
-  // minimumNumberOfCharacters: 0,
+  precision: Number(get('precision', 2)),
+  disableNegative: !!get('disableNegative', false),
+  disabled: !!get('disabled', false),
+  min: Number(get('min', Number.MIN_SAFE_INTEGER)),
+  max: Number(get('max', Number.MAX_SAFE_INTEGER)),
+  allowBlank: !!get('allowBlank', false),
+  minimumNumberOfCharacters: get('precision', 0),
 });
 
 // eslint-disable-next-line no-unused-vars

@@ -95,4 +95,149 @@ describe('Puppeteer Tests', () => {
       expect(value).toBe(`${toBe}`);
     }
   });
+
+  it('Test default integer model', async () => {
+    await page.goto(`${serverUrl}?amount=12`);
+
+    const value = await page.$eval('#component', (input) => input.value);
+
+    expect(value).toBe('12.00');
+  });
+
+  it('Test default float model', async () => {
+    await page.goto(`${serverUrl}?amount=12.1`);
+
+    const value = await page.$eval('#component', (input) => input.value);
+
+    expect(value).toBe('12.10');
+  });
+
+  it('Test disable-negative attribute', async () => {
+    let value;
+
+    await page.goto(`${serverUrl}`);
+
+    await page.focus('#component');
+    await page.type('#component', '62185');
+
+    value = await page.$eval('#component', (input) => input.value);
+    expect(value).toBe('621.85');
+
+    await page.type('#component', '-');
+
+    value = await page.$eval('#component', (input) => input.value);
+    expect(value).toBe('-621.85');
+
+    // ---------
+
+    await page.goto(`${serverUrl}?disableNegative=true`);
+
+    await page.focus('#component');
+    await page.type('#component', '35684');
+
+    value = await page.$eval('#component', (input) => input.value);
+
+    expect(value).toBe('356.84');
+
+    await page.type('#component', '-');
+
+    value = await page.$eval('#component', (input) => input.value);
+    expect(value).toBe('356.84');
+  });
+
+  it('Test disable attribute', async () => {
+    await page.goto(`${serverUrl}?disabled=true`);
+
+    const isDisabled = await page.$eval('#component', (input) => input.disabled);
+
+    expect(isDisabled).toBe(true);
+  });
+
+  it('Test min attribute', async () => {
+    let value;
+    const min = 3;
+
+    await page.goto(`${serverUrl}?min=${min}`);
+
+    await page.focus('#component');
+    await page.keyboard.press('ArrowLeft');
+    await page.type('#component', '1');
+
+    value = await page.$eval('#component', (input) => input.value);
+    expect(value).toBe('30.10');
+
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowLeft');
+
+    await page.type('#component', '2');
+    value = await page.$eval('#component', (input) => input.value);
+    expect(value).toBe('320.10');
+
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('Delete');
+
+    value = await page.$eval('#component', (input) => input.value);
+    expect(value).toBe('20.10');
+
+    await page.keyboard.press('Delete');
+
+    value = await page.$eval('#component', (input) => input.value);
+    expect(value).toBe('3.00');
+  });
+
+  it('Test max attribute', async () => {
+    let value;
+    const max = 10;
+
+    await page.goto(`${serverUrl}?max=${max}`);
+
+    await page.focus('#component');
+    await page.type('#component', '123');
+
+    value = await page.$eval('#component', (input) => input.value);
+    expect(value).toBe('1.23');
+
+    await page.type('#component', '4');
+
+    value = await page.$eval('#component', (input) => input.value);
+    expect(value).toBe('10.00');
+  });
+
+  it('Test allow-blank attribute', async () => {
+    let value;
+
+    await page.goto(`${serverUrl}?allowBlank=true`);
+
+    value = await page.$eval('#component', (input) => input.value);
+
+    expect(value).toBe('');
+
+    await page.focus('#component');
+    await page.type('#component', '5');
+
+    value = await page.$eval('#component', (input) => input.value);
+
+    expect(value).toBe('0.05');
+
+    await page.keyboard.press('Backspace');
+
+    value = await page.$eval('#component', (input) => input.value);
+
+    expect(value).toBe('');
+
+    await page.type('#component', '6');
+
+    value = await page.$eval('#component', (input) => input.value);
+
+    expect(value).toBe('0.06');
+
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('Delete');
+
+    value = await page.$eval('#component', (input) => input.value);
+
+    expect(value).toBe('');
+  });
 });
