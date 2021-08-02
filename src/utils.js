@@ -44,7 +44,7 @@ function format(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils format() - caller', caller);
   if (opt.debug) console.log('utils format() - input1', input);
 
-  if (input === null) {
+  if (input === null || input === undefined) {
     input = 0;
   }
 

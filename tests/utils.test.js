@@ -5,6 +5,8 @@ test('format function should parse numbers and strings', () => {
   expect(format('$123.001')).toBe('1,230.01');
 
   expect(format('')).toBe('0.00');
+  expect(format(null)).toBe('0.00');
+  expect(format(undefined)).toBe('0.00');
   expect(format(123.45)).toBe('123.45');
 
   expect(format(123.45, { ...defaults, prefix: 'R$ ' })).toBe('R$ 123.45');
