@@ -104,20 +104,6 @@ test('Test default integer model', async () => {
   expect(input.element.value).toBe('1.00');
 });
 
-test('Test oninput pre-format integers', async () => {
-  const input = mountComponent({
-    modelValue: 2,
-    'model-value': 2,
-    precision: 2,
-  }).find('input');
-
-  expect(input.element.value).toBe('2.00');
-
-  await input.setValue(1);
-
-  expect(input.element.value).toBe('0.01');
-});
-
 test('Test disable-negative attribute', async () => {
   const input = mountComponent({ disableNegative: true }).find('input');
 
@@ -210,14 +196,6 @@ test('Test minimum-number-of-characters attribute', async () => {
   expect(input.element.value).toBe('000,123.45');
 });
 
-test('Test if null v-model is turned into zero', async () => {
-  const input = mountComponent({ precision: 0 }).find('input');
-
-  await input.setValue(null);
-
-  expect(input.element.value).toBe('0');
-});
-
 test('Test if US format works correctly', async () => {
   const input = mountComponent({
     decimal: '.',
@@ -229,6 +207,28 @@ test('Test if US format works correctly', async () => {
   await input.setValue('1513.15');
 
   expect(input.element.value).toBe('1,513.15');
+});
+
+test('Test if null v-model is turned into zero', async () => {
+  const input = mountComponent({ precision: 0 }).find('input');
+
+  await input.setValue(null);
+
+  expect(input.element.value).toBe('0');
+});
+
+test('Test oninput pre-format integers', async () => {
+  const input = mountComponent({
+    modelValue: 2,
+    'model-value': 2,
+    precision: 2,
+  }).find('input');
+
+  expect(input.element.value).toBe('2.00');
+
+  await input.setValue(1);
+
+  expect(input.element.value).toBe('0.01');
 });
 
 test('Test if non masked values are correctly translated', async () => {
