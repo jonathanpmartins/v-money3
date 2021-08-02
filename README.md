@@ -154,6 +154,22 @@ Must use `v-model.lazy` to bind works properly.
 | allow-blank | false  | Boolean | false   | If the field can start blank and be cleared out by user |
 | minimum-number-of-characters | false | Number | 0 | The minimum number of characters that the mask should show |
 
+## Restricted Characters
+
+The following characters...
+
+- `+`
+- `-`
+
+...are restricted on following properties: 
+- `decimal`
+- `thousands`
+- `prefix`
+- `prefix` 
+
+An exception will be thrown if validation fails.
+
+
 ## Don't want to use a package manager?
 
 Use it directly in the browser! 

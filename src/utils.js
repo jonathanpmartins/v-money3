@@ -1,6 +1,7 @@
 import defaults from './options';
 
-const restrictedCharacters = ['+', '-'];
+const RESTRICTED_CHARACTERS = ['+', '-'];
+const RESTRICTED_OPTIONS = ['decimal', 'thousands', 'prefix', 'suffix'];
 
 function isNormalInteger(str) {
   const n = Math.floor(Number(str));
@@ -43,15 +44,14 @@ function joinIntegerAndDecimal(integer, decimal, separator) {
 }
 
 function validateRestrictedInput(value, caller) {
-  if (restrictedCharacters.includes(value)) {
+  if (RESTRICTED_CHARACTERS.includes(value)) {
     throw new Error(`v-money3 "${caller}" property don't accept "${value}" as a value.`);
   }
   return true;
 }
 
 function validateRestrictedOptions(opt) {
-  const targets = ['decimal', 'thousands', 'prefix', 'suffix'];
-  for (const target of targets) {
+  for (const target of RESTRICTED_OPTIONS) {
     validateRestrictedInput(opt[target], target);
   }
   return true;
@@ -168,6 +168,8 @@ function event(name) {
 }
 
 export {
+  RESTRICTED_CHARACTERS,
+  RESTRICTED_OPTIONS,
   format,
   unformat,
   setCursor,

@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils';
+import { RESTRICTED_CHARACTERS, RESTRICTED_OPTIONS } from '../src/utils';
 import Money3Component from '../src/component.vue';
 import Money3Directive from '../src/directive';
 
@@ -208,6 +209,26 @@ test('Test if US format works correctly', async () => {
 
   expect(input.element.value).toBe('1,513.15');
 });
+
+test('Test if restricted characters are correctly validated!', async () => {
+  for (const character of RESTRICTED_CHARACTERS) {
+    for (const option of RESTRICTED_OPTIONS) {
+      try {
+        const attr = {};
+        attr[option] = character;
+        mountComponent(attr);
+      } catch (e) {
+        const message = `v-money3 "${option}" property don't accept "${character}" as a value`;
+
+        const hasException = e.message.includes(message);
+
+        expect(hasException).toBe(true);
+      }
+    }
+  }
+});
+
+/* ----------------- not tested in e2e puppeteer ----------------- */
 
 test('Test if null v-model is turned into zero', async () => {
   const input = mountComponent({ precision: 0 }).find('input');
