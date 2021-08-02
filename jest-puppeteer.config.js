@@ -5,8 +5,7 @@ module.exports = {
   },
   launch: {
     // dumpio: true,
-    // headless: process.env.HEADLESS !== 'false',
-    // headless: false,
+    headless: process.env.HEADLESS !== 'false',
     slowMo: 35,
     product: 'chrome',
   },

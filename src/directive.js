@@ -48,6 +48,13 @@ export default {
         el.value = '';
         el.dispatchEvent(event('change')); // v-model.lazy
       }
+
+      if (e.key === '+') {
+        const number = unformat(el.value, opt);
+        if (number < 0) {
+          el.value = number * -1;
+        }
+      }
     };
 
     el.oninput = () => {

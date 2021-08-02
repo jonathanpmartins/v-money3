@@ -250,4 +250,19 @@ describe('Puppeteer Tests', () => {
 
     expect(await getValue()).toBe('U$1,234,567.89');
   });
+
+  it('Test if I can positive and negative with the plus and minus signals', async () => {
+    await page.goto(`${serverUrl}`);
+
+    await page.focus('#component');
+    await page.type('#component', '123456789');
+
+    await page.keyboard.press('-');
+
+    expect(await getValue()).toBe('-1,234,567.89');
+
+    await page.keyboard.press('+');
+
+    expect(await getValue()).toBe('1,234,567.89');
+  });
 });
