@@ -241,4 +241,13 @@ describe('Puppeteer Tests', () => {
     expect(events[1]).toBe('0.12');
     expect(events[2]).toBe('1.23');
   });
+
+  it('Test if US format works correctly', async () => {
+    await page.goto(`${serverUrl}?prefix=U$`);
+
+    await page.focus('#component');
+    await page.type('#component', '123456789');
+
+    expect(await getValue()).toBe('U$1,234,567.89');
+  });
 });
