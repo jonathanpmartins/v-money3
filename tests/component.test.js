@@ -57,7 +57,7 @@ test('Test suffix attribute', async () => {
 });
 
 test('Test thousands attribute', async () => {
-  const data = ['.', '-', '|', '#', ';'];
+  const data = ['.', '|', '#', ';'];
 
   for (const thousands of data) {
     const input = mountComponent({ thousands }).find('input');
@@ -70,7 +70,7 @@ test('Test thousands attribute', async () => {
 });
 
 test('Test decimal attribute', async () => {
-  const data = ['.', ',', '-', '#', ';', '\''];
+  const data = ['.', ',', '#', ';', '\''];
 
   for (const decimal of data) {
     const input = mountComponent({ decimal }).find('input');
