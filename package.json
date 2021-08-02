@@ -11,11 +11,11 @@
     }
   },
   "scripts": {
-    "lint": "eslint --ext .js,.vue ./",
+    "lint": "./node_modules/eslint/bin/eslint.js --ext .js,.vue ./",
     "serve": "./node_modules/vite/bin/vite.js --host=localhost --port=3000 --open --force",
-    "build": "vite build",
+    "build": "./node_modules/vite/bin/vite.js build",
     "prepublish": "npm run build",
-    "test": "jest"
+    "test": "./node_modules/jest/bin/jest.js"
   },
   "files": [
     "dist"

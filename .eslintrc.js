@@ -31,5 +31,5 @@ module.exports = {
     'no-restricted-syntax': 'off',
     'no-console': 'off',
   },
-  ignorePatterns: ['/dist/**'],
+  ignorePatterns: ['/dist/**', '/node_modules/**'],
 };
