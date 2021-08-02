@@ -226,8 +226,6 @@ describe('Puppeteer Tests', () => {
 
     await page.$eval('#component', (input) => {
       input.addEventListener('change', (event, detail) => {
-        console.log('event', event);
-        console.log('detail', detail);
         window.onCustomEvent(event, event.target.value);
       });
     });

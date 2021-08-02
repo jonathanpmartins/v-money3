@@ -1,5 +1,11 @@
 import {
-  format, unformat, setCursor, event, fixed, numbersToCurrency,
+  format,
+  unformat,
+  setCursor,
+  event,
+  fixed,
+  numbersToCurrency,
+  validateRestrictedOptions,
 } from './utils';
 import assign from './assign';
 import defaults from './options';
@@ -8,6 +14,9 @@ let lastKnownValue = null;
 
 const setValue = (el, opt, caller) => {
   if (lastKnownValue === el.value) {
+    return;
+  }
+  if (!validateRestrictedOptions(opt)) {
     return;
   }
   let positionFromEnd = el.value.length - el.selectionEnd;

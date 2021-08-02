@@ -16,8 +16,6 @@ import VMoney3 from '../../src/component.vue';
 function get(key, value) {
   const url = new URL(window.location.href);
   const params = url.searchParams;
-  console.log('key', key);
-  console.log('params.get(key)', params.get(key));
   return params.get(key) === 'empty' ? '' : params.get(key) || value;
 }
 

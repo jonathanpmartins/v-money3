@@ -27,7 +27,7 @@ import {
 } from 'vue';
 import Money3Directive from './directive';
 import defaults from './options';
-import { format, unformat } from './utils';
+import { format, unformat, validateRestrictedInput } from './utils';
 
 export default defineComponent({
   inheritAttrs: false,
@@ -59,18 +59,30 @@ export default defineComponent({
     decimal: {
       type: String,
       default: () => defaults.decimal,
+      validator(value) {
+        return validateRestrictedInput(value, 'decimal');
+      },
     },
     thousands: {
       type: String,
       default: () => defaults.thousands,
+      validator(value) {
+        return validateRestrictedInput(value, 'thousands');
+      },
     },
     prefix: {
       type: String,
       default: () => defaults.prefix,
+      validator(value) {
+        return validateRestrictedInput(value, 'prefix');
+      },
     },
     suffix: {
       type: String,
       default: () => defaults.suffix,
+      validator(value) {
+        return validateRestrictedInput(value, 'suffix');
+      },
     },
     disableNegative: {
       type: Boolean,

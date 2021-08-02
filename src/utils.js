@@ -1,5 +1,7 @@
 import defaults from './options';
 
+const restrictedCharacters = ['+', '-'];
+
 function isNormalInteger(str) {
   const n = Math.floor(Number(str));
   return n !== Infinity && String(n) === str && n >= 0;
@@ -38,6 +40,21 @@ function addThousandSeparator(integer, separator) {
 
 function joinIntegerAndDecimal(integer, decimal, separator) {
   return decimal ? integer + separator + decimal : integer;
+}
+
+function validateRestrictedInput(value, caller) {
+  if (restrictedCharacters.includes(value)) {
+    throw new Error(`v-money3 "${caller}" property don't accept "${value}" as a value.`);
+  }
+  return true;
+}
+
+function validateRestrictedOptions(opt) {
+  const targets = ['decimal', 'thousands', 'prefix', 'suffix'];
+  for (const target of targets) {
+    validateRestrictedInput(opt[target], target);
+  }
+  return true;
 }
 
 function format(input, opt = defaults, caller) {
@@ -157,4 +174,6 @@ export {
   event,
   fixed,
   numbersToCurrency,
+  validateRestrictedInput,
+  validateRestrictedOptions,
 };
