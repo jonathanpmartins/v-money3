@@ -165,7 +165,7 @@ The following characters...
 - `decimal`
 - `thousands`
 - `prefix`
-- `prefix` 
+- `suffix` 
 
 An exception will be thrown if validation fails.
 
