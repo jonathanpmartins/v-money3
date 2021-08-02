@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.15.1] / 2021-08-02
+
+- Pointing npm scripts to local binaries
+- Update CI to node 16.
+- More e2e tests with puppeteer.
+- Restrict `+` and `-` in some properties. See [#30](https://github.com/jonathanpmartins/v-money3/issues/30)
+- Correct toggle for `-` and `+` signals. [#29](https://github.com/jonathanpmartins/v-money3/issues/29) 
+
 ## [3.15.0] / 2021-08-01
 
 ### Feature
@@ -214,6 +222,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.15.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.0...v3.15.1
 [3.15.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.3...v3.15.0
 [3.14.3]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.2...v3.14.3
 [3.14.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.1...v3.14.2
