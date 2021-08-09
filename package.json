@@ -15,6 +15,7 @@
     "serve": "./node_modules/vite/bin/vite.js --host=localhost --port=3000 --open --force",
     "build": "./node_modules/vite/bin/vite.js build",
     "prepublish": "npm run build",
+    "bump-lock": "npm i --package-lock-only",
     "test": "./node_modules/jest/bin/jest.js"
   },
   "files": [
