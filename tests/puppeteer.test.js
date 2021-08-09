@@ -17,7 +17,7 @@ describe('Puppeteer Tests', () => {
     const data = ['R$ ', '$', '€', '₿', '1\\', '2\\'];
 
     for (const prefix of data) {
-      await page.goto(`${serverUrl}?prefix=${prefix.replaceAll(' ', '+')}`);
+      await page.goto(`${serverUrl}?prefix=${prefix.replace(/\s/g, '+')}`);
 
       await page.focus('#component');
       await page.type('#component', '12345');
@@ -31,8 +31,8 @@ describe('Puppeteer Tests', () => {
 
     for (const suffix of data) {
       const treated = suffix
-        .replaceAll('%', '%25')
-        .replaceAll('#', '%23');
+        .replace(/%/g, '%25')
+        .replace(/#/g, '%23');
 
       await page.goto(`${serverUrl}?suffix=${treated}`);
 
@@ -47,7 +47,7 @@ describe('Puppeteer Tests', () => {
     const data = [',', '.', '|', '#', ';'];
 
     for (const thousands of data) {
-      const treated = thousands.replaceAll('#', '%23');
+      const treated = thousands.replace(/#/g, '%23');
 
       await page.goto(`${serverUrl}?thousands=${treated}`);
 
@@ -63,8 +63,8 @@ describe('Puppeteer Tests', () => {
 
     for (const decimal of data) {
       const treated = decimal
-        .replaceAll('#', '%23')
-        .replaceAll(',', '%2C');
+        .replace(/#/g, '%23')
+        .replace(/#,/g, '%2C');
 
       await page.goto(`${serverUrl}?decimal=${treated}`);
 
