@@ -2,9 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.15.2] / 2021-08-09
+
+### Development improvment
+
+- New `npm run bump-lock` script to mirror `package.json` version.
+- Force the usage of node 16 on local tests.
+
 ## [3.15.1] / 2021-08-02
 
-- Pointing npm scripts to local binaries
+### Changes
+
+- Pointing npm scripts to local binaries.
 - Update CI to node 16.
 - More e2e tests with puppeteer.
 - Restrict `+` and `-` in some properties. See [#30](https://github.com/jonathanpmartins/v-money3/issues/30)
@@ -222,6 +231,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.15.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.1...v3.15.2
 [3.15.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.0...v3.15.1
 [3.15.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.3...v3.15.0
 [3.14.3]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.2...v3.14.3
