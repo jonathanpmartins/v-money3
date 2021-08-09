@@ -11,12 +11,12 @@
     }
   },
   "scripts": {
-    "lint": "./node_modules/eslint/bin/eslint.js --ext .js,.vue ./",
-    "serve": "./node_modules/vite/bin/vite.js --host=localhost --port=3000 --open --force",
-    "build": "./node_modules/vite/bin/vite.js build",
-    "prepublish": "npm run build",
+    "lint": "./node_modules/node/bin/node ./node_modules/eslint/bin/eslint.js --ext .js,.vue ./",
+    "serve": "./node_modules/node/bin/node ./node_modules/vite/bin/vite.js --host=localhost --port=3000 --open --force",
+    "build": "./node_modules/node/bin/node ./node_modules/vite/bin/vite.js build",
+    "test": "./node_modules/node/bin/node ./node_modules/jest/bin/jest.js",
     "bump-lock": "npm i --package-lock-only",
-    "test": "./node_modules/jest/bin/jest.js"
+    "prepublish": "npm run build"
   },
   "files": [
     "dist"
@@ -52,6 +52,7 @@
     "eslint-plugin-vue": "^7.15.0",
     "jest": "^26.6.3",
     "jest-puppeteer": "^5.0.4",
+    "node": "^16.6.1",
     "ts-jest": "^26.5.5",
     "vite": "^2.4.3",
     "vue": "^3.1.5",
