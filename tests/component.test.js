@@ -305,3 +305,24 @@ test('Guarantee that the v-model number modifier always returns a float number e
   expect(updates[updates.length - 1][0]).toBe(8971513.15);
   expect(input.element.value).toBe('8,971,513.15');
 });
+
+test('Test if watcher correctly propagates changes made on v-model', async () => {
+  const component = mountComponent({
+    decimal: '.',
+    thousands: ',',
+    precision: 2,
+    masked: false,
+  });
+
+  await component.setProps({ modelValue: 5 });
+
+  expect(component.vm.data.formattedValue).toBe('5.00');
+
+  await component.setProps({ modelValue: 5.1 });
+
+  expect(component.vm.data.formattedValue).toBe('5.10');
+
+  await component.setProps({ modelValue: '5.13' });
+
+  expect(component.vm.data.formattedValue).toBe('5.13');
+});
