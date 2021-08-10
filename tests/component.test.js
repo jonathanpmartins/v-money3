@@ -286,3 +286,22 @@ test('Test if the v-model number modifier work correctly', async () => {
   expect(updates[updates.length - 1][0]).toBe(971513.158);
   expect(input.element.value).toBe('971,513.158');
 });
+
+test('Guarantee that the v-model number modifier always returns a float number even if masked property is true', async () => {
+  const component = mountComponent({
+    decimal: '.',
+    thousands: ',',
+    precision: 2,
+    masked: true,
+    modelModifiers: {
+      number: true,
+    },
+  });
+  const input = component.find('input');
+
+  await input.setValue('8971513.15');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates[updates.length - 1][0]).toBe(8971513.15);
+  expect(input.element.value).toBe('8,971,513.15');
+});

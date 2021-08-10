@@ -139,7 +139,7 @@ export default defineComponent({
 
     function change(evt) {
       if (props.debug) console.log('component change() -> evt.target.value', evt.target.value);
-      const value = props.masked ? evt.target.value : unformat(evt.target.value, props, 'component change');
+      const value = props.masked && !props.modelModifiers.number ? evt.target.value : unformat(evt.target.value, props, 'component change');
       if (props.debug) console.log('component change() -> update:model-value', value);
       emit('update:model-value', value);
     }
