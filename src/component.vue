@@ -48,6 +48,11 @@ export default defineComponent({
       type: [Number, String, undefined, null],
       default: null,
     },
+    modelModifiers: {
+      required: false,
+      type: Object,
+      default: () => ({ number: false }),
+    },
     masked: {
       type: Boolean,
       default: false,

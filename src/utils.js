@@ -143,11 +143,15 @@ function unformat(input, opt = defaults, caller) {
     currency = opt.min;
   }
 
-  const output = Number(currency).toFixed(fixed(opt.precision));
+  let output = Number(currency).toFixed(fixed(opt.precision));
+
+  if (opt.modelModifiers && opt.modelModifiers.number) {
+    output = parseFloat(output);
+  }
 
   if (opt.debug) console.log('utils unformat() - output', output);
 
-  return parseFloat(output);
+  return output;
 }
 
 function setCursor(el, position) {
