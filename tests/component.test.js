@@ -62,10 +62,10 @@ test('Test thousands attribute', async () => {
   for (const thousands of data) {
     const input = mountComponent({ thousands }).find('input');
 
-    await input.setValue('9999999999999');
+    await input.setValue('999999999999999');
 
     expect(input.element.value)
-      .toBe(`9${thousands}999${thousands}999${thousands}999${thousands}999.00`);
+      .toBe(`9${thousands}999${thousands}999${thousands}999${thousands}999.99`);
   }
 });
 
@@ -126,43 +126,27 @@ test('Test disable attribute', async () => {
 });
 
 test('Test min attribute', async () => {
-  const min = 10;
+  for (const min of [10, -10, -100]) {
+    const input = mountComponent({ min }).find('input');
 
-  const input = mountComponent({ min }).find('input');
+    await input.setValue((min - 1.01).toFixed(2));
+    expect(input.element.value).toBe(min.toFixed(2));
 
-  await input.setValue('11.00');
-
-  expect(input.element.value).toBe('11.00');
-
-  await input.setValue('9.00');
-
-  expect(input.element.value).toBe('10.00');
-
-  await input.setValue('9.99');
-
-  expect(input.element.value).toBe('10.00');
+    await input.setValue((min - 1).toFixed(2));
+    expect(input.element.value).toBe(min.toFixed(2));
+  }
 });
 
 test('Test max attribute', async () => {
-  const max = 10;
+  for (const max of [10, -10, -100]) {
+    const input = mountComponent({ max }).find('input');
 
-  const input = mountComponent({ max }).find('input');
+    await input.setValue((max + 1.01).toFixed(2));
+    expect(input.element.value).toBe(max.toFixed(2));
 
-  await input.setValue('9.01');
-
-  expect(input.element.value).toBe('9.01');
-
-  await input.setValue('9.99');
-
-  expect(input.element.value).toBe('9.99');
-
-  await input.setValue('11.10');
-
-  expect(input.element.value).toBe('10.00');
-
-  await input.setValue('10.01');
-
-  expect(input.element.value).toBe('10.00');
+    await input.setValue((max + 1).toFixed(2));
+    expect(input.element.value).toBe(max.toFixed(2));
+  }
 });
 
 test('Test allow-blank attribute', async () => {
@@ -325,4 +309,53 @@ test('Test if watcher correctly propagates changes made on v-model', async () =>
   await component.setProps({ modelValue: '5.13' });
 
   expect(component.vm.data.formattedValue).toBe('5.13');
+});
+
+test('Test arbitrary precision', async () => {
+  const component = mountComponent({
+    decimal: '.',
+    thousands: ',',
+    precision: 2,
+    masked: false,
+    max: 1e30,
+  });
+  const input = component.find('input');
+
+  await input.setValue('999999999999999999999.99');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates[updates.length - 1][0]).toBe('999999999999999999999.99');
+  expect(input.element.value).toBe('999,999,999,999,999,999,999.99');
+});
+
+test('Weird separators', async () => {
+  const component = mountComponent({
+    decimal: 'd',
+    thousands: 't',
+    precision: 2,
+    masked: true,
+  });
+  const input = component.find('input');
+
+  await input.setValue('123456789');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates[updates.length - 1][0]).toBe('1t234t567d89');
+  expect(input.element.value).toBe('1t234t567d89');
+});
+
+test('No decimal', async () => {
+  const component = mountComponent({
+    decimal: 'd',
+    thousands: 't',
+    precision: 0,
+    masked: true,
+  });
+  const input = component.find('input');
+
+  await input.setValue('123456789');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates[updates.length - 1][0]).toBe('123t456t789');
+  expect(input.element.value).toBe('123t456t789');
 });

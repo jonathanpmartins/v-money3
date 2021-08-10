@@ -3,15 +3,6 @@ import defaults from './options';
 const RESTRICTED_CHARACTERS = ['+', '-'];
 const RESTRICTED_OPTIONS = ['decimal', 'thousands', 'prefix', 'suffix'];
 
-function isNormalInteger(str) {
-  const n = Math.floor(Number(str));
-  return n !== Infinity && String(n) === str && n >= 0;
-}
-
-function isValidFloat(str) {
-  return (/^-?[\d]*(\.[\d]+)?$/g).test(str);
-}
-
 function between(min, n, max) {
   return Math.max(min, Math.min(n, max));
 }
@@ -22,9 +13,8 @@ function fixed(precision) {
 }
 
 function numbersToCurrency(numbers, precision) {
-  const exp = 10 ** precision;
-  const float = parseFloat(numbers) / exp;
-  return float.toFixed(fixed(precision));
+  numbers = numbers.padStart(precision + 1, '0');
+  return precision === 0 ? numbers : `${numbers.slice(0, -precision)}.${numbers.slice(-precision)}`;
 }
 
 function toStr(value) {
@@ -61,38 +51,30 @@ function format(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils format() - caller', caller);
   if (opt.debug) console.log('utils format() - input1', input);
 
-  if (input === null || input === undefined) {
-    input = 0;
+  if (input === null || typeof input === 'undefined') {
+    input = '';
+  } else if (typeof input === 'number') {
+    input = input.toFixed(fixed(opt.precision));
   }
-
-  if (opt.allowBlank && isNormalInteger(input)) {
-    input = numbersToCurrency(input, fixed(opt.precision));
+  if (input === '' && opt.allowBlank) {
+    return '';
   }
-
-  if (typeof input === 'number') {
-    input = Number(input).toFixed(fixed(opt.precision));
-  } else if (!Number.isNaN(input)) {
-    if (isNormalInteger(input)) {
-      input = Number(input).toFixed(fixed(opt.precision));
-    } else if (isValidFloat(input)) {
-      if (!caller || caller === 'component setup' || caller === 'directive mounted') {
-        input = Number(input).toFixed(fixed(opt.precision));
-      }
-    }
-  }
-
-  if (opt.debug) console.log('utils format() - input2', input);
 
   const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : '';
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
   const numbers = onlyNumbers(filtered);
+  const padded = numbers.padStart(opt.minimumNumberOfCharacters, '0');
+  input = numbersToCurrency(padded, opt.precision);
+  if (opt.debug) console.log('utils format() - input2', input);
 
-  let currency = Number(numbersToCurrency(numbers, opt.precision));
+  let currency = parseFloat(negative + input);
   if (opt.debug) console.log('utils format() - currency1', currency);
   if (currency > opt.max) {
     currency = opt.max;
+    input = Math.abs(currency).toFixed(fixed(opt.precision));
   } else if (currency < opt.min) {
     currency = opt.min;
+    input = Math.abs(currency).toFixed(fixed(opt.precision));
   }
   if (opt.debug) console.log('utils format() - currency2', currency);
 
@@ -101,17 +83,10 @@ function format(input, opt = defaults, caller) {
     return '';
   }
 
-  const parts = toStr(currency).split('.');
+  const parts = input.split('.');
 
-  if (opt.minimumNumberOfCharacters > 0) {
-    const currentLength = (`${parts[0]}`).length + (`${parts[1]}`).length;
-    const diff = opt.minimumNumberOfCharacters - currentLength;
-    if (diff > 0) {
-      for (let i = 0; i < diff; i += 1) {
-        parts[0] = `0${parts[0]}`;
-      }
-    }
-  }
+  const decimalLength = parts.length === 2 ? parts[1].length : 0;
+  parts[0].padStart(opt.minimumNumberOfCharacters - decimalLength, '0');
 
   let integer = parts[0];
   const decimal = parts[1];
@@ -131,19 +106,21 @@ function unformat(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils unformat() - caller', caller);
   if (opt.debug) console.log('utils unformat() - input', input);
 
-  const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? -1 : 1) : 1;
+  const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : '';
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
   const numbers = onlyNumbers(filtered);
-  let currency = numbersToCurrency(numbers, opt.precision);
-  currency = parseFloat(currency) * negative;
+  input = numbersToCurrency(numbers, opt.precision);
+  let currency = parseFloat(negative + input);
 
   if (currency > opt.max) {
     currency = opt.max;
+    input = Math.abs(currency).toFixed(fixed(opt.precision));
   } else if (input < opt.min) {
     currency = opt.min;
+    input = Math.abs(currency).toFixed(fixed(opt.precision));
   }
 
-  let output = Number(currency).toFixed(fixed(opt.precision));
+  let output = negative + input;
 
   if (opt.modelModifiers && opt.modelModifiers.number) {
     output = parseFloat(output);
