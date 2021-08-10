@@ -1,17 +1,44 @@
 <template>
   <div>
-    <v-money3
+    <h3>Component</h3>
+    <v-money3-component
         id="component"
         v-bind="config"
-        @update:model-value="updateValue"
-        :model-value="amount"
+        v-model.number="componentAmount"
     />
+    <div>
+      <div>
+        model: [{{ componentAmount }}]
+      </div>
+      <div>
+        typeof: [{{ typeof componentAmount }}]
+      </div>
+    </div>
+    <hr>
+    <h3>Directive</h3>
+    <input
+        id="directive"
+        v-money3-directive="config"
+        v-model.lazy="directiveAmount"
+        type="tel">
+    <div>
+      <div>
+        model: [{{ directiveAmount }}]
+      </div>
+      <div>
+        typeof: [{{ typeof directiveAmount }}]
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, defineEmit } from 'vue';
-import VMoney3 from '../../src/component.vue';
+import {
+  ref, reactive,
+} from 'vue';
+import VMoney3Component from '../../src/component.vue';
+// eslint-disable-next-line import/no-named-default
+import { default as vMoney3Directive } from '../../src/directive';
 
 function get(key, value) {
   const url = new URL(window.location.href);
@@ -19,7 +46,8 @@ function get(key, value) {
   return params.get(key) === 'empty' ? '' : params.get(key) || value;
 }
 
-const amount = ref(get('amount', 0));
+const componentAmount = ref(get('componentAmount', 0));
+const directiveAmount = ref(get('directiveAmount', 0));
 const config = reactive({
   debug: true,
   // masked: false,
@@ -35,13 +63,6 @@ const config = reactive({
   allowBlank: !!get('allowBlank', false),
   minimumNumberOfCharacters: get('minimumNumberOfCharacters', 0),
 });
-
-// eslint-disable-next-line no-unused-vars
-const emit = defineEmit(['update:modelValue']);
-
-const updateValue = (value) => {
-  amount.value = value;
-};
 
 // This starter template is using Vue 3 experimental <script setup> SFCs
 // Check out https://github.com/vuejs/rfcs/blob/master/active-rfcs/0040-script-setup.md
