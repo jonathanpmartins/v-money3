@@ -267,3 +267,22 @@ test('Test if non masked values are correctly translated', async () => {
   expect(updates[updates.length - 1][0]).toBe('5971513.15');
   expect(input.element.value).toBe('5,971,513.15');
 });
+
+test('Test if the v-model number modifier work correctly', async () => {
+  const component = mountComponent({
+    decimal: '.',
+    thousands: ',',
+    precision: 3,
+    masked: false,
+    modelModifiers: {
+      number: true,
+    },
+  });
+  const input = component.find('input');
+
+  await input.setValue('971513.158');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates[updates.length - 1][0]).toBe(971513.158);
+  expect(input.element.value).toBe('971,513.158');
+});
