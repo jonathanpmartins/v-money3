@@ -14,9 +14,11 @@ let lastKnownValue = null;
 
 const setValue = (el, opt, caller) => {
   if (lastKnownValue === el.value) {
+    if (opt.debug) console.log('directive setValue() - lastKnownValue === el.value. Stopping here...', el.value);
     return;
   }
   if (!validateRestrictedOptions(opt)) {
+    if (opt.debug) console.log('directive setValue() - validateRestrictedOptions() return false. Stopping here...', el.value);
     return;
   }
   let positionFromEnd = el.value.length - el.selectionEnd;
