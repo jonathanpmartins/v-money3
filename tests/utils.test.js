@@ -39,3 +39,16 @@ test('unformat number should strip the string', () => {
     decimal: ',',
   })).toBe('1123.45');
 });
+
+test('unformat should check for the number modifier', () => {
+  expect(unformat('R$ 1.123,45/100', {
+    ...defaults,
+    prefix: 'R$ ',
+    suffix: '/100',
+    thousands: '.',
+    decimal: ',',
+    modelModifiers: {
+      number: true,
+    },
+  })).toBe(1123.45);
+});
