@@ -264,6 +264,6 @@ test('Test if non masked values are correctly translated', async () => {
   await input.setValue('5971513.15');
 
   const updates = component.emitted()['update:model-value'];
-  expect(updates[updates.length - 1][0]).toBe(5971513.15);
+  expect(updates[updates.length - 1][0]).toBe('5971513.15');
   expect(input.element.value).toBe('5,971,513.15');
 });

@@ -37,5 +37,5 @@ test('unformat number should strip the string', () => {
     suffix: '/100',
     thousands: '.',
     decimal: ',',
-  })).toBe(1123.45);
+  })).toBe('1123.45');
 });

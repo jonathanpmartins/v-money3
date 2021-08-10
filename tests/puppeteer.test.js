@@ -93,13 +93,13 @@ describe('Puppeteer Tests', () => {
   });
 
   it('Test default integer model', async () => {
-    await page.goto(`${serverUrl}?amount=12`);
+    await page.goto(`${serverUrl}?componentAmount=12`);
 
     expect(await getValue()).toBe('12.00');
   });
 
   it('Test default float model', async () => {
-    await page.goto(`${serverUrl}?amount=12.1`);
+    await page.goto(`${serverUrl}?componentAmount=12.1`);
 
     expect(await getValue()).toBe('12.10');
   });
