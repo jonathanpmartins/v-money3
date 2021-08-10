@@ -81,7 +81,7 @@ app.directive('money3', Money3Directive)
     components: { money3: Money3Component },
     data () {
       return {
-        amount: 123.45,
+        amount: '12345.67',
         config: {
           decimal: ',',
           thousands: '.',
@@ -102,6 +102,35 @@ app.directive('money3', Money3Directive)
 </script>
 ```
 
+### Component v-model modifier ([view codesandbox](https://codesandbox.io/s/v-money3-use-as-component-forked-523de?file=/src/App.vue))
+
+`v-model` will always return a string.
+If the `masked` property is true it will be formatted, otherwise it will be a fixed string representation of a float number.
+If you need your model to be a float number use the `number` modifier. Ex.: `v-model.number="amount"`
+
+- `v-model="amount"` will return a fixed string with typeOf `string`. Ex.: "123456.78"
+- `v-model.number="amount"` will return a float number with typeOf `number`. Ex.: 123456.78
+
+```html
+<template>
+  <money3 v-model.number="amount" v-bind="config"></money3> {{ amount }}
+</template>
+
+<script>
+  import { Money3Component } from 'v-money3'
+
+  export default {
+    components: { money3: Money3Component },
+    data () {
+      return {
+        amount: 12345.67,
+        config: { ... }
+      }
+    }
+  }
+</script>
+```
+
 ### Use as directive ([view codesandbox](https://codesandbox.io/s/v-money3-use-as-directive-e7ror?file=/src/App.vue))
 Must use `v-model.lazy` to bind works properly.
 ```html
@@ -115,7 +144,7 @@ Must use `v-model.lazy` to bind works properly.
   export default {
     data () {
       return {
-        amount: 123.45,
+        amount: '12345.67',
         config: {
           decimal: ',',
           thousands: '.',
