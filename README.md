@@ -204,7 +204,7 @@ An exception will be thrown if validation fails.
 Use it directly in the browser! 
 
 ```html
-<script src="https://unpkg.com/v-money3@3.15.2/dist/v-money3.umd.js"></script>
+<script src="https://unpkg.com/v-money3@3.16.0/dist/v-money3.umd.js"></script>
 ```
 
 Take a look at issue [#15](https://github.com/jonathanpmartins/v-money3/issues/15#issuecomment-830988807) and also this [codesandbox](https://codesandbox.io/s/mystifying-paper-bpfyn?file=/index.html) working example.
@@ -236,6 +236,8 @@ console.log(formatted);
 const unformatted = unformat(formatted, config);
 console.log(unformatted);
 // output fixed string: '12345.67'
+
+/* ----------------- or ----------------- */
 
 config.modelModifiers = { number: true };
 

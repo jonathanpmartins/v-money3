@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.16.0] / 2021-08-10
+
+### Break Changes
+
+- `v-model` will always return a string. If `masked` is set to true, it will be formatted, otherwise a fixed string representation of a float number will be received. To receive a float number directly in your model use `v-model.number`. See [#27](https://github.com/jonathanpmartins/v-money3/issues/27)
+
 ## [3.15.2] / 2021-08-09
 
 ### Development improvment
@@ -231,6 +237,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.16.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.2...v3.16.0
 [3.15.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.1...v3.15.2
 [3.15.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.0...v3.15.1
 [3.15.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.14.3...v3.15.0
