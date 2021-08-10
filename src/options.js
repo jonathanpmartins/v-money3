@@ -1,6 +1,6 @@
 export default {
   debug: false,
-  masked: true,
+  masked: false,
   prefix: '',
   suffix: '',
   thousands: ',',
