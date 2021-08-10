@@ -102,14 +102,14 @@ app.directive('money3', Money3Directive)
 </script>
 ```
 
-### Component v-model modifier ([view codesandbox](https://codesandbox.io/s/v-money3-use-as-component-forked-523de?file=/src/App.vue))
+### Component v-model number modifier ([view codesandbox](https://codesandbox.io/s/v-money3-use-as-component-forked-523de?file=/src/App.vue))
 
 `v-model` will always return a string.
-If the `masked` property is true it will be formatted, otherwise it will be a fixed string representation of a float number.
+If the `masked` property is set to true it will be formatted, otherwise it will be a fixed string representation of a float number.
 If you need your model to be a float number use the `number` modifier. Ex.: `v-model.number="amount"`
 
-- `v-model="amount"` will return a fixed string with typeOf `string`. Ex.: "123456.78"
-- `v-model.number="amount"` will return a float number with typeOf `number`. Ex.: 123456.78
+- `v-model="amount"` will return a fixed string with typeof `string`. Ex.: "123456.78"
+- `v-model.number="amount"` will return a float number with typeof `number`. Ex.: 123456.78
 
 ```html
 <template>
@@ -220,7 +220,7 @@ const config = {
     prefix: 'R$ ',
     suffix: ' #',
     precision: 2,
-    masked: false /* doesn't work with directive */,
+    masked: false,
     disableNegative: false,
     disabled: false,
     min: Number.MIN_SAFE_INTEGER,
@@ -229,13 +229,19 @@ const config = {
     minimumNumberOfCharacters: 0,
 }
 
-const formatted = format(1234.56, config);
+const formatted = format(12345.67, config);
 console.log(formatted);
-// output string: 'R$ 1.234,56 #'
+// output string: 'R$ 12.345,67 #'
 
 const unformatted = unformat(formatted, config);
 console.log(unformatted);
-// output float: 1234.56
+// output fixed string: '12345.67'
+
+config.modelModifiers = { number: true };
+
+const unformatted = unformat(formatted, config);
+console.log(unformatted);
+// output float number: 12345.67
 ```
 
 ### References
