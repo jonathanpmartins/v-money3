@@ -62,10 +62,10 @@ test('Test thousands attribute', async () => {
   for (const thousands of data) {
     const input = mountComponent({ thousands }).find('input');
 
-    await input.setValue('999999999999999');
+    await input.setValue('9999999999999');
 
     expect(input.element.value)
-      .toBe(`9${thousands}999${thousands}999${thousands}999${thousands}999.99`);
+      .toBe(`9${thousands}999${thousands}999${thousands}999${thousands}999.00`);
   }
 });
 
@@ -328,6 +328,23 @@ test('Test arbitrary precision', async () => {
   expect(input.element.value).toBe('999,999,999,999,999,999,999.99');
 });
 
+test('Test arbitrary precision with decimal rounded', async () => {
+  const component = mountComponent({
+    decimal: '.',
+    thousands: ',',
+    precision: 0,
+    masked: false,
+    max: 1e30,
+  });
+  const input = component.find('input');
+
+  await input.setValue('999999999999999999999.99');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates[updates.length - 1][0]).toBe('1000000000000000000000');
+  expect(input.element.value).toBe('1,000,000,000,000,000,000,000');
+});
+
 test('Weird separators', async () => {
   const component = mountComponent({
     decimal: 'd',
@@ -337,14 +354,14 @@ test('Weird separators', async () => {
   });
   const input = component.find('input');
 
-  await input.setValue('123456789');
+  await input.setValue('1234567d89');
 
   const updates = component.emitted()['update:model-value'];
   expect(updates[updates.length - 1][0]).toBe('1t234t567d89');
   expect(input.element.value).toBe('1t234t567d89');
 });
 
-test('No decimal', async () => {
+test('Decimal values rounded when precision is 0', async () => {
   const component = mountComponent({
     decimal: 'd',
     thousands: 't',
@@ -353,9 +370,52 @@ test('No decimal', async () => {
   });
   const input = component.find('input');
 
-  await input.setValue('123456789');
+  await input.setValue('1234567.89');
 
   const updates = component.emitted()['update:model-value'];
-  expect(updates[updates.length - 1][0]).toBe('123t456t789');
-  expect(input.element.value).toBe('123t456t789');
+  expect(updates[updates.length - 1][0]).toBe('1t234t568');
+  expect(input.element.value).toBe('1t234t568');
+});
+
+test('Number type value', async () => {
+  const component = mountComponent({
+    decimal: 'd',
+    thousands: 't',
+    precision: 2,
+    masked: true,
+    modelValue: 12.1,
+    'model-value': 12.1,
+  });
+  const input = component.find('input');
+  expect(input.element.value).toBe('12d10');
+});
+
+test('Event count', async () => {
+  const component = mountComponent({
+    decimal: 'd',
+    thousands: 't',
+    precision: 2,
+  });
+  const input = component.find('input');
+
+  await input.setValue('1234');
+  await input.setValue('1234567.89');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates.length).toBe(3); // Starting 0.00 plus 2 changes
+});
+
+test('Leading zeroes', async () => {
+  const component = mountComponent({
+    decimal: 'd',
+    thousands: 't',
+    precision: 4,
+  });
+  const input = component.find('input');
+
+  await input.setValue('0.00001234');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates.length).toBe(2); // Make sure it doesn't take multiple rounds of formatting
+  expect(input.element.value).toBe('0d1234');
 });

@@ -46,10 +46,14 @@ function get(key, value) {
   return params.get(key) === 'empty' ? '' : params.get(key) || value;
 }
 
-const componentAmount = ref(get('componentAmount', 0));
+const componentAmount = ref(
+  parseInt(get('componentAmountInt'), 10)
+  || parseFloat(get('componentAmountFloat'))
+  || get('componentAmount', 0),
+);
 const directiveAmount = ref(get('directiveAmount', 0));
 const config = reactive({
-  debug: true,
+  debug: !!get('debug', false),
   // masked: false,
   prefix: get('prefix', ''),
   suffix: get('suffix', ''),

@@ -55,6 +55,29 @@ function format(input, opt = defaults, caller) {
     input = '';
   } else if (typeof input === 'number') {
     input = input.toFixed(fixed(opt.precision));
+  } else if (opt.precision > 0 && !input.includes('.') && !input.includes(opt.decimal)) {
+    // Integer string, append 0 decimal
+    input += `.${'0'.repeat(opt.precision)}`;
+  } else if (opt.precision === 0 && input.includes('.')) {
+    // Someone entered a decimal when it's not allowed, round
+    // it instead of treating the decimal as part of the number
+    const decimalIndex = input.indexOf('.');
+    // Rounding is a bit difficult with strings, might be worth redoing this with BigInt
+    let currentIndex = decimalIndex - 1;
+    let rounded = '';
+    if (['5', '6', '7', '8', '9'].indexOf(input[decimalIndex + 1]) !== false) {
+      for (; input[currentIndex] === '9' && currentIndex >= 0; currentIndex -= 1) {
+        rounded = `0${rounded}`;
+      }
+      if (currentIndex === -1) {
+        rounded = `1${rounded}`;
+        currentIndex = 0;
+      } else {
+        rounded = (parseInt(input[currentIndex], 10) + 1) + rounded;
+      }
+    }
+    rounded = input.slice(0, currentIndex) + rounded;
+    input = rounded;
   }
   if (input === '' && opt.allowBlank) {
     return '';
@@ -62,8 +85,15 @@ function format(input, opt = defaults, caller) {
 
   const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : '';
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
-  const numbers = onlyNumbers(filtered);
+  let numbers = onlyNumbers(filtered);
+
+  // Trim leading zeroes
+  let trimIndex = 0;
+  for (; numbers[trimIndex] === '0'; trimIndex += 1);
+  numbers = numbers.slice(trimIndex);
+  // Pad zeroes
   const padded = numbers.padStart(opt.minimumNumberOfCharacters, '0');
+
   input = numbersToCurrency(padded, opt.precision);
   if (opt.debug) console.log('utils format() - input2', input);
 

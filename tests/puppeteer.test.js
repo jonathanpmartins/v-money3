@@ -7,6 +7,7 @@ describe('Puppeteer Tests', () => {
 
   beforeAll(async () => {
     jest.setTimeout(60000);
+    page.on('console', (message) => console.log(`DEBUG: ${message.text()}`));
   });
 
   async function getValue() {
@@ -93,15 +94,21 @@ describe('Puppeteer Tests', () => {
   });
 
   it('Test default integer model', async () => {
-    await page.goto(`${serverUrl}?componentAmount=12`);
+    await page.goto(`${serverUrl}?componentAmountInt=12`);
 
     expect(await getValue()).toBe('12.00');
   });
 
   it('Test default float model', async () => {
-    await page.goto(`${serverUrl}?componentAmount=12.1`);
+    await page.goto(`${serverUrl}?componentAmountFloat=12.1`);
 
     expect(await getValue()).toBe('12.10');
+  });
+
+  it('Test default string model', async () => {
+    await page.goto(`${serverUrl}?componentAmount=12.1`);
+
+    expect(await getValue()).toBe('1.21');
   });
 
   it('Test disable-negative attribute', async () => {
@@ -262,5 +269,32 @@ describe('Puppeteer Tests', () => {
     await page.keyboard.press('+');
 
     expect(await getValue()).toBe('1,234,567.89');
+  });
+
+  it('Test allowBlank still allows zero value', async () => {
+    await page.goto(`${serverUrl}?allowBlank=true`);
+
+    await page.focus('#component');
+
+    expect(await getValue()).toBe('');
+
+    await page.type('#component', '0');
+
+    expect(await getValue()).toBe('0.00');
+  });
+
+  it('Test allowBlank edge case', async () => {
+    // Weird edge case with allowBlank and integer detection.
+    // Should be fixed somehow and this test should be updated.
+
+    await page.goto(`${serverUrl}?allowBlank=true&debug=true`);
+
+    await page.focus('#component');
+
+    expect(await getValue()).toBe('');
+
+    await page.type('#component', '12');
+
+    expect(await getValue()).toBe('10.02');
   });
 });
