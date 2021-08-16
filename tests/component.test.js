@@ -340,9 +340,15 @@ test('Test arbitrary precision with decimal rounded', async () => {
 
   await input.setValue('999999999999999999999.99');
 
-  const updates = component.emitted()['update:model-value'];
+  let updates = component.emitted()['update:model-value'];
   expect(updates[updates.length - 1][0]).toBe('1000000000000000000000');
   expect(input.element.value).toBe('1,000,000,000,000,000,000,000');
+
+  await input.setValue('1999999999999999999999.99');
+
+  updates = component.emitted()['update:model-value'];
+  expect(updates[updates.length - 1][0]).toBe('2000000000000000000000');
+  expect(input.element.value).toBe('2,000,000,000,000,000,000,000');
 });
 
 test('Weird separators', async () => {

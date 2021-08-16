@@ -65,7 +65,7 @@ const config = reactive({
   min: Number(get('min', Number.MIN_SAFE_INTEGER)),
   max: Number(get('max', Number.MAX_SAFE_INTEGER)),
   allowBlank: !!get('allowBlank', false),
-  minimumNumberOfCharacters: get('minimumNumberOfCharacters', 0),
+  minimumNumberOfCharacters: Number(get('minimumNumberOfCharacters', 0)),
 });
 
 // This starter template is using Vue 3 experimental <script setup> SFCs
