@@ -97,7 +97,8 @@ function format(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils format() - currency2', currency);
 
   currency = currency.toFixed(fixed(opt.precision));
-  if (currency === '0.00' && opt.allowBlank) {
+  // test if it is zero 0, or 0.0 or 0.00 and so on...
+  if ((/^0(\.0+)?$/g).test(currency) && opt.allowBlank) {
     return '';
   }
 
