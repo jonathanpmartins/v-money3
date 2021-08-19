@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.16.1] / 2021-08-10
+
+### Fix
+
+- Fixing problem with `allow-blank` option that did not work on precision other than 2.
+
 ## [3.16.0] / 2021-08-10
 
 ### Break Changes
@@ -237,6 +243,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.16.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.16.0...v3.16.1
 [3.16.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.2...v3.16.0
 [3.15.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.1...v3.15.2
 [3.15.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.0...v3.15.1
