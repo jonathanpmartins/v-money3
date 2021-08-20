@@ -206,6 +206,32 @@ describe('Puppeteer Tests', () => {
     expect(await getValue()).toBe('');
   });
 
+  it('Test if allow-blank works on all precisions', async () => {
+    const number = '123456';
+    const maxPrecision = 6;
+
+    for (let i = 0; i < maxPrecision; i += 1) {
+      await page.goto(`${serverUrl}?allowBlank=true&thousands=empty&precision=${i}`);
+
+      expect(await getValue()).toBe('');
+
+      await page.focus('#component');
+      await page.type('#component', number);
+
+      const value = await getValue();
+
+      const toBe = (number / (10 ** i)).toFixed(i);
+
+      expect(value).toBe(`${toBe}`);
+
+      for (let l = 0; l < number.length; l += 1) {
+        await page.keyboard.press('Backspace', { delay: 50 });
+      }
+
+      expect(await getValue()).toBe('');
+    }
+  });
+
   it('Test minimum-number-of-characters attribute', async () => {
     await page.goto(`${serverUrl}?minimumNumberOfCharacters=8`);
 
