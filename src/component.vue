@@ -98,11 +98,11 @@ export default defineComponent({
       default: false,
     },
     max: {
-      type: Number,
+      type: String,
       default: () => defaults.max,
     },
     min: {
-      type: Number,
+      type: String,
       default: () => defaults.min,
     },
     allowBlank: {

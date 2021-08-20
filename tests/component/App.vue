@@ -4,7 +4,7 @@
     <v-money3-component
         id="component"
         v-bind="config"
-        v-model.number="componentAmount"
+        v-model="componentAmount"
     />
     <div>
       <div>
@@ -50,7 +50,7 @@ function get(key, value) {
 const componentAmount = ref(get('componentAmount', 0));
 const directiveAmount = ref(get('directiveAmount', 0));
 const config = reactive({
-  debug: true,
+  debug: !!get('debug', false),
   // masked: false,
   prefix: get('prefix', ''),
   suffix: get('suffix', ''),
@@ -59,8 +59,8 @@ const config = reactive({
   precision: Number(get('precision', 2)),
   disableNegative: !!get('disableNegative', false),
   disabled: !!get('disabled', false),
-  min: Number(get('min', Number.MIN_SAFE_INTEGER)),
-  max: Number(get('max', Number.MAX_SAFE_INTEGER)),
+  min: get('min', `${Number.MIN_SAFE_INTEGER}`),
+  max: get('max', `${Number.MAX_SAFE_INTEGER}`),
   allowBlank: !!get('allowBlank', false),
   minimumNumberOfCharacters: get('minimumNumberOfCharacters', 0),
 });
