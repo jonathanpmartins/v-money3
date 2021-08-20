@@ -17,10 +17,11 @@
     <hr>
     <h3>Directive</h3>
     <input
-        id="directive"
-        v-money3-directive="config"
-        v-model.lazy="directiveAmount"
-        type="tel">
+      id="directive"
+      v-money3-directive="config"
+      :value="directiveAmount"
+      @change="directiveAmount = $event.target.value"
+      type="tel">
     <div>
       <div>
         model: [{{ directiveAmount }}]
