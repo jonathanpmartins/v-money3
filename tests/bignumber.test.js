@@ -15,6 +15,11 @@ test('test getDecimalPrecision function', () => {
 test('test setNumber function', () => {
   const number = new BigNumber('0');
 
+  number.setNumber('0.00');
+
+  expect(number.getNumber()).toBe(0n);
+  expect(number.getDecimalPrecision()).toBe(2);
+
   number.setNumber(12n);
 
   expect(number.getNumber()).toBe(12n);
@@ -104,6 +109,13 @@ test('test toString function', () => {
     { number: 2n, target: '2' },
     { number: '-00.11', target: '-0.11' },
     { number: '000111234567.8912345678989123456789', target: '111234567.8912345678989123456789' },
+    { number: '1.00', target: '1.00' },
+    { number: '0.11', target: '0.11' },
+    { number: '0.01', target: '0.01' },
+    { number: '0.00', target: '0.00' },
+    { number: '1.00', target: '1.00' },
+    { number: '123.00', target: '123.00' },
+    { number: '123.45', target: '123.45' },
   ];
 
   for (const item of array) {

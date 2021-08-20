@@ -26,12 +26,12 @@ class BigNumber {
   }
 
   setupString(number) {
-    number = BigNumber.removeLeadingZeros(number);
+    number = this.constructor.removeLeadingZeros(number);
 
-    if (BigNumber.isValidInteger(number)) {
+    if (this.constructor.isValidInteger(number)) {
       this.number = BigInt(number);
-    } else if (BigNumber.isValidFloat(number)) {
-      this.decimal = BigNumber.guessFloatPrecision(number);
+    } else if (this.constructor.isValidFloat(number)) {
+      this.decimal = this.constructor.guessFloatPrecision(number);
       this.number = BigInt(number.replace('.', ''));
     } else {
       throw new Error(`BigNumber has received and invalid format for the constructor: ${number}`);
@@ -64,11 +64,10 @@ class BigNumber {
         string = string.substring(1);
         isNegative = true;
       }
-
+      string = string.padStart(string.length + this.decimal, '0');
       string = `${string.slice(0, -this.decimal)}.${string.slice(-this.decimal)}`;
-      if (string.charAt(0) === '.') {
-        string = `0${string}`;
-      }
+      string = this.constructor.removeLeadingZeros(string);
+
       return (isNegative ? '-' : '') + string;
     }
     return string;
