@@ -1,12 +1,14 @@
 class BigNumber {
   constructor(number) {
-    console.log('BigNumber.constructor', number);
-    console.log('BigNumber.constructor typeof', typeof number);
-
     this.setNumber(number);
+  }
 
-    console.log('BigNumber.decimal', this.decimal);
-    console.log('BigNumber.number', this.number);
+  getNumber() {
+    return this.number;
+  }
+
+  getDecimalPrecision() {
+    return this.decimal;
   }
 
   setNumber(number) {
@@ -36,59 +38,55 @@ class BigNumber {
     }
   }
 
-  getNumber() {
-    return this.number;
-  }
-
-  getDecimalPrecision() {
-    return this.decimal;
-  }
-
-  toString() {
-    // Number(15).toFixed()
-    let string = this.number.toString();
-    // console.log('BigNumber.toString() - string1', string);
-    if (this.decimal) {
-      let isNegative = false;
-      if (string.charAt(0) === '-') {
-        string = string.substring(1);
-        isNegative = true;
-        // console.log('BigNumber.toString() - isNegative!!!!!!!!!!!!');
-      }
-      // string = string.charAt(0) === '-' ? string.substring(1) : string;
-
-      string = `${string.slice(0, -this.decimal)}.${string.slice(-this.decimal)}`;
-      if (string.charAt(0) === '.') {
-        string = `0${string}`;
-      }
-      // console.log('BigNumber.toString() - sliced', sliced);
-      return (isNegative ? '-' : '') + string;
-    }
-    // console.log('BigNumber.toString() - string2', string);
-    return string;
-  }
-
-  toFixed(integer) {
-    // console.log('BigNumber.toFixed() - integer', integer);
+  toFixed(fractionDigits = 0) {
     let string = this.toString();
-    const diff = integer - this.getDecimalPrecision();
-    // console.log('BigNumber.toFixed() - diff', diff);
+    const diff = fractionDigits - this.getDecimalPrecision();
     // diff bigger than zero pads zeros at the end
     if (diff > 0) {
       // if it is an integer, add a dot
       if (!string.includes('.')) {
         string += '.';
       }
-      // console.log('BigNumber.toFixed() - string diff > 0', string.padEnd(string.length + diff, '0'));
       return string.padEnd(string.length + diff, '0');
     }
     // diff smaller than zero need to be sliced
     if (diff < 0) {
-      // console.log('BigNumber.toFixed() - string string < 0', string.slice(diff));
-      return string.slice(diff);
+      return string.slice(0, diff);
     }
-    // console.log('BigNumber.toFixed() - string == ??', string);
     return string;
+  }
+
+  toString() {
+    let string = this.number.toString();
+    if (this.decimal) {
+      let isNegative = false;
+      if (string.charAt(0) === '-') {
+        string = string.substring(1);
+        isNegative = true;
+      }
+
+      string = `${string.slice(0, -this.decimal)}.${string.slice(-this.decimal)}`;
+      if (string.charAt(0) === '.') {
+        string = `0${string}`;
+      }
+      return (isNegative ? '-' : '') + string;
+    }
+    return string;
+  }
+
+  lessThan(thatBigNumber) {
+    const numbers = this.adjustComparisonNumbers(thatBigNumber);
+    return numbers[0] < numbers[1];
+  }
+
+  biggerThan(thatBigNumber) {
+    const numbers = this.adjustComparisonNumbers(thatBigNumber);
+    return numbers[0] > numbers[1];
+  }
+
+  isEqual(thatBigNumber) {
+    const numbers = this.adjustComparisonNumbers(thatBigNumber);
+    return numbers[0] === numbers[1];
   }
 
   adjustComparisonNumbers(thatNumber) {
@@ -104,10 +102,8 @@ class BigNumber {
     if (diff > 0) {
       thisNum = this.getNumber();
       thatNum = thatNumber.getNumber() * (10n ** BigInt(diff));
-      // console.log('BigNumber.adjustComparisonNumbers() - thatNumber.getNumber()', thatNumber.getNumber());
-      // console.log('BigNumber.adjustComparisonNumbers() - thatNum', thatNum);
     } else if (diff < 0) {
-      thisNum = this.getNumber() * (10n ** BigInt(diff));
+      thisNum = this.getNumber() * (10n ** BigInt(diff * -1));
       thatNum = thatNumber.getNumber();
     } else {
       thisNum = this.getNumber();
@@ -115,31 +111,6 @@ class BigNumber {
     }
 
     return [thisNum, thatNum];
-  }
-
-  lessThan(thatBigNumber) {
-    const numbers = this.adjustComparisonNumbers(thatBigNumber);
-    // console.log('BigNumber.lessThan() number 0', numbers[0]);
-    // console.log('BigNumber.lessThan() number 0 typeof', typeof numbers[0]);
-    // console.log('BigNumber.lessThan() number 1', numbers[1]);
-    // console.log('BigNumber.lessThan() number 1 typeof', typeof numbers[1]);
-    // console.log('BigNumber.lessThan() result', numbers[0] < numbers[1]);
-    return numbers[0] < numbers[1];
-  }
-
-  biggerThan(thatBigNumber) {
-    const numbers = this.adjustComparisonNumbers(thatBigNumber);
-    // console.log('BigNumber.biggerThan() number 0', numbers[0]);
-    // console.log('BigNumber.biggerThan() number 0 typeof', typeof numbers[0]);
-    // console.log('BigNumber.biggerThan() number 1', numbers[1]);
-    // console.log('BigNumber.biggerThan() number 1 typeof', typeof numbers[1]);
-    // console.log('BigNumber.biggerThan() result', numbers[0] > numbers[1]);
-    return numbers[0] > numbers[1];
-  }
-
-  isEqual(thatBigNumber) {
-    const numbers = this.adjustComparisonNumbers(thatBigNumber);
-    return numbers[0] === numbers[1];
   }
 
   static guessFloatPrecision(string) {
@@ -157,7 +128,7 @@ class BigNumber {
   }
 
   static isValidFloat(str) {
-    return (/^-?[\d]+(\.[\d]+)?$/g).test(str);
+    return (/^-?[\d]+(\.[\d]+)$/g).test(str);
   }
 }
 
