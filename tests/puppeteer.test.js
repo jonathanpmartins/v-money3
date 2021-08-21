@@ -95,11 +95,27 @@ describe('Puppeteer Tests', () => {
   it('Test default integer model', async () => {
     await page.goto(`${serverUrl}?componentAmount=12`);
 
+    expect(await getValue()).toBe('0.12');
+
+    await page.goto(`${serverUrl}?componentAmount=12.00`);
+
     expect(await getValue()).toBe('12.00');
+
+    await page.goto(`${serverUrl}?componentAmount=12&useModelNumberDirective=true`);
+
+    expect(await getValue()).toBe('12.00');
+
+    await page.goto(`${serverUrl}?componentAmount=12.1&useModelNumberDirective=true`);
+
+    expect(await getValue()).toBe('12.10');
   });
 
   it('Test default float model', async () => {
     await page.goto(`${serverUrl}?componentAmount=12.1`);
+
+    expect(await getValue()).toBe('1.21');
+
+    await page.goto(`${serverUrl}?componentAmount=12.1&useModelNumberDirective=true`);
 
     expect(await getValue()).toBe('12.10');
   });

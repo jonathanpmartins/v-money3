@@ -27,7 +27,9 @@ import {
 } from 'vue';
 import Money3Directive from './directive';
 import defaults from './options';
-import { format, unformat, validateRestrictedInput } from './utils';
+import {
+  fixed, format, unformat, validateRestrictedInput,
+} from './utils';
 
 export default defineComponent({
   inheritAttrs: false,
@@ -120,8 +122,16 @@ export default defineComponent({
   setup(props, { emit, attrs }) {
     if (props.debug) console.log('component setup()', props);
 
+    console.log('component setup()', props);
+
+    const modelValue = props.modelModifiers && props.modelModifiers.number
+      ? Number(props.modelValue).toFixed(fixed(props.precision))
+      : props.modelValue;
+
+    console.log('modelValue', modelValue);
+
     const data = reactive({
-      formattedValue: format(props.modelValue, props, 'component setup'),
+      formattedValue: format(modelValue, props, 'component setup'),
     });
 
     if (props.debug) console.log('component setup() - data.formattedValue', data.formattedValue);

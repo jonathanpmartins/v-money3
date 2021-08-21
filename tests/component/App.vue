@@ -2,6 +2,13 @@
   <div>
     <h3>Component</h3>
     <v-money3-component
+        v-if="useModelNumberDirective"
+        id="component"
+        v-bind="config"
+        v-model.number="componentAmount"
+    />
+    <v-money3-component
+        v-else
         id="component"
         v-bind="config"
         v-model="componentAmount"
@@ -49,6 +56,7 @@ function get(key, value) {
 
 const componentAmount = ref(get('componentAmount', 0));
 const directiveAmount = ref(get('directiveAmount', 0));
+const useModelNumberDirective = ref(!!get('useModelNumberDirective', false));
 const config = reactive({
   debug: !!get('debug', false),
   // masked: false,

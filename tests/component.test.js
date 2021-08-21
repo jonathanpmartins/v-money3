@@ -60,7 +60,7 @@ test('Test thousands attribute', async () => {
   const data = ['.', '|', '#', ';'];
 
   for (const thousands of data) {
-    const input = mountComponent({ thousands }).find('input');
+    const input = mountComponent({ thousands, modelModifiers: { number: true } }).find('input');
 
     await input.setValue('9999999999999');
 

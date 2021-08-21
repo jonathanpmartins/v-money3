@@ -56,9 +56,9 @@ export default {
       const backspacePressed = e.code === 'Backspace' || e.code === 'Delete';
       const isAtEndPosition = (el.value.length - el.selectionEnd) === 0;
 
+      if (opt.debug) console.log('directive onkeydown() - el.value', el.value);
       if (opt.debug) console.log('directive onkeydown() - backspacePressed', backspacePressed);
       if (opt.debug) console.log('directive onkeydown() - isAtEndPosition', isAtEndPosition);
-      if (opt.debug) console.log('directive onkeydown() - unformat el.valuee', el.value);
 
       if (opt.allowBlank
           && backspacePressed

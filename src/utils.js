@@ -101,7 +101,6 @@ function format(input, opt = defaults, caller) {
   integer = addThousandSeparator(integer, opt.thousands);
 
   const output = opt.prefix
-      // + negative
       + joinIntegerAndDecimal(integer, decimal, opt.decimal)
       + opt.suffix;
 
@@ -111,26 +110,17 @@ function format(input, opt = defaults, caller) {
 }
 
 function unformat(input, opt = defaults, caller) {
-  console.log('utils unformat() - caller', caller);
-  console.log('utils unformat() - input', input);
+  if (opt.debug) console.log('utils unformat() - caller', caller);
+  if (opt.debug) console.log('utils unformat() - input', input);
 
   const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');
-  // const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? -1 : 1) : 1;
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
-
-  console.log('utils unformat() - filtered', filtered);
+  if (opt.debug) console.log('utils unformat() - filtered', filtered);
   const numbers = onlyNumbers(filtered);
-  console.log('utils unformat() - numbers', numbers);
-  console.log('utils unformat() - opt', opt);
-  console.log('utils unformat() - opt.precision', opt.precision);
+  if (opt.debug) console.log('utils unformat() - numbers', numbers);
+  const bigNumber = new BigNumber(negative + numbersToCurrency(numbers, opt.precision));
 
-  // await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  const numbersToCCCC = numbersToCurrency(numbers, opt.precision);
-
-  console.log('utils unformat() - numbersToCCCC', numbersToCCCC);
-
-  const bigNumber = new BigNumber(negative + numbersToCCCC);
+  if (opt.debug) console.log('utils unformat() - bigNumber1', numbers.toString());
 
   /// min and max must be a valid float or integer
   if (bigNumber.biggerThan(opt.max)) {
