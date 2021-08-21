@@ -55,12 +55,24 @@ export default {
     el.onkeydown = (e) => {
       const backspacePressed = e.code === 'Backspace' || e.code === 'Delete';
       const isAtEndPosition = (el.value.length - el.selectionEnd) === 0;
-      if (opt.allowBlank && backspacePressed && isAtEndPosition && (unformat(el.value, 0) === 0)) {
+
+      if (opt.debug) console.log('directive onkeydown() - backspacePressed', backspacePressed);
+      if (opt.debug) console.log('directive onkeydown() - isAtEndPosition', isAtEndPosition);
+      if (opt.debug) console.log('directive onkeydown() - unformat el.valuee', el.value);
+
+      if (opt.allowBlank
+          && backspacePressed
+          && isAtEndPosition
+          && unformat(el.value, opt) === 0
+      ) {
+        if (opt.debug) console.log('directive onkeydown() - set el.value = ""', el.value);
         el.value = '';
         el.dispatchEvent(event('change')); // v-model.lazy
       }
 
+      if (opt.debug) console.log('directive onkeydown() - e.key', e.key);
       if (e.key === '+') {
+        if (opt.debug) console.log('directive onkeydown() - unformat el.value', el.value);
         const number = unformat(el.value, opt);
         if (number < 0) {
           el.value = number * -1;
@@ -69,8 +81,10 @@ export default {
     };
 
     el.oninput = () => {
+      if (opt.debug) console.log('directive oninput()', el.value);
       if (/^[1-9]$/.test(el.value)) {
         el.value = numbersToCurrency(el.value, fixed(opt.precision));
+        if (opt.debug) console.log('directive oninput() - is 1-9', el.value);
       }
       setValue(el, opt, 'directive oninput');
     };

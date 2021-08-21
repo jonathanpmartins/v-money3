@@ -66,6 +66,9 @@ test('Test thousands attribute', async () => {
 
     expect(input.element.value)
       .toBe(`9${thousands}999${thousands}999${thousands}999${thousands}999.00`);
+
+    // .toBe(`99${thousands}999${thousands}999${thousands}999.99`);
+    // the line above make the test pass, but it is wrong... should be and integer?!
   }
 });
 
@@ -126,7 +129,7 @@ test('Test disable attribute', async () => {
 });
 
 test('Test min attribute', async () => {
-  const min = 10;
+  const min = '10';
 
   const input = mountComponent({ min }).find('input');
 
@@ -144,7 +147,7 @@ test('Test min attribute', async () => {
 });
 
 test('Test max attribute', async () => {
-  const max = 10;
+  const max = '10';
 
   const input = mountComponent({ max }).find('input');
 

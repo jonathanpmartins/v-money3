@@ -16,12 +16,12 @@
     </div>
     <hr>
     <h3>Directive</h3>
-    <input
-      id="directive"
-      v-money3-directive="config"
-      :value="directiveAmount"
-      @change="directiveAmount = $event.target.value"
-      type="tel">
+<!--    <input-->
+<!--      id="directive"-->
+<!--      v-money3-directive="config"-->
+<!--      :value="directiveAmount"-->
+<!--      @change="directiveAmount = $event.target.value"-->
+<!--      type="tel">-->
     <div>
       <div>
         model: [{{ directiveAmount }}]

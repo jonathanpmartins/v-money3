@@ -15,6 +15,7 @@ function fixed(precision) {
 
 function numbersToCurrency(numbers, precision) {
   numbers = numbers.padStart(precision + 1, '0');
+  // numbers = numbers.padStart((`${numbers}`).length + precision, '0'); // !
   if (precision === 0) {
     return numbers;
   }
@@ -64,30 +65,9 @@ function format(input, opt = defaults, caller) {
     input = input.toFixed(fixed(opt.precision));
   }
 
-  // else if (isValidFloat(input)) {
-  //   // it can
-  //   input = Number(input).toFixed(fixed(opt.precision));
-  // }
-
-  // if (opt.allowBlank && isNormalInteger(input)) {
-  //   input = numbersToCurrency(input, fixed(opt.precision));
-  // }
-
-  // if (typeof input === 'number') {
-  //   input = Number(input).toFixed(fixed(opt.precision));
-  // } else if (!Number.isNaN(input)) {
-  //   if (isNormalInteger(input)) {
-  //     input = Number(input).toFixed(fixed(opt.precision));
-  //   } else if (isValidFloat(input)) {
-  //     if (!caller || caller === 'component setup' || caller === 'directive mounted') {
-  //       input = Number(input).toFixed(fixed(opt.precision));
-  //     }
-  //   }
-  // }
-
   if (opt.debug) console.log('utils format() - input2', input);
 
-  const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? '-' : '') : '';
+  const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
   const numbers = onlyNumbers(filtered);
 
@@ -116,16 +96,6 @@ function format(input, opt = defaults, caller) {
   const decimalLength = parts.length === 2 ? parts[1].length : 0;
   parts[0] = parts[0].padStart(opt.minimumNumberOfCharacters - decimalLength, '0');
 
-  // if (opt.minimumNumberOfCharacters > 0) {
-  //   const currentLength = (`${parts[0]}`).length + (`${parts[1]}`).length;
-  //   const diff = opt.minimumNumberOfCharacters - currentLength;
-  //   if (diff > 0) {
-  //     for (let i = 0; i < diff; i += 1) {
-  //       parts[0] = `0${parts[0]}`;
-  //     }
-  //   }
-  // }
-
   let integer = parts[0];
   const decimal = parts[1];
   integer = addThousandSeparator(integer, opt.thousands);
@@ -141,23 +111,35 @@ function format(input, opt = defaults, caller) {
 }
 
 function unformat(input, opt = defaults, caller) {
-  if (opt.debug) console.log('utils unformat() - caller', caller);
-  if (opt.debug) console.log('utils unformat() - input', input);
+  console.log('utils unformat() - caller', caller);
+  console.log('utils unformat() - input', input);
 
-  const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? -1 : 1) : 1;
+  const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');
+  // const negative = (!opt.disableNegative) ? (input.indexOf('-') >= 0 ? -1 : 1) : 1;
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
+
+  console.log('utils unformat() - filtered', filtered);
   const numbers = onlyNumbers(filtered);
-  let currency = numbersToCurrency(numbers, opt.precision);
+  console.log('utils unformat() - numbers', numbers);
+  console.log('utils unformat() - opt', opt);
+  console.log('utils unformat() - opt.precision', opt.precision);
 
-  currency = parseFloat(currency) * negative;
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  if (currency > opt.max) {
-    currency = opt.max;
-  } else if (input < opt.min) {
-    currency = opt.min;
+  const numbersToCCCC = numbersToCurrency(numbers, opt.precision);
+
+  console.log('utils unformat() - numbersToCCCC', numbersToCCCC);
+
+  const bigNumber = new BigNumber(negative + numbersToCCCC);
+
+  /// min and max must be a valid float or integer
+  if (bigNumber.biggerThan(opt.max)) {
+    bigNumber.setNumber(opt.max);
+  } else if (bigNumber.lessThan(opt.min)) {
+    bigNumber.setNumber(opt.min);
   }
 
-  let output = Number(currency).toFixed(fixed(opt.precision));
+  let output = bigNumber.toFixed(fixed(opt.precision));
 
   if (opt.modelModifiers && opt.modelModifiers.number) {
     output = parseFloat(output);
