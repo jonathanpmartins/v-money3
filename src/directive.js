@@ -82,9 +82,12 @@ export default {
 
     el.oninput = () => {
       if (opt.debug) console.log('directive oninput()', el.value);
-      if (/^[1-9]$/.test(el.value)) {
-        el.value = numbersToCurrency(el.value, fixed(opt.precision));
-        if (opt.debug) console.log('directive oninput() - is 1-9', el.value);
+      if (opt.debug) console.log('directive oninput() !opt.modelModifiers || !opt.modelModifiers.number', !opt.modelModifiers || !opt.modelModifiers.number);
+      if (!opt.modelModifiers || !opt.modelModifiers.number) {
+        if (/^[1-9]$/.test(el.value)) {
+          el.value = numbersToCurrency(el.value, fixed(opt.precision));
+          if (opt.debug) console.log('directive oninput() - is 1-9', el.value);
+        }
       }
       setValue(el, opt, 'directive oninput');
     };

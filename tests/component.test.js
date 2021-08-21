@@ -60,15 +60,19 @@ test('Test thousands attribute', async () => {
   const data = ['.', '|', '#', ';'];
 
   for (const thousands of data) {
-    const input = mountComponent({ thousands, modelModifiers: { number: true } }).find('input');
+    const input1 = mountComponent({ thousands, modelModifiers: { number: true } }).find('input');
 
-    await input.setValue('9999999999999');
+    await input1.setValue('9999999999999');
 
-    expect(input.element.value)
+    expect(input1.element.value)
       .toBe(`9${thousands}999${thousands}999${thousands}999${thousands}999.00`);
 
-    // .toBe(`99${thousands}999${thousands}999${thousands}999.99`);
-    // the line above make the test pass, but it is wrong... should be and integer?!
+    const input2 = mountComponent({ thousands }).find('input');
+
+    await input2.setValue('9999999999999');
+
+    expect(input2.element.value)
+      .toBe(`99${thousands}999${thousands}999${thousands}999.99`);
   }
 });
 
@@ -328,4 +332,43 @@ test('Test if watcher correctly propagates changes made on v-model', async () =>
   await component.setProps({ modelValue: '5.13' });
 
   expect(component.vm.data.formattedValue).toBe('5.13');
+});
+
+test('Test default user expectations', async () => {
+  const strings = [
+    { set: '9', toBe: '0.09' },
+    { set: '99', toBe: '0.99' },
+    { set: '999', toBe: '9.99' },
+    { set: '9999', toBe: '99.99' },
+
+    { set: '9.90', toBe: '9.90' },
+    { set: '9.99', toBe: '9.99' },
+  ];
+
+  for (const item of strings) {
+    const input = mountComponent().find('input');
+
+    await input.setValue(item.set);
+
+    expect(input.element.value)
+      .toBe(item.toBe);
+  }
+
+  const numbers = [
+    { set: 9, toBe: '9.00' },
+    { set: 99, toBe: '99.00' },
+    { set: 999, toBe: '999.00' },
+    { set: 9999, toBe: '9,999.00' },
+    { set: 9.9, toBe: '9.90' },
+    { set: 9.99, toBe: '9.99' },
+  ];
+
+  for (const item of numbers) {
+    const input = mountComponent({ modelModifiers: { number: true } }).find('input');
+
+    await input.setValue(item.set);
+
+    expect(input.element.value)
+      .toBe(item.toBe);
+  }
 });

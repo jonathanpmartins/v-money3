@@ -58,11 +58,14 @@ function validateRestrictedOptions(opt) {
 function format(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils format() - caller', caller);
   if (opt.debug) console.log('utils format() - input1', input);
+  if (opt.debug) console.log('utils format() - opt', opt);
 
   if (input === null || input === undefined) {
     input = '';
   } else if (typeof input === 'number') {
     input = input.toFixed(fixed(opt.precision));
+  } else if (opt.modelModifiers && opt.modelModifiers.number) {
+    input = Number(input).toFixed(fixed(opt.precision));
   }
 
   if (opt.debug) console.log('utils format() - input2', input);

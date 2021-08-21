@@ -17,6 +17,7 @@
       allowBlank,
       minimumNumberOfCharacters,
       debug,
+      modelModifiers,
     }"
     class="v-money3" />
 </template>
@@ -122,13 +123,9 @@ export default defineComponent({
   setup(props, { emit, attrs }) {
     if (props.debug) console.log('component setup()', props);
 
-    console.log('component setup()', props);
-
     const modelValue = props.modelModifiers && props.modelModifiers.number
       ? Number(props.modelValue).toFixed(fixed(props.precision))
       : props.modelValue;
-
-    console.log('modelValue', modelValue);
 
     const data = reactive({
       formattedValue: format(modelValue, props, 'component setup'),
