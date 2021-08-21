@@ -93,7 +93,10 @@ test('format function should parse numbers and strings', () => {
   expect(format('', { ...defaults, allowBlank: true })).toBe('');
   expect(format('5', { ...defaults, allowBlank: true })).toBe('0.05');
 
-  // expect(format('6.00', { ...defaults })).toBe('6.00');
+  expect(format('6.00', { ...defaults })).toBe('6.00');
+
+  expect(format(6, { ...defaults, modelModifiers: { number: true } })).toBe('6.00');
+  expect(format(6.1, { ...defaults, modelModifiers: { number: true } })).toBe('6.10');
 });
 
 test('unformat min max options should be respected', () => {

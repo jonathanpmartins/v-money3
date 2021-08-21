@@ -144,11 +144,15 @@ export default defineComponent({
       },
     );
 
+    let lastValue = null;
     function change(evt) {
       if (props.debug) console.log('component change() -> evt.target.value', evt.target.value);
       const value = props.masked && !props.modelModifiers.number ? evt.target.value : unformat(evt.target.value, props, 'component change');
-      if (props.debug) console.log('component change() -> update:model-value', value);
-      emit('update:model-value', value);
+      if (value !== lastValue) {
+        lastValue = value;
+        if (props.debug) console.log('component change() -> update:model-value', value);
+        emit('update:model-value', value);
+      }
     }
 
     const listeners = computed(() => {

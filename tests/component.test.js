@@ -372,3 +372,79 @@ test('Test default user expectations', async () => {
       .toBe(item.toBe);
   }
 });
+
+test('Test arbitrary precision', async () => {
+  const component = mountComponent({
+    decimal: '.',
+    thousands: ',',
+    precision: 2,
+    masked: false,
+    // max: 1e30,
+  });
+  const input = component.find('input');
+
+  await input.setValue('999999999999999999999.99');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates[updates.length - 1][0]).toBe('999999999999999999999.99');
+  expect(input.element.value).toBe('999,999,999,999,999,999,999.99');
+});
+
+test('Weird separators', async () => {
+  const component = mountComponent({
+    decimal: 'd',
+    thousands: 't',
+    precision: 2,
+    masked: true,
+  });
+  const input = component.find('input');
+
+  await input.setValue('1234567d89');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates[updates.length - 1][0]).toBe('1t234t567d89');
+  expect(input.element.value).toBe('1t234t567d89');
+});
+
+test('Number type value', async () => {
+  const component = mountComponent({
+    decimal: 'd',
+    thousands: 't',
+    precision: 2,
+    masked: true,
+    modelValue: 12.1,
+    'model-value': 12.1,
+  });
+  const input = component.find('input');
+  expect(input.element.value).toBe('12d10');
+});
+
+test('Event count', async () => {
+  const component = mountComponent({
+    decimal: 'd',
+    thousands: 't',
+    precision: 2,
+  });
+  const input = component.find('input');
+
+  await input.setValue('1234');
+  await input.setValue('1234567.89');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates.length).toBe(3); // Starting 0.00 plus 2 changes
+});
+
+test('Leading zeroes', async () => {
+  const component = mountComponent({
+    decimal: 'd',
+    thousands: 't',
+    precision: 4,
+  });
+  const input = component.find('input');
+
+  await input.setValue('0.00001234');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates.length).toBe(2); // Make sure it doesn't take multiple rounds of formatting
+  expect(input.element.value).toBe('0d1234');
+});

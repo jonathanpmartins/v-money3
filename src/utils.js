@@ -15,14 +15,7 @@ function fixed(precision) {
 
 function numbersToCurrency(numbers, precision) {
   numbers = numbers.padStart(precision + 1, '0');
-  // numbers = numbers.padStart((`${numbers}`).length + precision, '0'); // !
-  if (precision === 0) {
-    return numbers;
-  }
-  return `${numbers.slice(0, -precision)}.${numbers.slice(-precision)}`;
-  // const exp = 10 ** precision;
-  // const float = parseFloat(numbers) / exp;
-  // return float.toFixed(fixed(precision));
+  return precision === 0 ? numbers : `${numbers.slice(0, -precision)}.${numbers.slice(-precision)}`;
 }
 
 function toStr(value) {
@@ -79,10 +72,15 @@ function format(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils format() - bigNumber1', bigNumber.toString());
 
   /// min and max must be a valid float or integer
-  if (bigNumber.biggerThan(opt.max)) {
-    bigNumber.setNumber(opt.max);
-  } else if (bigNumber.lessThan(opt.min)) {
-    bigNumber.setNumber(opt.min);
+  if (opt.max) {
+    if (bigNumber.biggerThan(opt.max)) {
+      bigNumber.setNumber(opt.max);
+    }
+  }
+  if (opt.min) {
+    if (bigNumber.lessThan(opt.min)) {
+      bigNumber.setNumber(opt.min);
+    }
   }
 
   const currency = bigNumber.toFixed(fixed(opt.precision));
@@ -94,7 +92,7 @@ function format(input, opt = defaults, caller) {
     return '';
   }
 
-  const parts = toStr(currency).split('.');
+  const parts = currency.split('.');
 
   const decimalLength = parts.length === 2 ? parts[1].length : 0;
   parts[0] = parts[0].padStart(opt.minimumNumberOfCharacters - decimalLength, '0');
@@ -126,10 +124,15 @@ function unformat(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils unformat() - bigNumber1', numbers.toString());
 
   /// min and max must be a valid float or integer
-  if (bigNumber.biggerThan(opt.max)) {
-    bigNumber.setNumber(opt.max);
-  } else if (bigNumber.lessThan(opt.min)) {
-    bigNumber.setNumber(opt.min);
+  if (opt.max) {
+    if (bigNumber.biggerThan(opt.max)) {
+      bigNumber.setNumber(opt.max);
+    }
+  }
+  if (opt.min) {
+    if (bigNumber.lessThan(opt.min)) {
+      bigNumber.setNumber(opt.min);
+    }
   }
 
   let output = bigNumber.toFixed(fixed(opt.precision));

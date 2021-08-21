@@ -8,8 +8,8 @@ export default {
   precision: 2,
   disableNegative: false,
   disabled: false,
-  min: `${Number.MIN_SAFE_INTEGER}`,
-  max: `${Number.MAX_SAFE_INTEGER}`,
+  min: null,
+  max: null,
   allowBlank: false,
   minimumNumberOfCharacters: 0,
 };
