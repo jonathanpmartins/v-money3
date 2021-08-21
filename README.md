@@ -14,13 +14,19 @@ Feel free to open an issue or post a pull request!
 
 ## Features
 
-- Lightweight (<3KB gzipped)
+- Lightweight (<4KB gzipped)
 - Dependency free
 - Mobile support
 - Component or Directive flavors
 - Accept copy/paste
 - Editable
 - Min / Max Limits
+
+## Arbitrary precision
+
+Arbitrary precision it's only supported with `v-model`. It expects to receive a string representation of a number. Arbitrary precision is supported by using `string` and `BigInt` with `v-model`.
+
+If you need to work with float numbers, you need to use v-model with the number modifier, or `v-model.number`. But in this case, you are stuck with numbers smaller than `2^53 - 1` or `9007199254740991` or `9,007,199,254,740,991`. Little more than nine quadrilion... See [MAX_SAFE_INTEGER](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER).
 
 ## Usage
 
