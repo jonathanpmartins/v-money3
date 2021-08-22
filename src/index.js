@@ -1,6 +1,7 @@
 import Money3Component from './component.vue';
 import Money3Directive from './directive';
-import { format, unformat } from './utils';
+import format from './format';
+import unformat from './unformat';
 
 const money = {
   install: (app) => {

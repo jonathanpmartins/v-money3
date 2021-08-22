@@ -1,12 +1,12 @@
 import {
-  format,
-  unformat,
   setCursor,
   event,
   fixed,
   numbersToCurrency,
   validateRestrictedOptions,
 } from './utils';
+import format from './format';
+import unformat from './unformat';
 import assign from './assign';
 import defaults from './options';
 

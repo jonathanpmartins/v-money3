@@ -28,9 +28,9 @@ import {
 } from 'vue';
 import Money3Directive from './directive';
 import defaults from './options';
-import {
-  fixed, format, unformat, validateRestrictedInput,
-} from './utils';
+import { fixed, validateRestrictedInput } from './utils';
+import format from './format';
+import unformat from './unformat';
 
 export default defineComponent({
   inheritAttrs: false,
