@@ -36,6 +36,11 @@ class Utils {
     if (RESTRICTED_CHARACTERS.includes(value)) {
       throw new Error(`v-money3 "${caller}" property don't accept "${value}" as a value.`);
     }
+    if (caller === 'prefix' || caller === 'suffix') {
+      if ((/\d/g).test(value)) {
+        throw new Error(`v-money3 "${caller}" property don't accept any number "${value}" as a value.`);
+      }
+    }
     return true;
   }
 

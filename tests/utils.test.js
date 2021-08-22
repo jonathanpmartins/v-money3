@@ -61,3 +61,19 @@ test('test if non restricted values pass validation in restricted options', () =
     }
   }
 });
+
+test('test if numbers on prefix and suffix throw errors', () => {
+  const callers = ['prefix', 'suffix'];
+
+  for (const caller of callers) {
+    for (let i = 0; i < 10; i += 1) {
+      const char = `$${i}#`;
+      try {
+        Utils.validateRestrictedInput(char, caller);
+      } catch (e) {
+        const itIncludes = e.message.toString().includes(`v-money3 "${caller}" property don't accept any number "${char}" as a value.`);
+        expect(itIncludes).toBe(true);
+      }
+    }
+  }
+});
