@@ -40,7 +40,8 @@ It will be interpreted as `'0.55'`. Another example: `'55.5'` => `'5.55'`.
 Arbitrary precision is supported by using `string` and `BigInt` with `v-model`.
 
 For the majority of users, it will make sense to use float numbers and stay within the
-boundaries of `Number`. If you fit this instance, you need to use `v-model`
+boundaries of [`Number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number).
+If you fit this instance, you need to use `v-model`
 with the number modifier, or `v-model.number`. But than,
 you are stuck with numbers smaller than `2^53 - 1` or
 `9007199254740991` or `9,007,199,254,740,991`.
