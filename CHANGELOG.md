@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.17.1] / 2021-08-22
+
+### Fix
+
+- Fixing a problem when using precision "0" zero with thousands "." dot. Issue [#39](https://github.com/jonathanpmartins/v-money3/issues/39).
+
 ## [3.17.0] / 2021-08-22
+
+### Refactoring
 
 - Codebase refactoring... See [AndrolGenhald](https://github.com/AndrolGenhald)
 super helpful collaboration with this [pull request](https://github.com/jonathanpmartins/v-money3/pull/34)
@@ -257,6 +265,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.17.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.0...v3.17.1
 [3.17.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.16.1...v3.17.0
 [3.16.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.16.0...v3.16.1
 [3.16.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.2...v3.16.0
