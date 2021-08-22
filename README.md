@@ -115,16 +115,16 @@ app.directive('money3', Money3Directive)
       return {
         amount: '12345.67',
         config: {
-          decimal: ',',
-          thousands: '.',
-          prefix: 'R$ ',
-          suffix: ' #',
-          precision: 2,
           masked: false,
+          prefix: '',
+          suffix: '',
+          thousands: ',',
+          decimal: '.',
+          precision: 2,
           disableNegative: false,
           disabled: false,
-          min: Number.MIN_SAFE_INTEGER,
-          max: Number.MAX_SAFE_INTEGER,
+          min: null,
+          max: null,
           allowBlank: false,
           minimumNumberOfCharacters: 0,
         }
@@ -149,7 +149,7 @@ Ex.: "123456.78"
 
 ```html
 <template>
-  <money3 v-model.number="amount" v-bind="config"></money3> {{ amount }}
+  <money3 v-model.number="amount" v-bind="config"></money3>
 </template>
 
 <script>
@@ -171,7 +171,7 @@ Ex.: "123456.78"
 Must use `v-model.lazy` to bind works properly.
 ```html
 <template>
-  <input v-model.lazy="amount" v-money3="config" /> {{ amount }}
+  <input v-model.lazy="amount" v-money3="config" />
 </template>
 
 <script>
@@ -182,24 +182,42 @@ Must use `v-model.lazy` to bind works properly.
       return {
         amount: '12345.67',
         config: {
-          decimal: ',',
-          thousands: '.',
-          prefix: 'R$ ',
-          suffix: ' #',
+          prefix: '',
+          suffix: '',
+          thousands: ',',
+          decimal: '.',
           precision: 2,
-          masked: false /* doesn't work with directive */,
           disableNegative: false,
           disabled: false,
-          min: Number.MIN_SAFE_INTEGER,
-          max: Number.MAX_SAFE_INTEGER,
+          min: null,
+          max: null,
           allowBlank: false,
           minimumNumberOfCharacters: 0,
+          modelModifiers: {
+            number: false,
+          },
         }
       }
     },
     directives: { money3: Money3Directive }
   }
 </script>
+```
+
+By default directives work with `v-model`.
+It is not possible to use `v-model.number` on directives, so, if you need
+to work with floats/integers on directives you need to configure the `number`
+modifier manually.
+
+Using config:
+```javascipt
+modelModifiers: {
+  number: true,
+}
+```
+If you bind it directly you are just fine too:
+```html
+<input :model-modifiers="{ number: true }" v-model.lazy="amount" v-money3="config" />
 ```
 
 ## Properties
@@ -251,18 +269,22 @@ Take a look at issue [#15](https://github.com/jonathanpmartins/v-money3/issues/1
 import { format, unformat } from 'v-money3';
 
 const config = {
-    decimal: ',',
-    thousands: '.',
-    prefix: 'R$ ',
-    suffix: ' #',
-    precision: 2,
+    debug: false,
     masked: false,
+    prefix: '',
+    suffix: '',
+    thousands: ',',
+    decimal: '.',
+    precision: 2,
     disableNegative: false,
     disabled: false,
-    min: Number.MIN_SAFE_INTEGER,
-    max: Number.MAX_SAFE_INTEGER,
+    min: null,
+    max: null,
     allowBlank: false,
     minimumNumberOfCharacters: 0,
+    modelModifiers: {
+        number: false,
+    },
 }
 
 const formatted = format(12345.67, config);

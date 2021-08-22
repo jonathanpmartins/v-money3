@@ -2,7 +2,7 @@
   <div>
     <h3>Component</h3>
     <v-money3-component
-        v-if="useModelNumberDirective"
+        v-if="config.modelModifiers.number"
         id="component"
         v-bind="config"
         v-model.number="componentAmount"
@@ -23,12 +23,12 @@
     </div>
     <hr>
     <h3>Directive</h3>
-<!--    <input-->
-<!--      id="directive"-->
-<!--      v-money3-directive="config"-->
-<!--      :value="directiveAmount"-->
-<!--      @change="directiveAmount = $event.target.value"-->
-<!--      type="tel">-->
+    <input
+      id="directive"
+      v-money3-directive="config"
+      :value="directiveAmount"
+      @change="directiveAmount = $event.target.value"
+      type="tel">
     <div>
       <div>
         model: [{{ directiveAmount }}]
@@ -56,7 +56,6 @@ function get(key, value) {
 
 const componentAmount = ref(get('componentAmount', 0));
 const directiveAmount = ref(get('directiveAmount', 0));
-const useModelNumberDirective = ref(!!get('useModelNumberDirective', false));
 const config = reactive({
   debug: !!get('debug', false),
   // masked: false,
@@ -71,6 +70,9 @@ const config = reactive({
   max: get('max', `${Number.MAX_SAFE_INTEGER}`),
   allowBlank: !!get('allowBlank', false),
   minimumNumberOfCharacters: get('minimumNumberOfCharacters', 0),
+  modelModifiers: {
+    number: ref(!!get('useModelNumberModifier', false)),
+  },
 });
 
 // This starter template is using Vue 3 experimental <script setup> SFCs

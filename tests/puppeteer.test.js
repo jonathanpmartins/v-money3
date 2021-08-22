@@ -14,7 +14,7 @@ describe('Puppeteer Tests', () => {
   }
 
   it('Test prefix attribute', async () => {
-    const data = ['R$ ', '$', '€', '₿', '1\\', '2\\'];
+    const data = ['R$ ', '$', '€', '₿', '\\', '@'];
 
     for (const prefix of data) {
       await page.goto(`${serverUrl}?prefix=${prefix.replaceAll(' ', '+')}`);
@@ -27,7 +27,7 @@ describe('Puppeteer Tests', () => {
   });
 
   it('Test suffix attribute', async () => {
-    const data = ['#', '%', '$', '€', '₿', '.00', '($)', '/3'];
+    const data = ['#', '%', '$', '€', '₿', '($)'];
 
     for (const suffix of data) {
       const treated = suffix
@@ -101,11 +101,11 @@ describe('Puppeteer Tests', () => {
 
     expect(await getValue()).toBe('12.00');
 
-    await page.goto(`${serverUrl}?componentAmount=12&useModelNumberDirective=true`);
+    await page.goto(`${serverUrl}?componentAmount=12&useModelNumberModifier=true`);
 
     expect(await getValue()).toBe('12.00');
 
-    await page.goto(`${serverUrl}?componentAmount=12.1&useModelNumberDirective=true`);
+    await page.goto(`${serverUrl}?componentAmount=12.1&useModelNumberModifier=true`);
 
     expect(await getValue()).toBe('12.10');
   });
@@ -115,7 +115,7 @@ describe('Puppeteer Tests', () => {
 
     expect(await getValue()).toBe('1.21');
 
-    await page.goto(`${serverUrl}?componentAmount=12.1&useModelNumberDirective=true`);
+    await page.goto(`${serverUrl}?componentAmount=12.1&useModelNumberModifier=true`);
 
     expect(await getValue()).toBe('12.10');
   });

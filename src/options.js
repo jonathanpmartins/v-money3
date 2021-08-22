@@ -12,4 +12,7 @@ export default {
   max: null,
   allowBlank: false,
   minimumNumberOfCharacters: 0,
+  modelModifiers: {
+    number: false,
+  },
 };
