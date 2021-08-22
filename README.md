@@ -8,12 +8,15 @@
 
 ## Disclaimer
 
-The old [`v-money`](https://github.com/vuejs-tips/v-money) library seems to be abandoned! Since I use it in many projects and part of then will be upgraded to Vue3, I needed it to work after the upgrades.
+The old [`v-money`](https://github.com/vuejs-tips/v-money) library seems to be abandoned!
+Since I use it in many projects and part of then will be upgraded to Vue3,
+I needed it to work after the upgrades.
 
 Feel free to open an issue or post a pull request!
 
 ## Features
 
+- Arbitrary Precision with `BigInt`
 - Lightweight (<4KB gzipped)
 - Dependency free
 - Mobile support
@@ -24,9 +27,32 @@ Feel free to open an issue or post a pull request!
 
 ## Arbitrary precision
 
-Arbitrary precision it's only supported with `v-model`. It expects to receive a string representation of a number. Arbitrary precision is supported by using `string` and `BigInt` with `v-model`.
+Arbitrary precision is only supported with `v-model`.
+It expects to receive a string representation of a number. `12345.67`
 
-If you need to work with float numbers, you need to use v-model with the number modifier, or `v-model.number`. But in this case, you are stuck with numbers smaller than `2^53 - 1` or `9007199254740991` or `9,007,199,254,740,991`. Little more than nine quadrilion... See [MAX_SAFE_INTEGER](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER).
+Some break changes where introduced in this release.
+Let's follow a train of thought:   
+If your precision is set to `2` and you set a default model value of `55`, 
+it will be interpreted as `0.55`.
+To instruct the correct format on setup, you need to pass `55.00`
+when using `v-model`. The same is true for `5.5`.
+It will be interpreted as `0.55`. Another example: `55.5` => `5.55`.  
+Arbitrary precision is supported by using `string` and `BigInt`
+with `v-model`.
+
+For the majority of users, it will make sense to use float numbers and stay within the
+boundaries of `Number`. If you fit this instance, you need to use `v-model`
+with the number modifier, or `v-model.number`. But than,
+you are stuck with numbers smaller than `2^53 - 1` or
+`9007199254740991` or `9,007,199,254,740,991`.
+Little more than nine quadrilion...
+See [MAX_SAFE_INTEGER](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER).
+
+For those who are using `v-model.number`, integers and floats are compleatly
+understood. Let's follow another train of thought:  
+If your precision is set to `2` and you set a default model value of `55`,
+it will be interpreted as `55.00`. The same is true for `5.5`.
+It will be interpreted as `5.50`. Another example: `55.5` => `5.50`.
 
 ## Usage
 
@@ -111,11 +137,15 @@ app.directive('money3', Money3Directive)
 ### Component v-model number modifier ([view codesandbox](https://codesandbox.io/s/v-money3-use-as-component-forked-523de?file=/src/App.vue))
 
 `v-model` will always return a string.
-If the `masked` property is set to true it will be formatted, otherwise it will be a fixed string representation of a float number.
-If you need your model to be a float number use the `number` modifier. Ex.: `v-model.number="amount"`
+If the `masked` property is set to true it will be formatted,
+otherwise it will be a fixed string representation of a float number.
+If you need your model to be a float number use the `number` modifier.
+Ex.: `v-model.number="amount"`
 
-- `v-model="amount"` will return a fixed string with typeof `string`. Ex.: "123456.78"
-- `v-model.number="amount"` will return a float number with typeof `number`. Ex.: 123456.78
+- `v-model="amount"` will return a fixed string with typeof `string`.
+Ex.: "123456.78"
+- `v-model.number="amount"` will return a float number with typeof
+`number`. Ex.: 123456.78
 
 ```html
 <template>
@@ -255,8 +285,3 @@ console.log(unformatted);
 ### References
 
 - https://github.com/vuejs-tips/v-money (based on `v-money`)
-- https://en.wikipedia.org/wiki/Decimal_mark
-- https://docs.oracle.com/cd/E19455-01/806-0169/overview-9/index.html
-- http://www.xe.com/symbols.php
-- https://github.com/kevinongko/vue-numeric
-- https://github.com/plentz/jquery-maskmoney
