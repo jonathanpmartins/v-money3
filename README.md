@@ -248,9 +248,16 @@ The following characters...
 - `decimal`
 - `thousands`
 - `prefix`
-- `suffix` 
+- `suffix`
+
+Number are restricted on the following properties:
+
+- `prefix`
+- `suffix`
 
 An exception will be thrown if validation fails.
+
+
 
 
 ## Don't want to use a package manager?
