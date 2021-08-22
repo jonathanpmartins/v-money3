@@ -90,10 +90,12 @@ test('test toFixed function', () => {
     { number: '1', fractionDigits: 3, target: '1.000' },
     { number: '123', fractionDigits: 2, target: '123.00' },
     { number: '111.111', fractionDigits: 2, target: '111.11' },
-    { number: '777.777', fractionDigits: 2, target: '777.77' },
+    { number: '-8888.8888', fractionDigits: 1, target: '-8888.9' },
+    { number: '777.777', fractionDigits: 2, target: '777.78' },
     { number: '123.45', fractionDigits: 3, target: '123.450' },
     { number: '-123.45', fractionDigits: 3, target: '-123.450' },
-    { number: '-8888.8888', fractionDigits: 1, target: '-8888.8' },
+    { number: '8.8888', fractionDigits: 1, target: '8.9' },
+    { number: '9.9999', fractionDigits: 2, target: '10.00' },
   ];
   for (const item of array) {
     const number = new BigNumber(item.number);
@@ -226,6 +228,46 @@ test('test adjustComparisonNumbers function', () => {
     const adjusted = number1.adjustComparisonNumbers(number2);
     expect(adjusted[0]).toBe(item.target1);
     expect(adjusted[1]).toBe(item.target2);
+  }
+});
+
+test('test replaceAt function', () => {
+  const tests = [
+    {
+      is: 'ABC', index: 0, char: 'B', target: 'BBC',
+    },
+    {
+      is: '123456', index: 1, char: '1', target: '113456',
+    },
+    {
+      is: '999', index: 2, char: '8', target: '998',
+    },
+  ];
+
+  for (const item of tests) {
+    const replaced = BigNumber.replaceAt(item.is, item.index, item.char);
+
+    expect(replaced).toBe(item.target);
+  }
+});
+
+test('test round function', () => {
+  const array = [
+    { number: '1.23', precision: 0, target: '1' },
+    { number: '1.23', precision: 1, target: '1.2' },
+    { number: '1.23', precision: 2, target: '1.23' },
+    { number: '1.23', precision: 3, target: '1.23' },
+
+    { number: '9.9999', precision: 4, target: '9.9999' },
+    { number: '9.9999', precision: 3, target: '10.000' },
+    { number: '9.9999', precision: 2, target: '10.00' },
+    { number: '9.9999', precision: 1, target: '10.0' },
+
+    { number: '-8.76543', precision: 2, target: '-8.77' },
+  ];
+  for (const item of array) {
+    const result = BigNumber.round(item.number, item.precision);
+    expect(result).toBe(item.target);
   }
 });
 

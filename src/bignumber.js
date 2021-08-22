@@ -38,9 +38,9 @@ class BigNumber {
     }
   }
 
-  toFixed(fractionDigits = 0) {
+  toFixed(precision = 0) {
     let string = this.toString();
-    const diff = fractionDigits - this.getDecimalPrecision();
+    const diff = precision - this.getDecimalPrecision();
     // diff bigger than zero pads zeros at the end
     if (diff > 0) {
       // if it is an integer, add a dot
@@ -49,9 +49,9 @@ class BigNumber {
       }
       return string.padEnd(string.length + diff, '0');
     }
-    // diff smaller than zero need to be sliced
+    // diff smaller than zero need to be sliced and rounded
     if (diff < 0) {
-      return string.slice(0, diff);
+      return this.constructor.round(string, precision);
     }
     return string;
   }
@@ -110,6 +110,42 @@ class BigNumber {
     }
 
     return [thisNum, thatNum];
+  }
+
+  static replaceAt(str, index, chr) {
+    if (index > str.length - 1) return str;
+    return str.substring(0, index) + chr + str.substring(index + 1);
+  }
+
+  static round(string, precision) {
+    const diff = precision - BigNumber.guessFloatPrecision(string);
+    if (diff >= 0) {
+      return string;
+    }
+
+    let firstPiece = string.slice(0, diff);
+    const lastPiece = string.slice(diff);
+
+    if (firstPiece.charAt(firstPiece.length - 1) === '.') {
+      firstPiece = firstPiece.slice(0, -1);
+    }
+
+    if (parseInt(lastPiece.charAt(0), 10) >= 5) {
+      for (let i = firstPiece.length - 1; i >= 0; i -= 1) {
+        const char = firstPiece.charAt(i);
+        if (char !== '.' && char !== '-') {
+          const newValue = parseInt(char, 10) + 1;
+          if (newValue < 10) {
+            return BigNumber.replaceAt(firstPiece, i, newValue);
+          }
+
+          firstPiece = BigNumber.replaceAt(firstPiece, i, '0');
+        }
+      }
+
+      return `1${firstPiece}`;
+    }
+    return firstPiece;
   }
 
   static guessFloatPrecision(string) {
