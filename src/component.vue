@@ -28,7 +28,7 @@ import {
 } from 'vue';
 import Money3Directive from './directive';
 import defaults from './options';
-import { fixed, validateRestrictedInput } from './utils';
+import Utils from './Utils';
 import format from './format';
 import unformat from './unformat';
 
@@ -68,28 +68,28 @@ export default defineComponent({
       type: String,
       default: () => defaults.decimal,
       validator(value) {
-        return validateRestrictedInput(value, 'decimal');
+        return Utils.validateRestrictedInput(value, 'decimal');
       },
     },
     thousands: {
       type: String,
       default: () => defaults.thousands,
       validator(value) {
-        return validateRestrictedInput(value, 'thousands');
+        return Utils.validateRestrictedInput(value, 'thousands');
       },
     },
     prefix: {
       type: String,
       default: () => defaults.prefix,
       validator(value) {
-        return validateRestrictedInput(value, 'prefix');
+        return Utils.validateRestrictedInput(value, 'prefix');
       },
     },
     suffix: {
       type: String,
       default: () => defaults.suffix,
       validator(value) {
-        return validateRestrictedInput(value, 'suffix');
+        return Utils.validateRestrictedInput(value, 'suffix');
       },
     },
     disableNegative: {
@@ -124,7 +124,7 @@ export default defineComponent({
     if (props.debug) console.log('component setup()', props);
 
     const modelValue = props.modelModifiers && props.modelModifiers.number
-      ? Number(props.modelValue).toFixed(fixed(props.precision))
+      ? Number(props.modelValue).toFixed(Utils.fixed(props.precision))
       : props.modelValue;
 
     const data = reactive({

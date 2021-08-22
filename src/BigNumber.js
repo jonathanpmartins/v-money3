@@ -1,5 +1,8 @@
-class BigNumber {
+import Utils from './Utils';
+
+class BigNumber extends Utils {
   constructor(number) {
+    super();
     this.setNumber(number);
   }
 
@@ -110,60 +113,6 @@ class BigNumber {
     }
 
     return [thisNum, thatNum];
-  }
-
-  static replaceAt(str, index, chr) {
-    if (index > str.length - 1) return str;
-    return str.substring(0, index) + chr + str.substring(index + 1);
-  }
-
-  static round(string, precision) {
-    const diff = precision - BigNumber.guessFloatPrecision(string);
-    if (diff >= 0) {
-      return string;
-    }
-
-    let firstPiece = string.slice(0, diff);
-    const lastPiece = string.slice(diff);
-
-    if (firstPiece.charAt(firstPiece.length - 1) === '.') {
-      firstPiece = firstPiece.slice(0, -1);
-    }
-
-    if (parseInt(lastPiece.charAt(0), 10) >= 5) {
-      for (let i = firstPiece.length - 1; i >= 0; i -= 1) {
-        const char = firstPiece.charAt(i);
-        if (char !== '.' && char !== '-') {
-          const newValue = parseInt(char, 10) + 1;
-          if (newValue < 10) {
-            return BigNumber.replaceAt(firstPiece, i, newValue);
-          }
-
-          firstPiece = BigNumber.replaceAt(firstPiece, i, '0');
-        }
-      }
-
-      return `1${firstPiece}`;
-    }
-    return firstPiece;
-  }
-
-  static guessFloatPrecision(string) {
-    const total = string.length;
-    const index = string.indexOf('.');
-    return total - (index + 1);
-  }
-
-  static removeLeadingZeros(string) {
-    return string.replace(/^(-?)0+(?!\.)(.+)/, '$1$2');
-  }
-
-  static isValidInteger(str) {
-    return (/^-?[\d]+$/g).test(str);
-  }
-
-  static isValidFloat(str) {
-    return (/^-?[\d]+(\.[\d]+)$/g).test(str);
   }
 }
 

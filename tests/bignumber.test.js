@@ -1,4 +1,4 @@
-import BigNumber from '../src/bignumber';
+import BigNumber from '../src/BigNumber';
 
 test('test getNumber function', () => {
   const number = new BigNumber('1234.567');

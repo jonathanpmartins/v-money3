@@ -1,6 +1,6 @@
 import defaults from './options';
-import BigNumber from './bignumber';
-import { fixed, numbersToCurrency, onlyNumbers } from './utils';
+import BigNumber from './BigNumber';
+import Utils from './Utils';
 
 function unformat(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils unformat() - caller', caller);
@@ -9,9 +9,9 @@ function unformat(input, opt = defaults, caller) {
   const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
   if (opt.debug) console.log('utils unformat() - filtered', filtered);
-  const numbers = onlyNumbers(filtered);
+  const numbers = Utils.onlyNumbers(filtered);
   if (opt.debug) console.log('utils unformat() - numbers', numbers);
-  const bigNumber = new BigNumber(negative + numbersToCurrency(numbers, opt.precision));
+  const bigNumber = new BigNumber(negative + Utils.numbersToCurrency(numbers, opt.precision));
 
   if (opt.debug) console.log('utils unformat() - bigNumber1', numbers.toString());
 
@@ -27,7 +27,7 @@ function unformat(input, opt = defaults, caller) {
     }
   }
 
-  let output = bigNumber.toFixed(fixed(opt.precision));
+  let output = bigNumber.toFixed(Utils.fixed(opt.precision));
 
   if (opt.modelModifiers && opt.modelModifiers.number) {
     output = parseFloat(output);

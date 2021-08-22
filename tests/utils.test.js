@@ -1,14 +1,13 @@
-import {
+import Utils, {
   RESTRICTED_CHARACTERS, RESTRICTED_OPTIONS,
-  validateRestrictedInput, validateRestrictedOptions,
-} from '../src/utils';
+} from '../src/Utils';
 import defaults from '../src/options';
 
 test('test if a restricted value throws an error', () => {
   const caller = 'unit tester';
   for (const char of RESTRICTED_CHARACTERS) {
     try {
-      validateRestrictedInput(char, caller);
+      Utils.validateRestrictedInput(char, caller);
     } catch (e) {
       const itIncludes = e.message.toString().includes(`v-money3 "${caller}" property don't accept "${char}" as a value.`);
       expect(itIncludes).toBe(true);
@@ -21,7 +20,7 @@ test('test if a non restricted value pass validation', () => {
   const UNRESTRICTED_CHARACTERS = ['.', ',', '#', '/', '$'];
   for (const char of UNRESTRICTED_CHARACTERS) {
     try {
-      const isValid = validateRestrictedInput(char, caller);
+      const isValid = Utils.validateRestrictedInput(char, caller);
       expect(isValid).toBe(true);
     } catch (e) {
       const itIncludes = e.message.toString().includes(`v-money3 "${caller}" property don't accept "${char}" as a value.`);
@@ -36,7 +35,7 @@ test('test if restricted values throw errors in restricted options', () => {
     for (const option of RESTRICTED_OPTIONS) {
       opt[option] = char;
       try {
-        validateRestrictedOptions({ ...opt[option] });
+        Utils.validateRestrictedOptions({ ...opt[option] });
       } catch (e) {
         const text = `v-money3 "${option}" property don't accept "${char}" as a value.`;
         const itIncludes = e.message.toString().includes(text);
@@ -53,7 +52,7 @@ test('test if non restricted values pass validation in restricted options', () =
     for (const option of RESTRICTED_OPTIONS) {
       opt[option] = char;
       try {
-        const isValid = validateRestrictedOptions({ ...opt[option] });
+        const isValid = Utils.validateRestrictedOptions({ ...opt[option] });
         expect(isValid).toBe(true);
       } catch (e) {
         const itIncludes = e.message.toString().includes(`v-money3 "${option}" property don't accept "${char}" as a value.`);

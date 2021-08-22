@@ -1,10 +1,4 @@
-import {
-  setCursor,
-  event,
-  fixed,
-  numbersToCurrency,
-  validateRestrictedOptions,
-} from './utils';
+import Utils from './Utils';
 import format from './format';
 import unformat from './unformat';
 import assign from './assign';
@@ -17,7 +11,7 @@ const setValue = (el, opt, caller) => {
     if (opt.debug) console.log('directive setValue() - lastKnownValue === el.value. Stopping here...', el.value);
     return;
   }
-  if (!validateRestrictedOptions(opt)) {
+  if (!Utils.validateRestrictedOptions(opt)) {
     if (opt.debug) console.log('directive setValue() - validateRestrictedOptions() return false. Stopping here...', el.value);
     return;
   }
@@ -27,8 +21,8 @@ const setValue = (el, opt, caller) => {
   positionFromEnd = Math.max(positionFromEnd, opt.suffix.length); // right
   positionFromEnd = el.value.length - positionFromEnd;
   positionFromEnd = Math.max(positionFromEnd, opt.prefix.length); // left
-  setCursor(el, positionFromEnd);
-  el.dispatchEvent(event('change')); // v-model.lazy
+  Utils.setCursor(el, positionFromEnd);
+  el.dispatchEvent(Utils.event('change')); // v-model.lazy
 };
 
 export default {
@@ -67,7 +61,7 @@ export default {
       ) {
         if (opt.debug) console.log('directive onkeydown() - set el.value = ""', el.value);
         el.value = '';
-        el.dispatchEvent(event('change')); // v-model.lazy
+        el.dispatchEvent(Utils.event('change')); // v-model.lazy
       }
 
       if (opt.debug) console.log('directive onkeydown() - e.key', e.key);
@@ -85,7 +79,7 @@ export default {
       if (opt.debug) console.log('directive oninput() !opt.modelModifiers || !opt.modelModifiers.number', !opt.modelModifiers || !opt.modelModifiers.number);
       if (!opt.modelModifiers || !opt.modelModifiers.number) {
         if (/^[1-9]$/.test(el.value)) {
-          el.value = numbersToCurrency(el.value, fixed(opt.precision));
+          el.value = Utils.numbersToCurrency(el.value, Utils.fixed(opt.precision));
           if (opt.debug) console.log('directive oninput() - is 1-9', el.value);
         }
       }
