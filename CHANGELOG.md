@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.17.0] / 2021-08-22
+
+- Codebase refactoring... See [AndrolGenhald](https://github.com/AndrolGenhald)
+super helpful collaboration with this [pull request](https://github.com/jonathanpmartins/v-money3/pull/34)
+and this critical [issue](https://github.com/jonathanpmartins/v-money3/issues/26).
+- [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+support introduced via native [BigNumber class](https://github.com/jonathanpmartins/v-money3/blob/main/src/BigNumber.js).
+- `v-model` and `v-model.number` are now treated completely differently.
+See [docs](https://github.com/jonathanpmartins/v-money3/blob/main/README.md)
+and [examples](https://github.com/jonathanpmartins/v-money3/issues/38#issuecomment-903214235).
+- Bundle compiled with `es2020` target. This is necessary to support full native BigInt.
+- Many other changes... See [diff](https://github.com/jonathanpmartins/v-money3/compare/v3.16.1...v3.17.0).
+
+
 ## [3.16.1] / 2021-08-10
 
 ### Fix
@@ -243,6 +257,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.17.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.16.1...v3.17.0
 [3.16.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.16.0...v3.16.1
 [3.16.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.2...v3.16.0
 [3.15.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.15.1...v3.15.2
