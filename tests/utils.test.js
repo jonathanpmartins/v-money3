@@ -91,12 +91,14 @@ test('format function should parse numbers and strings', () => {
   expect(format(123.45, { ...defaults, minimumNumberOfCharacters: 7 })).toBe('00,123.45');
 
   expect(format('', { ...defaults, allowBlank: true })).toBe('');
-  expect(format('5', { ...defaults, allowBlank: true })).toBe('0.05');
 
-  expect(format('6.00', { ...defaults })).toBe('6.00');
+  expect(format('5', { ...defaults })).toBe('0.05');
+  expect(format('5.5', { ...defaults })).toBe('0.55');
+  expect(format('5.55', { ...defaults })).toBe('5.55');
 
-  expect(format(6, { ...defaults, modelModifiers: { number: true } })).toBe('6.00');
-  expect(format(6.1, { ...defaults, modelModifiers: { number: true } })).toBe('6.10');
+  expect(format(5, { ...defaults, modelModifiers: { number: true } })).toBe('5.00');
+  expect(format(5.5, { ...defaults, modelModifiers: { number: true } })).toBe('5.50');
+  expect(format(5.55, { ...defaults, modelModifiers: { number: true } })).toBe('5.55');
 });
 
 test('unformat min max options should be respected', () => {

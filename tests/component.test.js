@@ -133,43 +133,27 @@ test('Test disable attribute', async () => {
 });
 
 test('Test min attribute', async () => {
-  const min = '10';
+  for (const min of [10, -10, -100]) {
+    const input = mountComponent({ min }).find('input');
 
-  const input = mountComponent({ min }).find('input');
+    await input.setValue((min - 1.01).toFixed(2));
+    expect(input.element.value).toBe(min.toFixed(2));
 
-  await input.setValue('11.00');
-
-  expect(input.element.value).toBe('11.00');
-
-  await input.setValue('9.00');
-
-  expect(input.element.value).toBe('10.00');
-
-  await input.setValue('9.99');
-
-  expect(input.element.value).toBe('10.00');
+    await input.setValue((min - 1).toFixed(2));
+    expect(input.element.value).toBe(min.toFixed(2));
+  }
 });
 
 test('Test max attribute', async () => {
-  const max = '10';
+  for (const max of [10, -10, -100]) {
+    const input = mountComponent({ max }).find('input');
 
-  const input = mountComponent({ max }).find('input');
+    await input.setValue((max + 1.01).toFixed(2));
+    expect(input.element.value).toBe(max.toFixed(2));
 
-  await input.setValue('9.01');
-
-  expect(input.element.value).toBe('9.01');
-
-  await input.setValue('9.99');
-
-  expect(input.element.value).toBe('9.99');
-
-  await input.setValue('11.10');
-
-  expect(input.element.value).toBe('10.00');
-
-  await input.setValue('10.01');
-
-  expect(input.element.value).toBe('10.00');
+    await input.setValue((max + 1).toFixed(2));
+    expect(input.element.value).toBe(max.toFixed(2));
+  }
 });
 
 test('Test allow-blank attribute', async () => {
@@ -390,6 +374,40 @@ test('Test arbitrary precision', async () => {
   expect(input.element.value).toBe('999,999,999,999,999,999,999.99');
 });
 
+test('Test arbitrary precision with decimal rounded', async () => {
+  const component1 = mountComponent({
+    decimal: '.',
+    thousands: ',',
+    precision: 0,
+    masked: false,
+    max: '1000000000000000000000',
+  });
+  const input1 = component1.find('input');
+
+  await input1.setValue('999999999999999999999.99');
+
+  const updates1 = component1.emitted()['update:model-value'];
+  expect(updates1[updates1.length - 1][0]).toBe('1000000000000000000000');
+  expect(input1.element.value).toBe('1,000,000,000,000,000,000,000');
+
+  const component2 = mountComponent({
+    decimal: '.',
+    thousands: ',',
+    precision: 0,
+    masked: false,
+    max: '2000000000000000000000',
+  });
+  const input2 = component2.find('input');
+
+  await input2.setValue('1999999999999999999999.99');
+
+  const updates2 = component2.emitted()['update:model-value'];
+  expect(updates2[updates2.length - 1][0]).toBe('2000000000000000000000');
+  expect(input2.element.value).toBe('2,000,000,000,000,000,000,000');
+
+  await input2.setValue('999999999999999999999.99');
+});
+
 test('Weird separators', async () => {
   const component = mountComponent({
     decimal: 'd',
@@ -404,6 +422,22 @@ test('Weird separators', async () => {
   const updates = component.emitted()['update:model-value'];
   expect(updates[updates.length - 1][0]).toBe('1t234t567d89');
   expect(input.element.value).toBe('1t234t567d89');
+});
+
+test('Decimal values rounded when precision is 0', async () => {
+  const component = mountComponent({
+    decimal: 'd',
+    thousands: 't',
+    precision: 0,
+    masked: true,
+  });
+  const input = component.find('input');
+
+  await input.setValue('1234567.89');
+
+  const updates = component.emitted()['update:model-value'];
+  expect(updates[updates.length - 1][0]).toBe('1t234t568');
+  expect(input.element.value).toBe('1t234t568');
 });
 
 test('Number type value', async () => {

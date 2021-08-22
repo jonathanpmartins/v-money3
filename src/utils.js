@@ -51,7 +51,6 @@ function validateRestrictedOptions(opt) {
 function format(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils format() - caller', caller);
   if (opt.debug) console.log('utils format() - input1', input);
-  if (opt.debug) console.log('utils format() - opt', opt);
 
   if (input === null || input === undefined) {
     input = '';
@@ -64,8 +63,14 @@ function format(input, opt = defaults, caller) {
   if (opt.debug) console.log('utils format() - input2', input);
 
   const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');
-  const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
+  let filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
+  if (opt.debug) console.log('utils format() - filtered', filtered);
+  if (!opt.precision && BigNumber.isValidFloat(filtered)) {
+    filtered = BigNumber.round(filtered, 0);
+    if (opt.debug) console.log('utils format() - !opt.precision && isValidFloat()', filtered);
+  }
   const numbers = onlyNumbers(filtered);
+  if (opt.debug) console.log('utils format() - numbers', numbers);
 
   if (opt.debug) console.log('utils format() - numbersToCurrency', negative + numbersToCurrency(numbers, opt.precision));
   const bigNumber = new BigNumber(negative + numbersToCurrency(numbers, opt.precision));
