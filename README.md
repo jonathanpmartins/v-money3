@@ -32,13 +32,12 @@ It expects to receive a string representation of a number. `12345.67`
 
 Some break changes where introduced in this release.
 Let's follow a train of thought:   
-If your precision is set to `2` and you set a default model value of `55`, 
-it will be interpreted as `0.55`.
-To instruct the correct format on setup, you need to pass `55.00`
-when using `v-model`. The same is true for `5.5`.
-It will be interpreted as `0.55`. Another example: `55.5` => `5.55`.  
-Arbitrary precision is supported by using `string` and `BigInt`
-with `v-model`.
+If your precision is set to `2` and you set a default model value of `'55'`, 
+it will be interpreted as `'0.55'`.
+To instruct the correct format on setup you need to pass in `'55.00'`
+when using `v-model`. The same is true for `'5.5'`.
+It will be interpreted as `'0.55'`. Another example: `'55.5'` => `'5.55'`.
+Arbitrary precision is supported by using `string` and `BigInt` with `v-model`.
 
 For the majority of users, it will make sense to use float numbers and stay within the
 boundaries of `Number`. If you fit this instance, you need to use `v-model`
@@ -49,10 +48,11 @@ Little more than nine quadrilion...
 See [MAX_SAFE_INTEGER](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER).
 
 For those who are using `v-model.number`, integers and floats are compleatly
-understood. Let's follow another train of thought:  
+understood.  
+Let's follow another train of thought:  
 If your precision is set to `2` and you set a default model value of `55`,
-it will be interpreted as `55.00`. The same is true for `5.5`.
-It will be interpreted as `5.50`. Another example: `55.5` => `5.50`.
+it will be interpreted as `55.0`. The same is true for `5.5`.
+It will be interpreted as `5.50`. Another example: `55.5` => `55.50`.
 
 ## Usage
 
