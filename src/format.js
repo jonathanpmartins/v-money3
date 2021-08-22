@@ -19,7 +19,7 @@ function format(input, opt = defaults, caller) {
   const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');
   let filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
   if (opt.debug) console.log('utils format() - filtered', filtered);
-  if (!opt.precision && BigNumber.isValidFloat(filtered)) {
+  if (!opt.precision && opt.thousands !== '.' && BigNumber.isValidFloat(filtered)) {
     filtered = BigNumber.round(filtered, 0);
     if (opt.debug) console.log('utils format() - !opt.precision && isValidFloat()', filtered);
   }

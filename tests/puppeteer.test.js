@@ -305,4 +305,15 @@ describe('Puppeteer Tests', () => {
 
     expect(await getValue()).toBe('1,234,567.89');
   });
+
+  it('Test if precision "0" (zero) with thousand "." (dot) work correctly', async () => {
+    await page.goto(`${serverUrl}?precision=0&thousands=.&debug=true`);
+
+    await page.focus('#component');
+    await page.type('#component', '123456789');
+
+    // await page.type('#component', '6');
+
+    expect(await getValue()).toBe('123.456.789');
+  });
 });
