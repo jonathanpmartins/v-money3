@@ -54,6 +54,8 @@ If your precision is set to `2` and you set a default model value of `55`,
 it will be interpreted as `55.0`. The same is true for `5.5`.
 It will be interpreted as `5.50`. Another example: `55.5` => `55.50`.
 
+[More Examples](https://github.com/jonathanpmartins/v-money3/issues/38#issuecomment-903214235)
+
 ## Usage
 
 ### Installation
