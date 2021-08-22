@@ -21,7 +21,7 @@ function mountComponent(attr = {}) {
 test('Renders the component', async () => {
   const component = mountComponent({
     prefix: 'R$ ',
-    suffix: '.000',
+    suffix: '.???',
     thousands: ',',
     decimal: '.',
     precision: 3,
@@ -31,11 +31,11 @@ test('Renders the component', async () => {
 
   await input.setValue('1123.450');
 
-  expect(input.element.value).toBe('R$ 1,123.450.000');
+  expect(input.element.value).toBe('R$ 1,123.450.???');
 });
 
 test('Test prefix attribute', async () => {
-  const data = ['$', '€', 'R$ ', '₿', '1\\', '2\\'];
+  const data = ['$', '€', 'R$ ', '₿', '\\', '@'];
 
   for (const prefix of data) {
     const input = mountComponent({ prefix }).find('input');
@@ -47,7 +47,7 @@ test('Test prefix attribute', async () => {
 });
 
 test('Test suffix attribute', async () => {
-  const data = ['$', '€', 'R$ ', '₿', '.00', '($)', '/3'];
+  const data = ['$', '€', 'R$ ', '₿', '($)'];
 
   for (const suffix of data) {
     const input = mountComponent({ suffix }).find('input');
