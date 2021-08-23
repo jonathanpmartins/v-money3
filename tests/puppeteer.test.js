@@ -275,11 +275,18 @@ describe('Puppeteer Tests', () => {
     await page.focus('#component');
     await page.type('#component', '123');
 
-    expect(events.length).toBe(3);
+    // removing lastKnownValue from directive setValue method
+    // does trigger change events 2 times every time the use type
+    // first time on the oninput event, and after on the updated event.
+
+    expect(events.length).toBe(6);
 
     expect(events[0]).toBe('0.01');
-    expect(events[1]).toBe('0.12');
-    expect(events[2]).toBe('1.23');
+    expect(events[1]).toBe('0.01');
+    expect(events[2]).toBe('0.12');
+    expect(events[3]).toBe('0.12');
+    expect(events[4]).toBe('1.23');
+    expect(events[5]).toBe('1.23');
   });
 
   it('Test if US format works correctly', async () => {

@@ -2,8 +2,8 @@ export default {
   name: 'App',
   data() {
     return {
-      componentAmount: 1234.50,
-      directiveAmount: 6543.21,
+      componentAmount: '1234.50',
+      directiveAmount: '6543.21',
       config: {
         decimal: ',',
         thousands: '.',
@@ -13,10 +13,11 @@ export default {
         masked: false, /* doesn't work with directive */
         disableNegative: false,
         disabled: false,
-        min: Number.MIN_SAFE_INTEGER,
-        max: Number.MAX_SAFE_INTEGER,
+        min: null,
+        max: null,
         allowBlank: false,
         minimumNumberOfCharacters: 0,
+        debug: true,
       },
     };
   },
@@ -60,7 +61,7 @@ export default {
                 <div class="field">
                   <label class="label">Directive</label>
                   <div class="control">
-                    <input v-model="directiveAmount" v-money3="config" class="input" type="tel">
+                    <input v-model.lazy="directiveAmount" v-money3="config" class="input" type="tel">
                   </div>
                 </div>
               </div>              
@@ -68,7 +69,7 @@ export default {
                 <div class="field">
                   <label class="label">Directive Model</label>
                   <div class="control">
-                    <input v-model="directiveAmount" class="input" type="text" disabled>
+                    <input v-model.lazy="directiveAmount" class="input" type="text" disabled>
                   </div>
                 </div>
               </div>
@@ -120,7 +121,7 @@ export default {
                 <div class="field">
                   <label class="label">Minimum Allowed Value</label>
                   <div class="control">
-                    <input v-model="config.min" class="input" type="number">
+                    <input v-model="config.min" class="input">
                   </div>
                 </div>
               </div>
@@ -128,7 +129,7 @@ export default {
                 <div class="field">
                   <label class="label">Maximum Allowed Value</label>
                   <div class="control">
-                    <input v-model="config.max" class="input" type="number">
+                    <input v-model="config.max" class="input">
                   </div>
                 </div>
               </div>

@@ -172,7 +172,7 @@ test('Change event is emitted', async () => {
   const component = mountComponent();
   const input = component.find('input');
 
-  await input.setValue(123.45);
+  await input.setValue('123.45');
 
   expect(component.emitted()).toHaveProperty('change');
 

@@ -4,24 +4,26 @@ import unformat from './unformat';
 import assign from './assign';
 import defaults from './options';
 
-let lastKnownValue = null;
+let opt = null;
 
-const setValue = (el, opt, caller) => {
-  if (lastKnownValue === el.value) {
-    if (opt.debug) console.log('directive setValue() - lastKnownValue === el.value. Stopping here...', el.value);
-    return;
-  }
+const setValue = (el, caller) => {
+  if (opt.debug) console.log('directive setValue() - caller', caller);
+
   if (!Utils.validateRestrictedOptions(opt)) {
     if (opt.debug) console.log('directive setValue() - validateRestrictedOptions() return false. Stopping here...', el.value);
     return;
   }
+
   let positionFromEnd = el.value.length - el.selectionEnd;
+
   el.value = format(el.value, opt, caller);
-  lastKnownValue = el.value;
+
   positionFromEnd = Math.max(positionFromEnd, opt.suffix.length); // right
   positionFromEnd = el.value.length - positionFromEnd;
   positionFromEnd = Math.max(positionFromEnd, opt.prefix.length); // left
+
   Utils.setCursor(el, positionFromEnd);
+
   el.dispatchEvent(Utils.event('change')); // v-model.lazy
 };
 
@@ -31,7 +33,7 @@ export default {
       return;
     }
 
-    const opt = assign(defaults, binding.value);
+    opt = assign(defaults, binding.value);
 
     if (opt.debug) console.log('directive mounted() - opt', opt);
 
@@ -83,19 +85,20 @@ export default {
           if (opt.debug) console.log('directive oninput() - is 1-9', el.value);
         }
       }
-      setValue(el, opt, 'directive oninput');
+      setValue(el, 'directive oninput');
     };
 
     if (opt.debug) console.log('directive mounted() - el.value', el.value);
-    setValue(el, opt, 'directive mounted');
+    setValue(el, 'directive mounted');
   },
   updated(el, binding) {
     if (!binding.value) {
       return;
     }
-    const opt = assign(defaults, binding.value);
+    opt = assign(defaults, binding.value);
     if (opt.debug) console.log('directive updated() - el.value', el.value);
-    setValue(el, opt, 'directive updated');
+    if (opt.debug) console.log('directive updated() - opt', opt);
+    setValue(el, 'directive updated');
   },
   beforeUnmount(el) {
     el.onkeydown = null;
