@@ -121,7 +121,6 @@ export default defineComponent({
   directives: { money3: Money3Directive },
 
   setup(props, { emit, attrs }) {
-    props = Utils.filterOptRestrictions({ ...props });
     if (props.debug) console.log('component setup()', props);
 
     const modelValue = props.modelModifiers && props.modelModifiers.number
@@ -130,6 +129,7 @@ export default defineComponent({
 
     const data = reactive({
       formattedValue: format(modelValue, props, 'component setup'),
+      props: Utils.filterOptRestrictions({ ...props }),
     });
 
     if (props.debug) console.log('component setup() - data.formattedValue', data.formattedValue);
@@ -137,7 +137,7 @@ export default defineComponent({
     watch(
       () => props.modelValue, (val) => {
         if (props.debug) console.log('component watch() -> val', val);
-        const formatted = format(val, props, 'component watch');
+        const formatted = format(val, data.props, 'component watch');
         if (formatted !== data.formattedValue) {
           if (props.debug) console.log('component watch() changed -> formatted', formatted);
           data.formattedValue = formatted;
@@ -148,7 +148,7 @@ export default defineComponent({
     let lastValue = null;
     function change(evt) {
       if (props.debug) console.log('component change() -> evt.target.value', evt.target.value);
-      const value = props.masked && !props.modelModifiers.number ? evt.target.value : unformat(evt.target.value, props, 'component change');
+      const value = props.masked && !props.modelModifiers.number ? evt.target.value : unformat(evt.target.value, data.props, 'component change');
       if (value !== lastValue) {
         lastValue = value;
         if (props.debug) console.log('component change() -> update:model-value', value);

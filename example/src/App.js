@@ -113,7 +113,7 @@ export default {
                 <div class="field">
                   <label class="label">Precision</label>
                   <div class="control">
-                    <input v-model="config.precision" class="input" type="number" min="0" max="20">
+                    <input v-model="config.precision" class="input" type="number" min="0" max="999">
                   </div>
                 </div>
               </div>

@@ -8,7 +8,7 @@ class Utils {
 
   // Uncaught RangeError: toFixed() digits argument must be between 0 and 20 at Number.toFixed
   static fixed(precision) {
-    return Utils.between(0, precision, 20);
+    return Utils.between(0, precision, 1000);
   }
 
   static numbersToCurrency(numbers, precision) {

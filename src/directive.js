@@ -1,7 +1,6 @@
 import Utils from './Utils';
 import format from './format';
 import unformat from './unformat';
-import assign from './assign';
 import defaults from './options';
 
 let opt = null;
@@ -33,7 +32,7 @@ export default {
       return;
     }
 
-    opt = Utils.filterOptRestrictions(assign(defaults, binding.value));
+    opt = Utils.filterOptRestrictions({ ...defaults, ...binding.value });
 
     if (opt.debug) console.log('directive mounted() - opt', opt);
 
@@ -95,7 +94,7 @@ export default {
     if (!binding.value) {
       return;
     }
-    opt = Utils.filterOptRestrictions(assign(defaults, binding.value));
+    opt = Utils.filterOptRestrictions({ ...defaults, ...binding.value });
     if (opt.debug) console.log('directive updated() - el.value', el.value);
     if (opt.debug) console.log('directive updated() - opt', opt);
     setValue(el, 'directive updated');
