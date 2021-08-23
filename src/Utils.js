@@ -34,14 +34,48 @@ class Utils {
 
   static validateRestrictedInput(value, caller) {
     if (RESTRICTED_CHARACTERS.includes(value)) {
-      throw new Error(`v-money3 "${caller}" property don't accept "${value}" as a value.`);
+      console.error(`v-money3 "${caller}" property don't accept "${value}" as a value.`);
+      return false;
+      // throw new Error(`v-money3 "${caller}" property don't accept "${value}" as a value.`);
     }
     if (caller === 'prefix' || caller === 'suffix') {
       if ((/\d/g).test(value)) {
-        throw new Error(`v-money3 "${caller}" property don't accept any number "${value}" as a value.`);
+        console.error(`v-money3 "${caller}" property don't accept "${value}" (any number) as a value.`);
+        return false;
+        // throw new Error(`v-money3 "${caller}" property don't accept any number "${value}" as a value.`);
       }
     }
     return true;
+  }
+
+  static validateRestrictedOptions(opt) {
+    for (const target of RESTRICTED_OPTIONS) {
+      Utils.validateRestrictedInput(opt[target], target);
+    }
+    return true;
+  }
+
+  static filterRestrictedCharactersFromRestrictedOptions(opt) {
+    for (const option of RESTRICTED_OPTIONS) {
+      for (const character of RESTRICTED_CHARACTERS) {
+        opt[option] = opt[option].replaceAll(character, '');
+      }
+    }
+    return opt;
+  }
+
+  static filterNumbersFromOption(opt, option) {
+    opt[option] = opt[option].replace(/\d+/g, '');
+    return opt;
+  }
+
+  static filterOptRestrictions(opt) {
+    opt = Utils.filterRestrictedCharactersFromRestrictedOptions(opt);
+
+    opt = Utils.filterNumbersFromOption(opt, 'prefix');
+    opt = Utils.filterNumbersFromOption(opt, 'suffix');
+
+    return opt;
   }
 
   static guessFloatPrecision(string) {
@@ -96,13 +130,6 @@ class Utils {
       return `1${firstPiece}`;
     }
     return firstPiece;
-  }
-
-  static validateRestrictedOptions(opt) {
-    for (const target of RESTRICTED_OPTIONS) {
-      Utils.validateRestrictedInput(opt[target], target);
-    }
-    return true;
   }
 
   static setCursor(el, position) {

@@ -121,6 +121,7 @@ export default defineComponent({
   directives: { money3: Money3Directive },
 
   setup(props, { emit, attrs }) {
+    props = Utils.filterOptRestrictions({ ...props });
     if (props.debug) console.log('component setup()', props);
 
     const modelValue = props.modelModifiers && props.modelModifiers.number

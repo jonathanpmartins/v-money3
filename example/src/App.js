@@ -57,22 +57,22 @@ export default {
                   </div>
                 </div>
               </div>
-              <div class="column">
-                <div class="field">
-                  <label class="label">Directive</label>
-                  <div class="control">
-                    <input v-model.lazy="directiveAmount" v-money3="config" class="input" type="tel">
-                  </div>
-                </div>
-              </div>              
-              <div class="column">
-                <div class="field">
-                  <label class="label">Directive Model</label>
-                  <div class="control">
-                    <input v-model.lazy="directiveAmount" class="input" type="text" disabled>
-                  </div>
-                </div>
-              </div>
+<!--              <div class="column">-->
+<!--                <div class="field">-->
+<!--                  <label class="label">Directive</label>-->
+<!--                  <div class="control">-->
+<!--                    <input v-model.lazy="directiveAmount" v-money3="config" class="input" type="tel">-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>              -->
+<!--              <div class="column">-->
+<!--                <div class="field">-->
+<!--                  <label class="label">Directive Model</label>-->
+<!--                  <div class="control">-->
+<!--                    <input v-model.lazy="directiveAmount" class="input" type="text" disabled>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
             </div>
             <div class="columns">
               <div class="column">

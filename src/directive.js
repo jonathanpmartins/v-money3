@@ -33,7 +33,7 @@ export default {
       return;
     }
 
-    opt = assign(defaults, binding.value);
+    opt = Utils.filterOptRestrictions(assign(defaults, binding.value));
 
     if (opt.debug) console.log('directive mounted() - opt', opt);
 
@@ -95,7 +95,7 @@ export default {
     if (!binding.value) {
       return;
     }
-    opt = assign(defaults, binding.value);
+    opt = Utils.filterOptRestrictions(assign(defaults, binding.value));
     if (opt.debug) console.log('directive updated() - el.value', el.value);
     if (opt.debug) console.log('directive updated() - opt', opt);
     setValue(el, 'directive updated');
