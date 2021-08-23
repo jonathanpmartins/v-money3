@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.17.2] / 2021-08-23
+
+### Improvements
+
+- `lastKnownValue` was removed from directives `setValue` method. It was causing issues with reactivity.
+
 ## [3.17.1] / 2021-08-22
 
 ### Fix
@@ -265,6 +271,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.17.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.1...v3.17.2
 [3.17.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.0...v3.17.1
 [3.17.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.16.1...v3.17.0
 [3.16.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.16.0...v3.16.1
