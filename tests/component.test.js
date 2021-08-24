@@ -5,6 +5,11 @@ import {
 import Money3Component from '../src/component.vue';
 import Money3Directive from '../src/directive';
 
+beforeAll(() => {
+  console.warn = () => {};
+  console.log = () => {};
+});
+
 function mountComponent(attr = {}) {
   const props = {
     ...attr,

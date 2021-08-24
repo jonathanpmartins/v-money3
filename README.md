@@ -242,7 +242,7 @@ If you bind it directly you are just fine too:
 
 ## Restricted Characters
 
-The following characters...
+Numbers `0-9` and the following characters...
 
 - `+`
 - `-`
@@ -253,12 +253,8 @@ The following characters...
 - `prefix`
 - `suffix`
 
-Number are restricted on the following properties:
-
-- `prefix`
-- `suffix`
-
-An exception will be thrown if validation fails.
+Restricted inputs will be filter out of the final mask.
+A console warn with more information will be shown!
 
 
 

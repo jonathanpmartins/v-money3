@@ -1,6 +1,11 @@
 import format from '../src/format';
 import defaults from '../src/options';
 
+beforeAll(() => {
+  console.warn = () => {};
+  console.log = () => {};
+});
+
 test('format function should parse numbers and strings', () => {
   expect(format('$123.001')).toBe('1,230.01');
 
@@ -36,4 +41,7 @@ test('format function should parse numbers and strings', () => {
   expect(format(5, { ...defaults, modelModifiers: { number: true } })).toBe('5.00');
   expect(format(5.5, { ...defaults, modelModifiers: { number: true } })).toBe('5.50');
   expect(format(5.55, { ...defaults, modelModifiers: { number: true } })).toBe('5.55');
+
+  // code coverage on debug console.log instructions
+  expect(format('12345.67', { ...defaults, debug: true })).toBe('12,345.67');
 });

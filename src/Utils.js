@@ -1,4 +1,4 @@
-const RESTRICTED_CHARACTERS = ['+', '-'];
+const RESTRICTED_CHARACTERS = ['+', '-']; // and number [0-9]
 const RESTRICTED_OPTIONS = ['decimal', 'thousands', 'prefix', 'suffix'];
 
 class Utils {
@@ -34,23 +34,22 @@ class Utils {
 
   static validateRestrictedInput(value, caller) {
     if (RESTRICTED_CHARACTERS.includes(value)) {
-      console.error(`v-money3 "${caller}" property don't accept "${value}" as a value.`);
+      console.warn(`v-money3 "${caller}" property don't accept "${value}" as a value.`);
       return false;
-      // throw new Error(`v-money3 "${caller}" property don't accept "${value}" as a value.`);
     }
-    if (caller === 'prefix' || caller === 'suffix') {
-      if ((/\d/g).test(value)) {
-        console.error(`v-money3 "${caller}" property don't accept "${value}" (any number) as a value.`);
-        return false;
-        // throw new Error(`v-money3 "${caller}" property don't accept any number "${value}" as a value.`);
-      }
+    if ((/\d/g).test(value)) {
+      console.warn(`v-money3 "${caller}" property don't accept "${value}" (any number) as a value.`);
+      return false;
     }
     return true;
   }
 
   static validateRestrictedOptions(opt) {
     for (const target of RESTRICTED_OPTIONS) {
-      Utils.validateRestrictedInput(opt[target], target);
+      const isValid = Utils.validateRestrictedInput(opt[target], target);
+      if (!isValid) {
+        return false;
+      }
     }
     return true;
   }
@@ -64,16 +63,16 @@ class Utils {
     return opt;
   }
 
-  static filterNumbersFromOption(opt, option) {
-    opt[option] = opt[option].replace(/\d+/g, '');
+  static filterNumbersFromRestrictedOptions(opt) {
+    for (const option of RESTRICTED_OPTIONS) {
+      opt[option] = opt[option].replace(/\d+/g, '');
+    }
     return opt;
   }
 
   static filterOptRestrictions(opt) {
     opt = Utils.filterRestrictedCharactersFromRestrictedOptions(opt);
-
-    opt = Utils.filterNumbersFromOption(opt, 'prefix');
-    opt = Utils.filterNumbersFromOption(opt, 'suffix');
+    opt = Utils.filterNumbersFromRestrictedOptions(opt);
 
     return opt;
   }

@@ -3,125 +3,130 @@ import Utils, {
 } from '../src/Utils';
 import defaults from '../src/options';
 
-// test('test if a restricted value throws an error', () => {
-//   const caller = 'unit tester';
-//   for (const char of RESTRICTED_CHARACTERS) {
-//     try {
-//       Utils.validateRestrictedInput(char, caller);
-//     } catch (e) {
-//       const itIncludes = e.message.toString().includes(`v-money3 "${caller}" property don't accept "${char}" as a value.`);
-//       expect(itIncludes).toBe(true);
-//     }
-//   }
-// });
-//
-// test('test if a non restricted value pass validation', () => {
-//   const caller = 'unit tester';
-//   const UNRESTRICTED_CHARACTERS = ['.', ',', '#', '/', '$'];
-//   for (const char of UNRESTRICTED_CHARACTERS) {
-//     try {
-//       const isValid = Utils.validateRestrictedInput(char, caller);
-//       expect(isValid).toBe(true);
-//     } catch (e) {
-//       const itIncludes = e.message.toString().includes(`v-money3 "${caller}" property don't accept "${char}" as a value.`);
-//       expect(itIncludes).toBe(false);
-//     }
-//   }
-// });
-//
-// test('test if restricted values throw errors in restricted options', () => {
-//   const opt = { ...defaults };
-//   for (const char of RESTRICTED_CHARACTERS) {
-//     for (const option of RESTRICTED_OPTIONS) {
-//       opt[option] = char;
-//       try {
-//         Utils.validateRestrictedOptions({ ...opt[option] });
-//       } catch (e) {
-//         const text = `v-money3 "${option}" property don't accept "${char}" as a value.`;
-//         const itIncludes = e.message.toString().includes(text);
-//         expect(itIncludes).toBe(true);
-//       }
-//     }
-//   }
-// });
-//
-// test('test if non restricted values pass validation in restricted options', () => {
-//   const UNRESTRICTED_CHARACTERS = ['.', ',', '#', '/', '$'];
-//   const opt = { ...defaults };
-//   for (const char of UNRESTRICTED_CHARACTERS) {
-//     for (const option of RESTRICTED_OPTIONS) {
-//       opt[option] = char;
-//       try {
-//         const isValid = Utils.validateRestrictedOptions({ ...opt[option] });
-//         expect(isValid).toBe(true);
-//       } catch (e) {
-//         const itIncludes = e.message.toString().includes(`v-money3 "${option}" property don't accept "${char}" as a value.`);
-//         expect(itIncludes).toBe(false);
-//       }
-//     }
-//   }
-// });
-//
-// test('test if numbers on prefix and suffix throw errors', () => {
-//   const callers = ['prefix', 'suffix'];
-//
-//   for (const caller of callers) {
-//     for (let i = 0; i < 10; i += 1) {
-//       const char = `$${i}#`;
-//       try {
-//         Utils.validateRestrictedInput(char, caller);
-//       } catch (e) {
-//         const itIncludes = e.message.toString().includes(`v-money3 "${caller}" property don't accept any number "${char}" as a value.`);
-//         expect(itIncludes).toBe(true);
-//       }
-//     }
-//   }
-// });
+beforeAll(() => {
+  console.warn = () => {};
+  console.log = () => {};
+});
+
+// todo: between
+// todo: fixed
+// todo: numbersToCurrency
+// todo: toStr
+// todo: onlyNumbers
+// todo: addThousandSeparator
+// todo: joinIntegerAndDecimal
+
+test('test validateRestrictedInput(value, caller) method', () => {
+  const caller = 'unit tester';
+  for (const char of RESTRICTED_CHARACTERS) {
+    const isValid = Utils.validateRestrictedInput(char, caller);
+    expect(isValid).toBe(false);
+  }
+
+  const UNRESTRICTED_CHARACTERS = ['.', ',', '#', '/', '$'];
+  for (const char of UNRESTRICTED_CHARACTERS) {
+    const isValid = Utils.validateRestrictedInput(char, caller);
+    expect(isValid).toBe(true);
+  }
+
+  for (const option of RESTRICTED_OPTIONS) {
+    for (let i = 0; i < 10; i += 1) {
+      const isValid = Utils.validateRestrictedInput(i, option);
+      expect(isValid).toBe(false);
+    }
+  }
+});
+
+test('test validateRestrictedOptions(opt) method', () => {
+  for (const target of RESTRICTED_OPTIONS) {
+    for (const char of RESTRICTED_CHARACTERS) {
+      const opt = { ...defaults };
+      opt[target] = char;
+      const isValid = Utils.validateRestrictedOptions(opt);
+      expect(isValid).toBe(false);
+    }
+  }
+
+  const options = ['prefix', 'suffix'];
+  for (const option of options) {
+    for (let i = 0; i < 10; i += 1) {
+      const opt = { ...defaults };
+      opt[option] = i;
+      const isValid = Utils.validateRestrictedOptions(opt);
+      expect(isValid).toBe(false);
+    }
+  }
+});
 
 test('test filterRestrictedCharactersFromRestrictedOptions(opt) function', () => {
   const array = [
-    { option: 'decimal', set: '+', target: '' },
-    { option: 'decimal', set: '-', target: '' },
-    { option: 'thousands', set: '+', target: '' },
-    { option: 'thousands', set: '-', target: '' },
-    { option: 'prefix', set: '+$', target: '$' },
-    { option: 'prefix', set: '-$', target: '$' },
-    { option: 'suffix', set: '+$', target: '$' },
-    { option: 'suffix', set: '-$', target: '$' },
-    { option: 'decimal', set: '+1+2+3+', target: '123' },
-    { option: 'thousands', set: '-1-2-3-', target: '123' },
-    { option: 'prefix', set: '++++++', target: '123' },
-    { option: 'suffix', set: '------', target: '123' },
+    { set: '+', target: '' },
+    { set: '-', target: '' },
+    { set: '+$0', target: '$0' },
+    { set: '-$1', target: '$1' },
+    { set: '+1+2+3+', target: '123' },
+    { set: '-1-2-3-', target: '123' },
+    { set: '++++++', target: '' },
+    { set: '------', target: '' },
   ];
-  for (const item of array) {
-    const opt = defaults;
-    opt[item.option] = item.set;
 
-    const result = Utils.filterRestrictedCharactersFromRestrictedOptions(opt);
+  for (const option of RESTRICTED_OPTIONS) {
+    for (const item of array) {
+      const opt = { ...defaults };
+      opt[option] = item.set;
 
-    expect(result[item.option]).toBe(item.target);
+      const result = Utils.filterRestrictedCharactersFromRestrictedOptions(opt);
+
+      expect(result[option]).toBe(item.target);
+    }
   }
 });
 
-test('test filterNumbersFromOption(opt, option) function', () => {
+test('test filterNumbersFromRestrictedOptions(opt, option) function', () => {
   const array = [
-    { option: 'prefix', set: 'R$1', target: 'R$' },
-    { option: 'prefix', set: '$/3', target: '$/' },
-    { option: 'suffix', set: 's0me1hing e1se', target: 'smehing ese' },
-    { option: 'suffix', set: '123', target: '' },
-    { option: 'suffix', set: '-1-2-3-4-5-6-7-8-9-0-', target: '-----------' },
+    { set: 'R$1', target: 'R$' },
+    { set: '$/3', target: '$/' },
+    { set: 's0me1hing e1se', target: 'smehing ese' },
+    { set: '+123', target: '+' },
+    { set: '-1-2-3-4-5-6-7-8-9-0-', target: '-----------' },
   ];
-  for (const item of array) {
-    const opt = defaults;
-    opt[item.option] = item.set;
 
-    const result = Utils.filterNumbersFromOption(opt, item.option);
+  for (const option of RESTRICTED_OPTIONS) {
+    for (const item of array) {
+      const opt = { ...defaults };
+      opt[option] = item.set;
 
-    expect(result[item.option]).toBe(item.target);
+      const result = Utils.filterNumbersFromRestrictedOptions(opt);
+
+      expect(result[option]).toBe(item.target);
+    }
   }
 });
 
-// todo: filterOptRestrictions
+test('test filterOptRestrictions function', () => {
+  const array = [
+    { set: '+R$', target: 'R$' },
+    { set: '-R1$', target: 'R$' },
+    { set: '+100%', target: '%' },
+    { set: '+$0', target: '$' },
+    { set: '-$1', target: '$' },
+    { set: '+9+8+7+6+5+', target: '' },
+    { set: '-0-1-2-3-4-', target: '' },
+    { set: '+9,', target: ',' },
+    { set: '-.0', target: '.' },
+  ];
+
+  for (const option of RESTRICTED_OPTIONS) {
+    for (const item of array) {
+      const opt = { ...defaults };
+      opt[option] = item.set;
+
+      const result = Utils.filterOptRestrictions(opt);
+
+      expect(result[option]).toBe(item.target);
+    }
+  }
+});
 
 test('test guessFloatPrecision function', () => {
   const tests = [

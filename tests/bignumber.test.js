@@ -101,6 +101,10 @@ test('test toFixed function', () => {
     const number = new BigNumber(item.number);
     expect(number.toFixed(item.fractionDigits)).toBe(item.target);
   }
+
+  // test coverage
+  const number = new BigNumber('123456');
+  expect(number.toFixed()).toBe('123456');
 });
 
 test('test toString function', () => {
