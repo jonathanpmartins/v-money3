@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.17.3] / 2021-08-23
+
+### Changes
+
+- Numbers `0-9`, `+` and `-` are restricted from the following options:
+`prefix`, `suffix`, `thousands` and `decimal`. In the past we `throw new Error`,
+but this could cause problems with reactivity. Currectly we filter out the above
+restricted characters from the restricted options.
+- Max precision was changed from `20` to `1000`.
+- Removing `assign` method and tests.
+- Code coverage improved.
+
 ## [3.17.2] / 2021-08-23
 
 ### Improvements
@@ -271,6 +283,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.17.3]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.2...v3.17.3
 [3.17.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.1...v3.17.2
 [3.17.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.0...v3.17.1
 [3.17.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.16.1...v3.17.0
