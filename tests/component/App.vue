@@ -1,19 +1,19 @@
 <template>
   <div>
-    <h3>Component</h3>
-    <v-money3-component
-        v-if="config.modelModifiers.number"
-        id="component"
-        v-bind="config"
-        v-model.number="componentAmount"
-    />
-    <v-money3-component
-        v-else
-        id="component"
-        v-bind="config"
-        v-model="componentAmount"
-    />
-    <div>
+    <div v-if="target === 'component'">
+      <h3>Component</h3>
+      <v-money3-component
+          v-if="config.modelModifiers.number"
+          id="component"
+          v-bind="config"
+          v-model.number="componentAmount"
+      />
+      <v-money3-component
+          v-else
+          id="component"
+          v-bind="config"
+          v-model="componentAmount"
+      />
       <div>
         model: [{{ componentAmount }}]
       </div>
@@ -21,15 +21,14 @@
         typeof: [{{ typeof componentAmount }}]
       </div>
     </div>
-    <hr>
-    <h3>Directive</h3>
-    <input
-      id="directive"
-      v-money3-directive="config"
-      :value="directiveAmount"
-      @change="directiveAmount = $event.target.value"
-      type="tel">
-    <div>
+    <div v-if="target === 'directive'">
+      <h3>Directive</h3>
+      <input
+          id="directive"
+          v-money3-directive="config"
+          :value="directiveAmount"
+          @change="directiveAmount = $event.target.value"
+          type="tel">
       <div>
         model: [{{ directiveAmount }}]
       </div>
@@ -54,6 +53,7 @@ function get(key, value) {
   return params.get(key) === 'empty' ? '' : params.get(key) || value;
 }
 
+const target = ref(get('target', 'component'));
 const componentAmount = ref(get('componentAmount', 0));
 const directiveAmount = ref(get('directiveAmount', 0));
 const config = reactive({

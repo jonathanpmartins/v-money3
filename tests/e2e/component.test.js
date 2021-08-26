@@ -2,31 +2,33 @@
  * @jest-environment puppeteer
  */
 
-describe('Puppeteer Tests', () => {
+describe('Puppeteer Component Tests', () => {
+  const target = '#component';
   const serverUrl = 'http://127.0.0.1:12345';
+  const serverUrlWithTarget = `${serverUrl}?target=${target.substring(1)}`;
 
   beforeAll(async () => {
     jest.setTimeout(60000);
   });
 
   async function getValue() {
-    return page.$eval('#component', (input) => input.value);
+    return page.$eval(target, (input) => input.value);
   }
 
-  it('Test prefix attribute', async () => {
+  it(`Test prefix attribute ${target}`, async () => {
     const data = ['R$ ', '$', '€', '₿', '\\', '@'];
 
     for (const prefix of data) {
-      await page.goto(`${serverUrl}?prefix=${prefix.replaceAll(' ', '+')}`);
+      await page.goto(`${serverUrlWithTarget}&prefix=${prefix.replaceAll(' ', '+')}`);
 
-      await page.focus('#component');
-      await page.type('#component', '12345');
+      await page.focus(target);
+      await page.type(target, '12345');
 
       expect(await getValue()).toBe(`${prefix}123.45`);
     }
   });
 
-  it('Test suffix attribute', async () => {
+  it(`Test suffix attribute ${target}`, async () => {
     const data = ['#', '%', '$', '€', '₿', '($)'];
 
     for (const suffix of data) {
@@ -34,31 +36,31 @@ describe('Puppeteer Tests', () => {
         .replaceAll('%', '%25')
         .replaceAll('#', '%23');
 
-      await page.goto(`${serverUrl}?suffix=${treated}`);
+      await page.goto(`${serverUrlWithTarget}&suffix=${treated}`);
 
-      await page.focus('#component');
-      await page.type('#component', '123456');
+      await page.focus(target);
+      await page.type(target, '123456');
 
       expect(await getValue()).toBe(`1,234.56${suffix}`);
     }
   });
 
-  it('Test thousands attribute', async () => {
+  it(`Test thousands attribute ${target}`, async () => {
     const data = [',', '.', '|', '#', ';'];
 
     for (const thousands of data) {
       const treated = thousands.replaceAll('#', '%23');
 
-      await page.goto(`${serverUrl}?thousands=${treated}`);
+      await page.goto(`${serverUrlWithTarget}&thousands=${treated}`);
 
-      await page.focus('#component');
-      await page.type('#component', '9999999999999');
+      await page.focus(target);
+      await page.type(target, '9999999999999');
 
       expect(await getValue()).toBe(`99${thousands}999${thousands}999${thousands}999.99`);
     }
   });
 
-  it('Test decimal attribute', async () => {
+  it(`Test decimal attribute ${target}`, async () => {
     const data = [',', '.', '#', ';', '\'', '/'];
 
     for (const decimal of data) {
@@ -66,23 +68,23 @@ describe('Puppeteer Tests', () => {
         .replaceAll('#', '%23')
         .replaceAll(',', '%2C');
 
-      await page.goto(`${serverUrl}?decimal=${treated}`);
+      await page.goto(`${serverUrlWithTarget}&decimal=${treated}`);
 
-      await page.focus('#component');
-      await page.type('#component', '12345.67');
+      await page.focus(target);
+      await page.type(target, '12345.67');
 
       expect(await getValue()).toBe(`12,345${decimal}67`);
     }
   });
 
-  it('Test precision attribute', async () => {
+  it(`Test precision attribute ${target}`, async () => {
     const number = 1234567891234;
 
     for (let precision = 0; precision < 10; precision += 1) {
-      await page.goto(`${serverUrl}?thousands=empty&precision=${precision}`);
+      await page.goto(`${serverUrlWithTarget}&thousands=empty&precision=${precision}`);
 
-      await page.focus('#component');
-      await page.type('#component', `${number}`);
+      await page.focus(target);
+      await page.type(target, `${number}`);
 
       const value = await getValue();
 
@@ -92,76 +94,76 @@ describe('Puppeteer Tests', () => {
     }
   });
 
-  it('Test default integer model', async () => {
-    await page.goto(`${serverUrl}?componentAmount=12`);
+  it(`Test default integer model ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}&componentAmount=12`);
 
     expect(await getValue()).toBe('0.12');
 
-    await page.goto(`${serverUrl}?componentAmount=12.00`);
+    await page.goto(`${serverUrlWithTarget}&componentAmount=12.00`);
 
     expect(await getValue()).toBe('12.00');
 
-    await page.goto(`${serverUrl}?componentAmount=12&useModelNumberModifier=true`);
+    await page.goto(`${serverUrlWithTarget}&componentAmount=12&useModelNumberModifier=true`);
 
     expect(await getValue()).toBe('12.00');
 
-    await page.goto(`${serverUrl}?componentAmount=12.1&useModelNumberModifier=true`);
+    await page.goto(`${serverUrlWithTarget}&componentAmount=12.1&useModelNumberModifier=true`);
 
     expect(await getValue()).toBe('12.10');
   });
 
-  it('Test default float model', async () => {
-    await page.goto(`${serverUrl}?componentAmount=12.1`);
+  it(`Test default float model ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}&componentAmount=12.1`);
 
     expect(await getValue()).toBe('1.21');
 
-    await page.goto(`${serverUrl}?componentAmount=12.1&useModelNumberModifier=true`);
+    await page.goto(`${serverUrlWithTarget}&componentAmount=12.1&useModelNumberModifier=true`);
 
     expect(await getValue()).toBe('12.10');
   });
 
-  it('Test disable-negative attribute', async () => {
-    await page.goto(`${serverUrl}`);
+  it(`Test disable-negative attribute ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}`);
 
-    await page.focus('#component');
-    await page.type('#component', '62185');
+    await page.focus(target);
+    await page.type(target, '62185');
 
     expect(await getValue()).toBe('621.85');
 
-    await page.type('#component', '-');
+    await page.type(target, '-');
 
     expect(await getValue()).toBe('-621.85');
 
     // ---------
 
-    await page.goto(`${serverUrl}?disableNegative=true`);
+    await page.goto(`${serverUrlWithTarget}&disableNegative=true`);
 
-    await page.focus('#component');
-    await page.type('#component', '35684');
+    await page.focus(target);
+    await page.type(target, '35684');
 
     expect(await getValue()).toBe('356.84');
 
-    await page.type('#component', '-');
+    await page.type(target, '-');
 
     expect(await getValue()).toBe('356.84');
   });
 
-  it('Test disable attribute', async () => {
-    await page.goto(`${serverUrl}?disabled=true`);
+  it(`Test disable attribute ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}&disabled=true`);
 
-    const isDisabled = await page.$eval('#component', (input) => input.disabled);
+    const isDisabled = await page.$eval(target, (input) => input.disabled);
 
     expect(isDisabled).toBe(true);
   });
 
-  it('Test min attribute', async () => {
+  it(`Test min attribute ${target}`, async () => {
     const min = 3;
 
-    await page.goto(`${serverUrl}?min=${min}`);
+    await page.goto(`${serverUrlWithTarget}&min=${min}`);
 
-    await page.focus('#component');
+    await page.focus(target);
     await page.keyboard.press('ArrowLeft');
-    await page.type('#component', '1');
+    await page.type(target, '1');
 
     expect(await getValue()).toBe('30.10');
 
@@ -169,7 +171,7 @@ describe('Puppeteer Tests', () => {
     await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('ArrowLeft');
 
-    await page.type('#component', '2');
+    await page.type(target, '2');
     expect(await getValue()).toBe('320.10');
 
     await page.keyboard.press('ArrowLeft');
@@ -183,28 +185,28 @@ describe('Puppeteer Tests', () => {
     expect(await getValue()).toBe('3.00');
   });
 
-  it('Test max attribute', async () => {
+  it(`Test max attribute ${target}`, async () => {
     const max = 10;
 
-    await page.goto(`${serverUrl}?max=${max}`);
+    await page.goto(`${serverUrlWithTarget}&max=${max}`);
 
-    await page.focus('#component');
-    await page.type('#component', '123');
+    await page.focus(target);
+    await page.type(target, '123');
 
     expect(await getValue()).toBe('1.23');
 
-    await page.type('#component', '4');
+    await page.type(target, '4');
 
     expect(await getValue()).toBe('10.00');
   });
 
-  it('Test allow-blank attribute', async () => {
-    await page.goto(`${serverUrl}?allowBlank=true`);
+  it(`Test allow-blank attribute ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}&allowBlank=true`);
 
     expect(await getValue()).toBe('');
 
-    await page.focus('#component');
-    await page.type('#component', '5');
+    await page.focus(target);
+    await page.type(target, '5');
 
     expect(await getValue()).toBe('0.05');
 
@@ -212,7 +214,7 @@ describe('Puppeteer Tests', () => {
 
     expect(await getValue()).toBe('');
 
-    await page.type('#component', '6');
+    await page.type(target, '6');
 
     expect(await getValue()).toBe('0.06');
 
@@ -222,17 +224,17 @@ describe('Puppeteer Tests', () => {
     expect(await getValue()).toBe('');
   });
 
-  it('Test if allow-blank works on all precisions', async () => {
+  it(`Test if allow-blank works on all precisions ${target}`, async () => {
     const number = '123456';
     const maxPrecision = 6;
 
     for (let i = 0; i < maxPrecision; i += 1) {
-      await page.goto(`${serverUrl}?allowBlank=true&thousands=empty&precision=${i}`);
+      await page.goto(`${serverUrlWithTarget}&allowBlank=true&thousands=empty&precision=${i}`);
 
       expect(await getValue()).toBe('');
 
-      await page.focus('#component');
-      await page.type('#component', number);
+      await page.focus(target);
+      await page.type(target, number);
 
       const value = await getValue();
 
@@ -248,32 +250,32 @@ describe('Puppeteer Tests', () => {
     }
   });
 
-  it('Test minimum-number-of-characters attribute', async () => {
-    await page.goto(`${serverUrl}?minimumNumberOfCharacters=8`);
+  it(`Test minimum-number-of-characters attribute ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}&minimumNumberOfCharacters=8`);
 
-    await page.focus('#component');
-    await page.type('#component', '123456');
+    await page.focus(target);
+    await page.type(target, '123456');
 
     expect(await getValue()).toBe('001,234.56');
   });
 
-  it('Change event is emitted', async () => {
+  it(`Change event is emitted ${target}`, async () => {
     const events = [];
 
     await page.exposeFunction('onCustomEvent', (event, value) => {
       events.push(value);
     });
 
-    await page.goto(`${serverUrl}`);
+    await page.goto(`${serverUrlWithTarget}`);
 
-    await page.$eval('#component', (input) => {
+    await page.$eval(target, (input) => {
       input.addEventListener('change', (event) => {
         window.onCustomEvent(event, event.target.value);
       });
     });
 
-    await page.focus('#component');
-    await page.type('#component', '123');
+    await page.focus(target);
+    await page.type(target, '123');
 
     // removing lastKnownValue from directive setValue method
     // does trigger change events 2 times every time the use type
@@ -289,20 +291,20 @@ describe('Puppeteer Tests', () => {
     expect(events[5]).toBe('1.23');
   });
 
-  it('Test if US format works correctly', async () => {
-    await page.goto(`${serverUrl}?prefix=U$`);
+  it(`Test if US format works correctly ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}&prefix=U$`);
 
-    await page.focus('#component');
-    await page.type('#component', '123456789');
+    await page.focus(target);
+    await page.type(target, '123456789');
 
     expect(await getValue()).toBe('U$1,234,567.89');
   });
 
-  it('Test if I can positive and negative with the plus and minus signals', async () => {
-    await page.goto(`${serverUrl}`);
+  it(`Test if I can positive and negative with the plus and minus signals ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}`);
 
-    await page.focus('#component');
-    await page.type('#component', '123456789');
+    await page.focus(target);
+    await page.type(target, '123456789');
 
     await page.keyboard.press('-');
 
@@ -313,13 +315,13 @@ describe('Puppeteer Tests', () => {
     expect(await getValue()).toBe('1,234,567.89');
   });
 
-  it('Test if precision "0" (zero) with thousand "." (dot) work correctly', async () => {
-    await page.goto(`${serverUrl}?precision=0&thousands=.&debug=true`);
+  it(`Test if precision "0" (zero) with thousand "." (dot) work correctly ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}&precision=0&thousands=.&debug=true`);
 
-    await page.focus('#component');
-    await page.type('#component', '123456789');
+    await page.focus(target);
+    await page.type(target, '123456789');
 
-    // await page.type('#component', '6');
+    // await page.type(target, '6');
 
     expect(await getValue()).toBe('123.456.789');
   });
