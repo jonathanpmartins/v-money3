@@ -28,7 +28,7 @@ Feel free to open an issue or post a pull request!
 ## Arbitrary precision
 
 Arbitrary precision is only supported with `v-model`.
-It expects to receive a string representation of a number. `12345.67`
+It expects to receive a string representation of a number. `'12345.67'`
 
 Some break changes where introduced in this release.
 Let's follow a train of thought:   
@@ -52,7 +52,7 @@ For those who are using `v-model.number`, integers and floats are compleatly
 understood.  
 Let's follow another train of thought:  
 If your precision is set to `2` and you set a default model value of `55`,
-it will be interpreted as `55.0`. The same is true for `5.5`.
+it will be interpreted as `55.00`. The same is true for `5.5`.
 It will be interpreted as `5.50`. Another example: `55.5` => `55.50`.
 
 [More Examples](https://github.com/jonathanpmartins/v-money3/issues/38#issuecomment-903214235)
