@@ -337,12 +337,13 @@ test('Test default user expectations', async () => {
   ];
 
   for (const item of strings) {
-    const input = mountComponent().find('input');
+    const component = mountComponent();
 
-    await input.setValue(item.set);
+    const input = component.find('input');
 
-    expect(input.element.value)
-      .toBe(item.toBe);
+    await component.setProps({ modelValue: item.set });
+
+    expect(input.element.value).toBe(item.toBe);
   }
 
   const numbers = [
@@ -352,6 +353,7 @@ test('Test default user expectations', async () => {
     { set: 9999, toBe: '9,999.00' },
     { set: 9.9, toBe: '9.90' },
     { set: 9.99, toBe: '9.99' },
+    { set: 9.999, toBe: '10.00' },
   ];
 
   for (const item of numbers) {
