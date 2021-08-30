@@ -492,3 +492,12 @@ test('Leading zeroes', async () => {
   expect(updates.length).toBe(2); // Make sure it doesn't take multiple rounds of formatting
   expect(input.element.value).toBe('0d1234');
 });
+
+test('Test if first digit is correctly recognized with v-model.number modifier component', async () => {
+  const component = mountComponent({ modelModifiers: { number: true } });
+  const input = component.find('input');
+
+  await input.setValue('1');
+
+  expect(input.element.value).toBe('0.01');
+});

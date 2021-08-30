@@ -302,8 +302,8 @@ describe('Puppeteer Component Tests', () => {
     await page.type(target, '123');
 
     // removing lastKnownValue from directive setValue method
-    // does trigger change events 2 times every time the use type
-    // first time on the oninput event, and after on the updated event.
+    // does trigger change events 2 times every time the user type.
+    // First time on the oninput event, and after on the updated event.
 
     expect(events.length).toBe(6);
 
@@ -345,8 +345,15 @@ describe('Puppeteer Component Tests', () => {
     await page.focus(target);
     await page.type(target, '123456789');
 
-    // await page.type(target, '6');
-
     expect(await getValue()).toBe('123.456.789');
+  });
+
+  it('Test if first digit is correctly recognized with v-model.number modifier with puppeteer', async () => {
+    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true`);
+
+    await page.keyboard.press('Tab');
+    await page.type(target, '123');
+
+    expect(await getValue()).toBe('1.23');
   });
 });
