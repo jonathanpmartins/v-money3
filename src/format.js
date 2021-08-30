@@ -11,7 +11,9 @@ function format(input, opt = defaults, caller) {
   } else if (typeof input === 'number') {
     input = input.toFixed(Utils.fixed(opt.precision));
   } else if (opt.modelModifiers && opt.modelModifiers.number) {
-    input = Number(input).toFixed(Utils.fixed(opt.precision));
+    if (Utils.isValidInteger(input)) {
+      input = Number(input).toFixed(Utils.fixed(opt.precision));
+    }
   }
 
   if (opt.debug) console.log('utils format() - input2', input);

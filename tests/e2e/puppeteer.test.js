@@ -122,6 +122,30 @@ describe('Puppeteer Component Tests', () => {
     expect(await getValue()).toBe('12.10');
   });
 
+  it(`Test if "v-model.number" modifier is working when typed ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}&componentAmount=15&useModelNumberModifier=true`);
+
+    expect(await getValue()).toBe('15.00');
+
+    await page.focus(target);
+    await page.type(target, '3');
+
+    expect(await getValue()).toBe('150.03');
+
+    await page.goto(`${serverUrlWithTarget}&componentAmount=15.1&useModelNumberModifier=true`);
+
+    expect(await getValue()).toBe('15.10');
+
+    await page.focus(target);
+    await page.type(target, '4');
+
+    expect(await getValue()).toBe('151.04');
+
+    await page.keyboard.press('Backspace');
+
+    expect(await getValue()).toBe('15.10');
+  });
+
   it(`Test disable-negative attribute ${target}`, async () => {
     await page.goto(`${serverUrlWithTarget}`);
 

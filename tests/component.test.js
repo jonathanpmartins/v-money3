@@ -355,12 +355,13 @@ test('Test default user expectations', async () => {
   ];
 
   for (const item of numbers) {
-    const input = mountComponent({ modelModifiers: { number: true } }).find('input');
+    const component = mountComponent({ modelModifiers: { number: true } });
 
-    await input.setValue(item.set);
+    const input = component.find('input');
 
-    expect(input.element.value)
-      .toBe(item.toBe);
+    await component.setProps({ modelValue: item.set });
+
+    expect(input.element.value).toBe(item.toBe);
   }
 });
 
