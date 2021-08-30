@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.17.5] / 2021-08-30
+
+### Fix
+
+- Fixing problem with first digit [#43](https://github.com/jonathanpmartins/v-money3/issues/43)
+
 ## [3.17.4] / 2021-08-30
 
 ### Fix
@@ -290,6 +296,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.17.5]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.4...v3.17.5
 [3.17.4]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.3...v3.17.4
 [3.17.3]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.2...v3.17.3
 [3.17.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.1...v3.17.2
