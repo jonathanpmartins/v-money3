@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.17.6] / 2021-09-07
+
+### Improvements
+
+- Vue 3.2.0+ added as a peerDependency in package.json file. Issue [#44](https://github.com/jonathanpmartins/v-money3/issues/44)
+- Opt to avoid round precision. Issue [#45](https://github.com/jonathanpmartins/v-money3/issues/45)
+
 ## [3.17.5] / 2021-08-30
 
 ### Fix
@@ -296,6 +303,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.17.6]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.5...v3.17.6
 [3.17.5]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.4...v3.17.5
 [3.17.4]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.3...v3.17.4
 [3.17.3]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.2...v3.17.3
