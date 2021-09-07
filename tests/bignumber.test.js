@@ -86,20 +86,63 @@ test('test setupString function', () => {
 
 test('test toFixed function', () => {
   const array = [
-    { number: 1, fractionDigits: 0, target: '1' },
-    { number: '1', fractionDigits: 3, target: '1.000' },
-    { number: '123', fractionDigits: 2, target: '123.00' },
-    { number: '111.111', fractionDigits: 2, target: '111.11' },
-    { number: '-8888.8888', fractionDigits: 1, target: '-8888.9' },
-    { number: '777.777', fractionDigits: 2, target: '777.78' },
-    { number: '123.45', fractionDigits: 3, target: '123.450' },
-    { number: '-123.45', fractionDigits: 3, target: '-123.450' },
-    { number: '8.8888', fractionDigits: 1, target: '8.9' },
-    { number: '9.9999', fractionDigits: 2, target: '10.00' },
+    // shouldRound
+    {
+      number: 1, precision: 0, round: true, target: '1',
+    },
+    {
+      number: '1', precision: 3, round: true, target: '1.000',
+    },
+    {
+      number: '123', precision: 2, round: true, target: '123.00',
+    },
+    {
+      number: '111.111', precision: 2, round: true, target: '111.11',
+    },
+    {
+      number: '-8888.8888', precision: 1, round: true, target: '-8888.9',
+    },
+    {
+      number: '777.777', precision: 2, round: true, target: '777.78',
+    },
+    {
+      number: '123.45', precision: 3, round: true, target: '123.450',
+    },
+    {
+      number: '-123.45', precision: 3, round: true, target: '-123.450',
+    },
+    {
+      number: '8.8888', precision: 1, round: true, target: '8.9',
+    },
+    {
+      number: '9.9999', precision: 2, round: true, target: '10.00',
+    },
+    // shouldNotRound
+    {
+      number: '111.111', precision: 2, round: false, target: '111.11',
+    },
+    {
+      number: '9.9999', precision: 2, round: false, target: '9.99',
+    },
+    {
+      number: '8.8888', precision: 1, round: false, target: '8.8',
+    },
+    {
+      number: '777.777', precision: 2, round: false, target: '777.77',
+    },
+    {
+      number: '666.6666', precision: 3, round: false, target: '666.666',
+    },
+    {
+      number: '555.55555', precision: 4, round: false, target: '555.5555',
+    },
+    {
+      number: '-8888.8888', precision: 1, round: false, target: '-8888.8',
+    },
   ];
   for (const item of array) {
     const number = new BigNumber(item.number);
-    expect(number.toFixed(item.fractionDigits)).toBe(item.target);
+    expect(number.toFixed(item.precision, item.round)).toBe(item.target);
   }
 
   // test coverage

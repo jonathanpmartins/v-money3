@@ -41,20 +41,24 @@ class BigNumber extends Utils {
     }
   }
 
-  toFixed(precision = 0) {
+  toFixed(precision = 0, shouldRound = true) {
     let string = this.toString();
     const diff = precision - this.getDecimalPrecision();
-    // diff bigger than zero pads zeros at the end
     if (diff > 0) {
-      // if it is an integer, add a dot
+      // diff bigger than zero pads zeros at the end
       if (!string.includes('.')) {
+        // if it is an integer, add a dot
         string += '.';
       }
       return string.padEnd(string.length + diff, '0');
     }
-    // diff smaller than zero need to be sliced and rounded
     if (diff < 0) {
-      return this.constructor.round(string, precision);
+      // diff smaller than zero need to be sliced...
+      if (shouldRound) {
+        // ... and rounded
+        return this.constructor.round(string, precision);
+      }
+      return string.slice(0, diff);
     }
     return string;
   }
