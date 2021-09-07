@@ -39,6 +39,9 @@
     "url": "https://github.com/jonathanpmartins/v-money3/issues"
   },
   "homepage": "https://github.com/jonathanpmartins/v-money3#readme",
+  "peerDependencies": {
+    "vue": ">= 3.2.0"
+  },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.15.0",
     "@babel/preset-env": "^7.15.0",
