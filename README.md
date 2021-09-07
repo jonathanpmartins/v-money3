@@ -196,9 +196,6 @@ Must use `v-model.lazy` to bind works properly.
           max: null,
           allowBlank: false,
           minimumNumberOfCharacters: 0,
-          modelModifiers: {
-            number: false,
-          },
         }
       }
     },
