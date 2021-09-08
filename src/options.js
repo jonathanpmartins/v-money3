@@ -15,4 +15,5 @@ export default {
   modelModifiers: {
     number: false,
   },
+  shouldRound: true,
 };

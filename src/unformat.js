@@ -27,7 +27,7 @@ function unformat(input, opt = defaults, caller) {
     }
   }
 
-  let output = bigNumber.toFixed(Utils.fixed(opt.precision));
+  let output = bigNumber.toFixed(Utils.fixed(opt.precision), opt.shouldRound);
 
   if (opt.modelModifiers && opt.modelModifiers.number) {
     output = parseFloat(output);

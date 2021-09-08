@@ -9,12 +9,18 @@ function format(input, opt = defaults, caller) {
   if (input === null || input === undefined) {
     input = '';
   } else if (typeof input === 'number') {
-    input = input.toFixed(Utils.fixed(opt.precision));
+    if (opt.shouldRound) {
+      input = input.toFixed(Utils.fixed(opt.precision));
+    } else {
+      input = input.toFixed(Utils.fixed(opt.precision) + 1).slice(0, -1);
+    }
   } else if (opt.modelModifiers && opt.modelModifiers.number) {
     if (Utils.isValidInteger(input)) {
       input = Number(input).toFixed(Utils.fixed(opt.precision));
     }
   }
+
+  // console.log('opt', opt);
 
   if (opt.debug) console.log('utils format() - input2', input);
 
@@ -44,7 +50,7 @@ function format(input, opt = defaults, caller) {
     }
   }
 
-  const currency = bigNumber.toFixed(Utils.fixed(opt.precision));
+  const currency = bigNumber.toFixed(Utils.fixed(opt.precision), opt.shouldRound);
 
   if (opt.debug) console.log('utils format() - bigNumber2', bigNumber.toFixed(Utils.fixed(opt.precision)));
 
