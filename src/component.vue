@@ -145,7 +145,7 @@ const {
 Utils.debug(props,'component setup()', props);
 
 const modelValue = modelModifiers.value && modelModifiers.value.number
-  ? Number(props.modelValue).toFixed(Utils.fixed(precision))
+  ? Number(props.modelValue).toFixed(Utils.fixed(precision.value))
   : props.modelValue;
 
 const data = reactive({
