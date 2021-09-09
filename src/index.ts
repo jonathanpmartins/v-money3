@@ -12,12 +12,15 @@ export default {
   }
 };
 
+export type {
+  VMoneyOptions
+};
+
 export {
   Money3Component,
   Money3Directive,
   format,
   unformat,
-  VMoneyOptions,
   // backwards compatibility
   Money3Component as Money3,
   Money3Directive as VMoney3,

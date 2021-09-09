@@ -18,6 +18,7 @@
       minimumNumberOfCharacters,
       debug,
       modelModifiers,
+      shouldRound,
     }"
     class="v-money3" />
 </template>
@@ -122,6 +123,10 @@ const props = defineProps({
     type: Number,
     default: () => defaults.minimumNumberOfCharacters,
   },
+  shouldRound: {
+    type: Boolean,
+    default: () => defaults.shouldRound
+  }
 });
 
 const {
@@ -140,17 +145,18 @@ const {
   min,
   allowBlank,
   minimumNumberOfCharacters,
+  shouldRound
 } = toRefs(props);
 
 Utils.debug(props,'component setup()', props);
 
-    const modelValue = props.modelModifiers && props.modelModifiers.number
-      ? (
-        props.shouldRound
-          ? Number(props.modelValue).toFixed(Utils.fixed(props.precision))
-          : Number(props.modelValue).toFixed(Utils.fixed(props.precision) + 1).slice(0, -1)
-      )
-      : props.modelValue;
+const modelValue = modelModifiers.value && modelModifiers.value.number
+  ? (
+    shouldRound.value
+      ? Number(props.modelValue).toFixed(Utils.fixed(precision.value))
+      : Number(props.modelValue).toFixed(Utils.fixed(precision.value) + 1).slice(0, -1)
+  )
+  : props.modelValue;
 
 const data = reactive({
   formattedValue: format(modelValue, props, 'component setup'),

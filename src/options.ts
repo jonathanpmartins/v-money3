@@ -13,6 +13,7 @@ export interface VMoneyOptions {
   allowBlank: boolean;
   minimumNumberOfCharacters: number;
   modelModifiers: any;
+  shouldRound: boolean;
 
   [key: string]: any;
 }
@@ -33,5 +34,6 @@ export default {
   minimumNumberOfCharacters: 0,
   modelModifiers: {
     number: false
-  }
+  },
+  shouldRound: true
 } as VMoneyOptions;
