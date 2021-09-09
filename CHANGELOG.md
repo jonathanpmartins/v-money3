@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.17.7] / 2021-09-09
+
+### Improvements
+
+- Complete `should-round` feature. Issue [#45](https://github.com/jonathanpmartins/v-money3/issues/45)
+
 ## [3.17.6] / 2021-09-07
 
 ### Improvements
@@ -303,6 +309,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.17.7]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.6...v3.17.7
 [3.17.6]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.5...v3.17.6
 [3.17.5]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.4...v3.17.5
 [3.17.4]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.3...v3.17.4
