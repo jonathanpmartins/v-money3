@@ -1,20 +1,30 @@
 import Utils from './Utils';
 
-class BigNumber extends Utils {
-  constructor(number) {
-    super();
+type NumberParam = number|string|BigInt;
+
+// @ts-ignore
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#use_within_json
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+}
+
+export default class BigNumber {
+  private number?: BigInt;
+  private decimal?: number;
+
+  constructor(number: NumberParam) {
     this.setNumber(number);
   }
 
-  getNumber() {
-    return this.number;
+  getNumber(): BigInt {
+    return this.number!;
   }
 
-  getDecimalPrecision() {
-    return this.decimal;
+  getDecimalPrecision(): number {
+    return this.decimal!;
   }
 
-  setNumber(number) {
+  setNumber(number: any): void {
     this.decimal = 0;
 
     if (typeof number === 'bigint') {
@@ -28,20 +38,20 @@ class BigNumber extends Utils {
     }
   }
 
-  setupString(number) {
-    number = this.constructor.removeLeadingZeros(number);
+  setupString(number: string): void {
+    number = Utils.removeLeadingZeros(number);
 
-    if (this.constructor.isValidInteger(number)) {
+    if (Utils.isValidInteger(number)) {
       this.number = BigInt(number);
-    } else if (this.constructor.isValidFloat(number)) {
-      this.decimal = this.constructor.guessFloatPrecision(number);
+    } else if (Utils.isValidFloat(number)) {
+      this.decimal = Utils.guessFloatPrecision(number);
       this.number = BigInt(number.replace('.', ''));
     } else {
       throw new Error(`BigNumber has received and invalid format for the constructor: ${number}`);
     }
   }
 
-  toFixed(precision = 0, shouldRound = true) {
+  toFixed(precision = 0, shouldRound = true): string {
     let string = this.toString();
     const diff = precision - this.getDecimalPrecision();
     if (diff > 0) {
@@ -56,15 +66,15 @@ class BigNumber extends Utils {
       // diff smaller than zero need to be sliced...
       if (shouldRound) {
         // ... and rounded
-        return this.constructor.round(string, precision);
+        return Utils.round(string, precision);
       }
       return string.slice(0, diff);
     }
     return string;
   }
 
-  toString() {
-    let string = this.number.toString();
+  toString(): string {
+    let string = this.number!.toString();
     if (this.decimal) {
       let isNegative = false;
       if (string.charAt(0) === '-') {
@@ -73,42 +83,47 @@ class BigNumber extends Utils {
       }
       string = string.padStart(string.length + this.decimal, '0');
       string = `${string.slice(0, -this.decimal)}.${string.slice(-this.decimal)}`;
-      string = this.constructor.removeLeadingZeros(string);
+      string = Utils.removeLeadingZeros(string);
 
       return (isNegative ? '-' : '') + string;
     }
     return string;
   }
 
-  lessThan(thatBigNumber) {
+  lessThan(thatBigNumber: NumberParam|BigNumber): boolean {
     const numbers = this.adjustComparisonNumbers(thatBigNumber);
     return numbers[0] < numbers[1];
   }
 
-  biggerThan(thatBigNumber) {
+  biggerThan(thatBigNumber: NumberParam|BigNumber): boolean {
     const numbers = this.adjustComparisonNumbers(thatBigNumber);
     return numbers[0] > numbers[1];
   }
 
-  isEqual(thatBigNumber) {
+  isEqual(thatBigNumber: NumberParam|BigNumber): boolean {
     const numbers = this.adjustComparisonNumbers(thatBigNumber);
     return numbers[0] === numbers[1];
   }
 
-  adjustComparisonNumbers(thatNumber) {
-    if (thatNumber.constructor.name !== 'BigNumber') {
-      thatNumber = new BigNumber(thatNumber);
+  adjustComparisonNumbers(thatNumberParam: NumberParam|BigNumber): BigInt[] {
+    let thatNumber: BigNumber;
+    if (thatNumberParam.constructor.name !== 'BigNumber') {
+      thatNumber = new BigNumber(thatNumberParam as NumberParam);
+    } else {
+      thatNumber = thatNumberParam as BigNumber;
     }
 
     const diff = this.getDecimalPrecision() - thatNumber.getDecimalPrecision();
 
-    let thisNum;
-    let thatNum;
+    let thisNum: BigInt;
+    let thatNum: BigInt;
 
     if (diff > 0) {
       thisNum = this.getNumber();
+      // @ts-ignore
       thatNum = thatNumber.getNumber() * (10n ** BigInt(diff));
     } else if (diff < 0) {
+      // @ts-ignore
       thisNum = this.getNumber() * (10n ** BigInt(diff * -1));
       thatNum = thatNumber.getNumber();
     } else {
@@ -118,6 +133,4 @@ class BigNumber extends Utils {
 
     return [thisNum, thatNum];
   }
-}
-
-export default BigNumber;
+};
