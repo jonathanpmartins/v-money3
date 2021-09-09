@@ -20,8 +20,6 @@ function format(input, opt = defaults, caller) {
     }
   }
 
-  // console.log('opt', opt);
-
   if (opt.debug) console.log('utils format() - input2', input);
 
   const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');

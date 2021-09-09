@@ -116,6 +116,10 @@ export default defineComponent({
       type: Number,
       default: () => defaults.minimumNumberOfCharacters,
     },
+    shouldRound: {
+      type: Boolean,
+      default: true,
+    },
   },
 
   directives: { money3: Money3Directive },
@@ -124,7 +128,11 @@ export default defineComponent({
     if (props.debug) console.log('component setup()', props);
 
     const modelValue = props.modelModifiers && props.modelModifiers.number
-      ? Number(props.modelValue).toFixed(Utils.fixed(props.precision))
+      ? (
+        props.shouldRound
+          ? Number(props.modelValue).toFixed(Utils.fixed(props.precision))
+          : Number(props.modelValue).toFixed(Utils.fixed(props.precision) + 1).slice(0, -1)
+      )
       : props.modelValue;
 
     const data = reactive({

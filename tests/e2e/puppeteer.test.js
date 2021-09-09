@@ -356,4 +356,14 @@ describe('Puppeteer Component Tests', () => {
 
     expect(await getValue()).toBe('1.23');
   });
+
+  it('Test shouldRound property works correctly with puppeteer', async () => {
+    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true&componentAmount=12345.678`);
+
+    expect(await getValue()).toBe('12,345.68');
+
+    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true&componentAmount=123456.789&shouldRound=false`);
+
+    expect(await getValue()).toBe('123,456.78');
+  });
 });

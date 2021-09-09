@@ -236,6 +236,7 @@ If you bind it directly you are just fine too:
 | max       | false    | Number  | Number.MAX_SAFE_INTEGER | The max value allowed                   |
 | allow-blank | false  | Boolean | false   | If the field can start blank and be cleared out by user |
 | minimum-number-of-characters | false | Number | 0 | The minimum number of characters that the mask should show |
+| should-round | false | Boolean | true | Should default values be rounded or sliced                 |
 
 ## Restricted Characters
 
