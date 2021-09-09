@@ -144,9 +144,13 @@ const {
 
 Utils.debug(props,'component setup()', props);
 
-const modelValue = modelModifiers.value && modelModifiers.value.number
-  ? Number(props.modelValue).toFixed(Utils.fixed(precision.value))
-  : props.modelValue;
+    const modelValue = props.modelModifiers && props.modelModifiers.number
+      ? (
+        props.shouldRound
+          ? Number(props.modelValue).toFixed(Utils.fixed(props.precision))
+          : Number(props.modelValue).toFixed(Utils.fixed(props.precision) + 1).slice(0, -1)
+      )
+      : props.modelValue;
 
 const data = reactive({
   formattedValue: format(modelValue, props, 'component setup'),

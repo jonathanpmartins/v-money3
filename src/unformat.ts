@@ -27,7 +27,7 @@ function unformat(input: string, opt: VMoneyOptions = defaults, caller?: any): s
     }
   }
 
-  let output = bigNumber.toFixed(Utils.fixed(opt.precision));
+  let output = bigNumber.toFixed(Utils.fixed(opt.precision), opt.shouldRound);
 
   if (opt.modelModifiers && opt.modelModifiers.number) {
     // @ts-ignore

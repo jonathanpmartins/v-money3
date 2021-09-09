@@ -504,3 +504,18 @@ test('Test if first digit is correctly recognized with v-model.number modifier c
 
   expect(input.element.value).toBe('0.01');
 });
+
+test('Test shouldRound property works correctly', async () => {
+  const component = mountComponent({ modelModifiers: { number: true } });
+  const input = component.find('input');
+
+  await component.setProps({ modelValue: 12345.678 });
+
+  expect(input.element.value).toBe('12,345.68');
+
+  await component.setProps({ shouldRound: false });
+
+  await component.setProps({ modelValue: 123456.789 });
+
+  expect(input.element.value).toBe('123,456.78');
+});

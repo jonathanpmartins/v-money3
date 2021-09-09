@@ -232,10 +232,11 @@ If you bind it directly you are just fine too:
 | masked    | false    | Boolean | false   | If the component output should include the mask or not  |
 | disable-negative | false | Boolean | false | Component does not allow negative values              |
 | disabled  | false    | Boolean | false   | Disable the inner input tag                             |
-| min       | false    | Number  | Number.MIN_SAFE_INTEGER | The min value allowed                   |
-| max       | false    | Number  | Number.MAX_SAFE_INTEGER | The max value allowed                   |
+| min       | false    | Number  | null | The min value allowed                   |
+| max       | false    | Number  | null | The max value allowed                   |
 | allow-blank | false  | Boolean | false   | If the field can start blank and be cleared out by user |
 | minimum-number-of-characters | false | Number | 0 | The minimum number of characters that the mask should show |
+| should-round | false | Boolean | true | Should default values be rounded or sliced                 |
 
 ## Restricted Characters
 
@@ -254,14 +255,12 @@ Restricted inputs will be filter out of the final mask.
 A console warn with more information will be shown!
 
 
-
-
 ## Don't want to use a package manager?
 
 Use it directly in the browser! 
 
 ```html
-<script src="https://unpkg.com/v-money3@3.17.6/dist/v-money3.umd.js"></script>
+<script src="https://unpkg.com/v-money3@3.18.0/dist/v-money3.umd.js"></script>
 ```
 
 Take a look at issue [#15](https://github.com/jonathanpmartins/v-money3/issues/15#issuecomment-830988807) and also this [codesandbox](https://codesandbox.io/s/mystifying-paper-bpfyn?file=/index.html) working example.

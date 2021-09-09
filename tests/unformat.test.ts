@@ -1,11 +1,6 @@
 import unformat from '../src/unformat';
 import defaults from '../src/options';
 
-beforeAll(() => {
-  console.warn = () => {};
-  console.log = () => {};
-});
-
 test('unformat min max options should be respected', () => {
   expect(unformat('9.00', { ...defaults, min: 10 })).toBe('10.00');
   expect(unformat('11.00', { ...defaults, min: 10 })).toBe('11.00');

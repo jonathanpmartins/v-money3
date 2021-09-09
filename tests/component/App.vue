@@ -73,6 +73,7 @@ const config = reactive({
   modelModifiers: {
     number: ref(!!get('useModelNumberModifier', false)),
   },
+  shouldRound: get('shouldRound') !== 'false',
 });
 
 // This starter template is using Vue 3 experimental <script setup> SFCs
