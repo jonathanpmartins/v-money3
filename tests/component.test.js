@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils';
 import {
   RESTRICTED_CHARACTERS, RESTRICTED_OPTIONS,
-} from '../src/Utils';
+} from '../src/Utils.ts';
 import Money3Component from '../src/component.vue';
-import Money3Directive from '../src/directive';
+import Money3Directive from '../src/directive.ts';
 
 beforeAll(() => {
   console.warn = () => {};

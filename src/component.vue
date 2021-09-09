@@ -22,154 +22,165 @@
     class="v-money3" />
 </template>
 
-<script>
-import {
-  defineComponent, reactive, watch, computed,
-} from 'vue';
-import Money3Directive from './directive';
-import defaults from './options';
-import Utils from './Utils';
-import format from './format';
-import unformat from './unformat';
-
-export default defineComponent({
+<script lang="ts">
+export default {
   inheritAttrs: false,
   name: 'Money3',
-  props: {
-    debug: {
-      required: false,
-      type: Boolean,
-      default: false,
-    },
-    id: {
-      required: false,
-      type: [Number, String],
-      default: 0,
-    },
-    modelValue: {
-      required: false,
-      type: [Number, String, undefined, null],
-      default: null,
-    },
-    modelModifiers: {
-      required: false,
-      type: Object,
-      default: () => ({ number: false }),
-    },
-    masked: {
-      type: Boolean,
-      default: false,
-    },
-    precision: {
-      type: Number,
-      default: () => defaults.precision,
-    },
-    decimal: {
-      type: String,
-      default: () => defaults.decimal,
-      validator(value) {
-        return Utils.validateRestrictedInput(value, 'decimal');
-      },
-    },
-    thousands: {
-      type: String,
-      default: () => defaults.thousands,
-      validator(value) {
-        return Utils.validateRestrictedInput(value, 'thousands');
-      },
-    },
-    prefix: {
-      type: String,
-      default: () => defaults.prefix,
-      validator(value) {
-        return Utils.validateRestrictedInput(value, 'prefix');
-      },
-    },
-    suffix: {
-      type: String,
-      default: () => defaults.suffix,
-      validator(value) {
-        return Utils.validateRestrictedInput(value, 'suffix');
-      },
-    },
-    disableNegative: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    max: {
-      type: [String, Number],
-      default: () => defaults.max,
-    },
-    min: {
-      type: [String, Number],
-      default: () => defaults.min,
-    },
-    allowBlank: {
-      type: Boolean,
-      default: () => defaults.allowBlank,
-    },
-    minimumNumberOfCharacters: {
-      type: Number,
-      default: () => defaults.minimumNumberOfCharacters,
+};
+</script>
+
+<script lang="ts" setup>
+import { computed, getCurrentInstance, reactive, toRefs, useAttrs, watch } from 'vue';
+import money3 from './directive.ts';
+import defaults from './options.ts';
+import Utils from './Utils.ts';
+import format from './format.ts';
+import unformat from './unformat.ts';
+
+const props = defineProps({
+  debug: {
+    required: false,
+    type: Boolean,
+    default: false,
+  },
+  id: {
+    required: false,
+    type: [Number, String],
+    default: () => getCurrentInstance().uid,
+  },
+  modelValue: {
+    required: false,
+    type: [Number, String, undefined, null],
+    default: null,
+  },
+  modelModifiers: {
+    required: false,
+    type: Object,
+    default: () => ({ number: false }),
+  },
+  masked: {
+    type: Boolean,
+    default: false,
+  },
+  precision: {
+    type: Number,
+    default: () => defaults.precision,
+  },
+  decimal: {
+    type: String,
+    default: () => defaults.decimal,
+    validator(value) {
+      return Utils.validateRestrictedInput(value, 'decimal');
     },
   },
+  thousands: {
+    type: String,
+    default: () => defaults.thousands,
+    validator(value) {
+      return Utils.validateRestrictedInput(value, 'thousands');
+    },
+  },
+  prefix: {
+    type: String,
+    default: () => defaults.prefix,
+    validator(value) {
+      return Utils.validateRestrictedInput(value, 'prefix');
+    },
+  },
+  suffix: {
+    type: String,
+    default: () => defaults.suffix,
+    validator(value) {
+      return Utils.validateRestrictedInput(value, 'suffix');
+    },
+  },
+  disableNegative: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  max: {
+    type: [String, Number],
+    default: () => defaults.max,
+  },
+  min: {
+    type: [String, Number],
+    default: () => defaults.min,
+  },
+  allowBlank: {
+    type: Boolean,
+    default: () => defaults.allowBlank,
+  },
+  minimumNumberOfCharacters: {
+    type: Number,
+    default: () => defaults.minimumNumberOfCharacters,
+  },
+});
 
-  directives: { money3: Money3Directive },
+const {
+  debug,
+  id,
+  modelModifiers,
+  masked,
+  precision,
+  decimal,
+  thousands,
+  prefix,
+  suffix,
+  disableNegative,
+  disabled,
+  max,
+  min,
+  allowBlank,
+  minimumNumberOfCharacters,
+} = toRefs(props);
 
-  setup(props, { emit, attrs }) {
-    if (props.debug) console.log('component setup()', props);
+Utils.debug(props,'component setup()', props);
 
-    const modelValue = props.modelModifiers && props.modelModifiers.number
-      ? Number(props.modelValue).toFixed(Utils.fixed(props.precision))
-      : props.modelValue;
+const modelValue = modelModifiers.value && modelModifiers.value.number
+  ? Number(props.modelValue).toFixed(Utils.fixed(precision))
+  : props.modelValue;
 
-    const data = reactive({
-      formattedValue: format(modelValue, props, 'component setup'),
-    });
+const data = reactive({
+  formattedValue: format(modelValue, props, 'component setup'),
+});
 
-    if (props.debug) console.log('component setup() - data.formattedValue', data.formattedValue);
+Utils.debug(props,'component setup() - data.formattedValue', data.formattedValue);
 
-    watch(
-      () => props.modelValue, (val) => {
-        if (props.debug) console.log('component watch() -> val', val);
-        const formatted = format(val, Utils.filterOptRestrictions({ ...props }), 'component watch');
-        if (formatted !== data.formattedValue) {
-          if (props.debug) console.log('component watch() changed -> formatted', formatted);
-          data.formattedValue = formatted;
-        }
-      },
-    );
-
-    let lastValue = null;
-    function change(evt) {
-      if (props.debug) console.log('component change() -> evt.target.value', evt.target.value);
-      const value = props.masked && !props.modelModifiers.number ? evt.target.value : unformat(evt.target.value, Utils.filterOptRestrictions({ ...props }), 'component change');
-      if (value !== lastValue) {
-        lastValue = value;
-        if (props.debug) console.log('component change() -> update:model-value', value);
-        emit('update:model-value', value);
-      }
+watch(
+  () => props.modelValue, (val) => {
+    Utils.debug(props,'component watch() -> val', val);
+    const formatted = format(val, Utils.filterOptRestrictions({ ...props }), 'component watch');
+    if (formatted !== data.formattedValue) {
+      Utils.debug(props,'component watch() changed -> formatted', formatted);
+      data.formattedValue = formatted;
     }
-
-    const listeners = computed(() => {
-      const payload = {
-        ...attrs,
-      };
-
-      delete payload['onUpdate:modelValue'];
-
-      return payload;
-    });
-
-    return {
-      data,
-      listeners,
-      change,
-    };
   },
+);
+
+let lastValue = null;
+const emit = defineEmits<{(e: 'update:model-value', value: string | number): void}>();
+function change(evt) {
+  Utils.debug(props,'component change() -> evt.target.value', evt.target.value);
+  const value = masked.value && !modelModifiers.value.number ? evt.target.value : unformat(evt.target.value, Utils.filterOptRestrictions({ ...props }), 'component change');
+  if (value !== lastValue) {
+    lastValue = value;
+    Utils.debug(props,'component change() -> update:model-value', value);
+    emit('update:model-value', value);
+  }
+}
+
+const attrs = useAttrs();
+const listeners = computed(() => {
+  const payload = {
+    ...attrs,
+  };
+
+  delete payload['onUpdate:modelValue'];
+
+  return payload;
 });
 </script>
