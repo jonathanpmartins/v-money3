@@ -232,8 +232,8 @@ If you bind it directly you are just fine too:
 | masked    | false    | Boolean | false   | If the component output should include the mask or not  |
 | disable-negative | false | Boolean | false | Component does not allow negative values              |
 | disabled  | false    | Boolean | false   | Disable the inner input tag                             |
-| min       | false    | Number  | Number.MIN_SAFE_INTEGER | The min value allowed                   |
-| max       | false    | Number  | Number.MAX_SAFE_INTEGER | The max value allowed                   |
+| min       | false    | Number  | null | The min value allowed                   |
+| max       | false    | Number  | null | The max value allowed                   |
 | allow-blank | false  | Boolean | false   | If the field can start blank and be cleared out by user |
 | minimum-number-of-characters | false | Number | 0 | The minimum number of characters that the mask should show |
 | should-round | false | Boolean | true | Should default values be rounded or sliced                 |
@@ -253,8 +253,6 @@ Numbers `0-9` and the following characters...
 
 Restricted inputs will be filter out of the final mask.
 A console warn with more information will be shown!
-
-
 
 
 ## Don't want to use a package manager?

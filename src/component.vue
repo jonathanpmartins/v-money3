@@ -61,6 +61,7 @@ export default defineComponent({
       default: false,
     },
     precision: {
+      required: true,
       type: Number,
       default: () => defaults.precision,
     },
