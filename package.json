@@ -46,6 +46,8 @@
     "@babel/plugin-transform-runtime": "^7.15.0",
     "@babel/preset-env": "^7.15.4",
     "@types/jest": "27.0.1",
+    "@types/jest-environment-puppeteer": "4.4.1",
+    "@types/puppeteer": "5.4.4",
     "@vitejs/plugin-vue": "^1.6.1",
     "@vue/compiler-sfc": "^3.2.9",
     "@vue/test-utils": "^2.0.0-rc.14",

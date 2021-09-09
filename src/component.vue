@@ -23,15 +23,19 @@
 </template>
 
 <script lang="ts">
+import money3 from './directive.ts';
+
 export default {
   inheritAttrs: false,
   name: 'Money3',
+  directives: {
+    money3
+  }
 };
 </script>
 
 <script lang="ts" setup>
 import { computed, getCurrentInstance, reactive, toRefs, useAttrs, watch } from 'vue';
-import money3 from './directive.ts';
 import defaults from './options.ts';
 import Utils from './Utils.ts';
 import format from './format.ts';

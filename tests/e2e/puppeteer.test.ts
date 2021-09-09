@@ -12,7 +12,7 @@ describe('Puppeteer Component Tests', () => {
   });
 
   async function getValue() {
-    return page.$eval(target, (input) => input.value);
+    return page.$eval<string>(target, (input: Element) => (input as HTMLInputElement).value);
   }
 
   it(`Test prefix attribute ${target}`, async () => {
@@ -175,7 +175,7 @@ describe('Puppeteer Component Tests', () => {
   it(`Test disable attribute ${target}`, async () => {
     await page.goto(`${serverUrlWithTarget}&disabled=true`);
 
-    const isDisabled = await page.$eval(target, (input) => input.disabled);
+    const isDisabled = await page.$eval<boolean>(target, (input: Element) => (input as HTMLInputElement).disabled);
 
     expect(isDisabled).toBe(true);
   });
@@ -262,7 +262,8 @@ describe('Puppeteer Component Tests', () => {
 
       const value = await getValue();
 
-      const toBe = (number / (10 ** i)).toFixed(i);
+      // TODO added parseFloat
+      const toBe = (parseFloat(number) / (10 ** i)).toFixed(i);
 
       expect(value).toBe(`${toBe}`);
 
@@ -284,17 +285,19 @@ describe('Puppeteer Component Tests', () => {
   });
 
   it(`Change event is emitted ${target}`, async () => {
-    const events = [];
+    const events: any[] = [];
 
-    await page.exposeFunction('onCustomEvent', (event, value) => {
+    await page.exposeFunction('onCustomEvent', (event: any, value: any) => {
       events.push(value);
     });
 
     await page.goto(`${serverUrlWithTarget}`);
 
-    await page.$eval(target, (input) => {
-      input.addEventListener('change', (event) => {
-        window.onCustomEvent(event, event.target.value);
+    await page.$eval<void>(target, (input: Element) => {
+      input.addEventListener('change', (event: Event) => {
+        const value = (event.target as HTMLInputElement).value;
+        // @ts-ignore
+        window.onCustomEvent(event, value);
       });
     });
 
