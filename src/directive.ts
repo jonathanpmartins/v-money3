@@ -70,8 +70,11 @@ export default {
       Utils.debug(opt!, 'directive onkeydown() - e.key', e.key);
       if (e.key === '+') {
         Utils.debug(opt!, 'directive onkeydown() - unformat el.value', el.value);
-        const number = unformat(el.value, opt!);
-        if (typeof number === 'number' && number < 0) {
+        let number = unformat(el.value, opt!);
+        if (typeof number === 'string') {
+          number = parseFloat(number);
+        }
+        if (number < 0) {
           el.value = String(number * -1);
         }
       }
