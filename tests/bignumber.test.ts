@@ -47,7 +47,7 @@ test('test setNumber function', () => {
 
   try {
     number.setNumber(['123.456.7']);
-  } catch (e) {
+  } catch (e: any) {
     const includes = e.message.includes('BigNumber has received and invalid typeof');
     expect(includes).toBe(true);
   }
@@ -78,7 +78,7 @@ test('test setupString function', () => {
 
   try {
     number.setupString('123.456.7');
-  } catch (e) {
+  } catch (e: any) {
     const includes = e.message.includes('BigNumber has received and invalid format for the constructor');
     expect(includes).toBe(true);
   }

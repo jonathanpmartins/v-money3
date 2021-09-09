@@ -1,7 +1,7 @@
 import Utils, {
   RESTRICTED_CHARACTERS, RESTRICTED_OPTIONS,
 } from '../src/Utils';
-import defaults from '../src/options';
+import defaults, { VMoneyOptions } from '../src/options';
 
 beforeAll(() => {
   console.warn = () => {};
@@ -40,7 +40,7 @@ test('test validateRestrictedInput(value, caller) method', () => {
 test('test validateRestrictedOptions(opt) method', () => {
   for (const target of RESTRICTED_OPTIONS) {
     for (const char of RESTRICTED_CHARACTERS) {
-      const opt = { ...defaults };
+      const opt: VMoneyOptions = { ...defaults };
       opt[target] = char;
       const isValid = Utils.validateRestrictedOptions(opt);
       expect(isValid).toBe(false);
