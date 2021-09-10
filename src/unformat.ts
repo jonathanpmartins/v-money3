@@ -1,19 +1,19 @@
-import defaults from './options';
+import defaults, { VMoneyOptions } from './options';
 import BigNumber from './BigNumber';
 import Utils from './Utils';
 
-function unformat(input, opt = defaults, caller) {
-  if (opt.debug) console.log('utils unformat() - caller', caller);
-  if (opt.debug) console.log('utils unformat() - input', input);
+function unformat(input: string, opt: VMoneyOptions = defaults, caller?: any): string|number {
+  Utils.debug(opt, 'utils unformat() - caller', caller);
+  Utils.debug(opt, 'utils unformat() - input', input);
 
   const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
-  if (opt.debug) console.log('utils unformat() - filtered', filtered);
+  Utils.debug(opt, 'utils unformat() - filtered', filtered);
   const numbers = Utils.onlyNumbers(filtered);
-  if (opt.debug) console.log('utils unformat() - numbers', numbers);
+  Utils.debug(opt, 'utils unformat() - numbers', numbers);
   const bigNumber = new BigNumber(negative + Utils.numbersToCurrency(numbers, opt.precision));
 
-  if (opt.debug) console.log('utils unformat() - bigNumber1', numbers.toString());
+  Utils.debug(opt, 'utils unformat() - bigNumber1', numbers.toString());
 
   /// min and max must be a valid float or integer
   if (opt.max) {
@@ -30,10 +30,11 @@ function unformat(input, opt = defaults, caller) {
   let output = bigNumber.toFixed(Utils.fixed(opt.precision), opt.shouldRound);
 
   if (opt.modelModifiers && opt.modelModifiers.number) {
+    // @ts-ignore
     output = parseFloat(output);
   }
 
-  if (opt.debug) console.log('utils unformat() - output', output);
+  Utils.debug(opt, 'utils unformat() - output', output);
 
   return output;
 }

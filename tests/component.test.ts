@@ -103,7 +103,7 @@ test('Test precision attribute', async () => {
 
     await input.setValue(`${number}`);
 
-    const toBe = parseFloat(number).toFixed(precision);
+    const toBe = number.toFixed(precision);
 
     expect(input.element.value).toBe(toBe);
   }
@@ -181,9 +181,9 @@ test('Change event is emitted', async () => {
 
   expect(component.emitted()).toHaveProperty('change');
 
-  const incrementEvent = component.emitted('change');
-  incrementEvent.forEach((item) => {
-    expect(item[0].target.value).toBe('123.45');
+  const incrementEvent = component.emitted<Event[]>('change');
+  incrementEvent!.forEach((item) => {
+    expect((item[0].target as HTMLInputElement).value).toBe('123.45');
   });
 });
 
@@ -212,10 +212,10 @@ test('Test if restricted characters are correctly validated!', async () => {
   for (const character of RESTRICTED_CHARACTERS) {
     for (const option of RESTRICTED_OPTIONS) {
       try {
-        const attr = {};
+        const attr: any = {};
         attr[option] = character;
         mountComponent(attr);
-      } catch (e) {
+      } catch (e: any) {
         const message = `v-money3 "${option}" property don't accept "${character}" as a value`;
 
         const hasException = e.message.includes(message);
@@ -261,7 +261,7 @@ test('Test if non masked values are correctly translated', async () => {
 
   await input.setValue('5971513.15');
 
-  const updates = component.emitted()['update:model-value'];
+  const updates = component.emitted<string[]>()['update:model-value'];
   expect(updates[updates.length - 1][0]).toBe('5971513.15');
   expect(input.element.value).toBe('5,971,513.15');
 });
@@ -280,7 +280,7 @@ test('Test if the v-model number modifier work correctly', async () => {
 
   await input.setValue('971513.158');
 
-  const updates = component.emitted()['update:model-value'];
+  const updates = component.emitted<number[]>()['update:model-value'];
   expect(updates[updates.length - 1][0]).toBe(971513.158);
   expect(input.element.value).toBe('971,513.158');
 });
@@ -299,7 +299,7 @@ test('Guarantee that the v-model number modifier always returns a float number e
 
   await input.setValue('8971513.15');
 
-  const updates = component.emitted()['update:model-value'];
+  const updates = component.emitted<number[]>()['update:model-value'];
   expect(updates[updates.length - 1][0]).toBe(8971513.15);
   expect(input.element.value).toBe('8,971,513.15');
 });
@@ -314,14 +314,17 @@ test('Test if watcher correctly propagates changes made on v-model', async () =>
 
   await component.setProps({ modelValue: 5 });
 
+  // @ts-ignore
   expect(component.vm.data.formattedValue).toBe('5.00');
 
   await component.setProps({ modelValue: 5.1 });
 
+  // @ts-ignore
   expect(component.vm.data.formattedValue).toBe('5.10');
 
   await component.setProps({ modelValue: '5.13' });
 
+  // @ts-ignore
   expect(component.vm.data.formattedValue).toBe('5.13');
 });
 
@@ -379,7 +382,7 @@ test('Test arbitrary precision', async () => {
 
   await input.setValue('999999999999999999999.99');
 
-  const updates = component.emitted()['update:model-value'];
+  const updates = component.emitted<string[]>()['update:model-value'];
   expect(updates[updates.length - 1][0]).toBe('999999999999999999999.99');
   expect(input.element.value).toBe('999,999,999,999,999,999,999.99');
 });
@@ -396,7 +399,7 @@ test('Test arbitrary precision with decimal rounded', async () => {
 
   await input1.setValue('999999999999999999999.99');
 
-  const updates1 = component1.emitted()['update:model-value'];
+  const updates1 = component1.emitted<string[]>()['update:model-value'];
   expect(updates1[updates1.length - 1][0]).toBe('1000000000000000000000');
   expect(input1.element.value).toBe('1,000,000,000,000,000,000,000');
 
@@ -411,7 +414,7 @@ test('Test arbitrary precision with decimal rounded', async () => {
 
   await input2.setValue('1999999999999999999999.99');
 
-  const updates2 = component2.emitted()['update:model-value'];
+  const updates2 = component2.emitted<string[]>()['update:model-value'];
   expect(updates2[updates2.length - 1][0]).toBe('2000000000000000000000');
   expect(input2.element.value).toBe('2,000,000,000,000,000,000,000');
 
@@ -429,7 +432,7 @@ test('Weird separators', async () => {
 
   await input.setValue('1234567d89');
 
-  const updates = component.emitted()['update:model-value'];
+  const updates = component.emitted<string[]>()['update:model-value'];
   expect(updates[updates.length - 1][0]).toBe('1t234t567d89');
   expect(input.element.value).toBe('1t234t567d89');
 });
@@ -445,7 +448,7 @@ test('Decimal values rounded when precision is 0', async () => {
 
   await input.setValue('1234567.89');
 
-  const updates = component.emitted()['update:model-value'];
+  const updates = component.emitted<string[]>()['update:model-value'];
   expect(updates[updates.length - 1][0]).toBe('1t234t568');
   expect(input.element.value).toBe('1t234t568');
 });

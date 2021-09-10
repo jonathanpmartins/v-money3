@@ -1,10 +1,10 @@
-import defaults from './options';
+import defaults, { VMoneyOptions } from './options';
 import BigNumber from './BigNumber';
 import Utils from './Utils';
 
-function format(input, opt = defaults, caller) {
-  if (opt.debug) console.log('utils format() - caller', caller);
-  if (opt.debug) console.log('utils format() - input1', input);
+function format(input: string|number|null|undefined, opt: VMoneyOptions = defaults, caller?: any): string {
+  Utils.debug(opt, 'utils format() - caller', caller);
+  Utils.debug(opt, 'utils format() - input1', input);
 
   if (input === null || input === undefined) {
     input = '';
@@ -20,21 +20,21 @@ function format(input, opt = defaults, caller) {
     }
   }
 
-  if (opt.debug) console.log('utils format() - input2', input);
+  Utils.debug(opt, 'utils format() - input2', input);
 
   const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');
   let filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
-  if (opt.debug) console.log('utils format() - filtered', filtered);
-  if (!opt.precision && opt.thousands !== '.' && BigNumber.isValidFloat(filtered)) {
-    filtered = BigNumber.round(filtered, 0);
-    if (opt.debug) console.log('utils format() - !opt.precision && isValidFloat()', filtered);
+  Utils.debug(opt, 'utils format() - filtered', filtered);
+  if (!opt.precision && opt.thousands !== '.' && Utils.isValidFloat(filtered)) {
+    filtered = Utils.round(filtered, 0);
+    Utils.debug(opt, 'utils format() - !opt.precision && isValidFloat()', filtered);
   }
   const numbers = Utils.onlyNumbers(filtered);
-  if (opt.debug) console.log('utils format() - numbers', numbers);
+  Utils.debug(opt, 'utils format() - numbers', numbers);
 
-  if (opt.debug) console.log('utils format() - numbersToCurrency', negative + Utils.numbersToCurrency(numbers, opt.precision));
+  Utils.debug(opt, 'utils format() - numbersToCurrency', negative + Utils.numbersToCurrency(numbers, opt.precision));
   const bigNumber = new BigNumber(negative + Utils.numbersToCurrency(numbers, opt.precision));
-  if (opt.debug) console.log('utils format() - bigNumber1', bigNumber.toString());
+  Utils.debug(opt, 'utils format() - bigNumber1', bigNumber.toString());
 
   /// min and max must be a valid float or integer
   if (opt.max) {
@@ -50,7 +50,7 @@ function format(input, opt = defaults, caller) {
 
   const currency = bigNumber.toFixed(Utils.fixed(opt.precision), opt.shouldRound);
 
-  if (opt.debug) console.log('utils format() - bigNumber2', bigNumber.toFixed(Utils.fixed(opt.precision)));
+  Utils.debug(opt, 'utils format() - bigNumber2', bigNumber.toFixed(Utils.fixed(opt.precision)));
 
   // test if it is zero 0, or 0.0 or 0.00 and so on...
   if ((/^0(\.0+)?$/g).test(currency) && opt.allowBlank) {
@@ -70,7 +70,7 @@ function format(input, opt = defaults, caller) {
         + Utils.joinIntegerAndDecimal(integer, decimal, opt.decimal)
         + opt.suffix;
 
-  if (opt.debug) console.log('utils format() - output', output);
+  Utils.debug(opt, 'utils format() - output', output);
 
   return output;
 }

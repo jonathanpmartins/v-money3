@@ -1,16 +1,20 @@
 import Money3Component from './component.vue';
 import Money3Directive from './directive';
 import format from './format';
+import { VMoneyOptions } from './options';
 import unformat from './unformat';
+import { App } from 'vue';
 
-const money = {
-  install: (app) => {
+export default {
+  install(app: App) {
     app.component('money3', Money3Component);
     app.directive('money3', Money3Directive);
-  },
+  }
 };
 
-export default money;
+export type {
+  VMoneyOptions
+};
 
 export {
   Money3Component,
