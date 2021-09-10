@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.19.0] / 2021-09-10
+
+### Improvements
+
+- Upgrade package to TypeScript. Issue [#41](https://github.com/jonathanpmartins/v-money3/issues/41) and Pull Request [#46](https://github.com/jonathanpmartins/v-money3/pull/46). Thanks to [@gigioSouza](https://github.com/gigioSouza)
+
 ## [3.18.0] / 2021-09-09
 
 ### Improvements
@@ -309,6 +315,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.19.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.18.0...v3.19.0
 [3.18.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.6...v3.18.0
 [3.17.6]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.5...v3.17.6
 [3.17.5]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.4...v3.17.5
