@@ -91,18 +91,18 @@ export default class BigNumber {
   }
 
   lessThan(thatBigNumber: NumberParam|BigNumber): boolean {
-    const numbers = this.adjustComparisonNumbers(thatBigNumber);
-    return numbers[0] < numbers[1];
+    const [ thisNumber, thatNumber ] = this.adjustComparisonNumbers(thatBigNumber);
+    return thisNumber < thatNumber;
   }
 
   biggerThan(thatBigNumber: NumberParam|BigNumber): boolean {
-    const numbers = this.adjustComparisonNumbers(thatBigNumber);
-    return numbers[0] > numbers[1];
+    const [ thisNumber, thatNumber ] = this.adjustComparisonNumbers(thatBigNumber);
+    return thisNumber > thatNumber;
   }
 
   isEqual(thatBigNumber: NumberParam|BigNumber): boolean {
-    const numbers = this.adjustComparisonNumbers(thatBigNumber);
-    return numbers[0] === numbers[1];
+    const [ thisNumber, thatNumber ] = this.adjustComparisonNumbers(thatBigNumber);
+    return thisNumber === thatNumber;
   }
 
   adjustComparisonNumbers(thatNumberParam: NumberParam|BigNumber): BigInt[] {
@@ -115,20 +115,15 @@ export default class BigNumber {
 
     const diff = this.getDecimalPrecision() - thatNumber.getDecimalPrecision();
 
-    let thisNum: BigInt;
-    let thatNum: BigInt;
+    let thisNum = this.getNumber();
+    let thatNum = thatNumber.getNumber();
 
     if (diff > 0) {
-      thisNum = this.getNumber();
       // @ts-ignore
       thatNum = thatNumber.getNumber() * (10n ** BigInt(diff));
     } else if (diff < 0) {
       // @ts-ignore
       thisNum = this.getNumber() * (10n ** BigInt(diff * -1));
-      thatNum = thatNumber.getNumber();
-    } else {
-      thisNum = this.getNumber();
-      thatNum = thatNumber.getNumber();
     }
 
     return [thisNum, thatNum];

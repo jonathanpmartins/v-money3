@@ -315,17 +315,17 @@ test('Test if watcher correctly propagates changes made on v-model', async () =>
   await component.setProps({ modelValue: 5 });
 
   // @ts-ignore
-  expect(component.vm.data.formattedValue).toBe('5.00');
+  expect(component.vm.formattedValue).toBe('5.00');
 
   await component.setProps({ modelValue: 5.1 });
 
   // @ts-ignore
-  expect(component.vm.data.formattedValue).toBe('5.10');
+  expect(component.vm.formattedValue).toBe('5.10');
 
   await component.setProps({ modelValue: '5.13' });
 
   // @ts-ignore
-  expect(component.vm.data.formattedValue).toBe('5.13');
+  expect(component.vm.formattedValue).toBe('5.13');
 });
 
 test('Test default user expectations', async () => {

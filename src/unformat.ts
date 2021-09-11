@@ -2,15 +2,20 @@ import defaults, { VMoneyOptions } from './options';
 import BigNumber from './BigNumber';
 import { debug, fixed, numbersToCurrency, onlyNumbers } from './Utils';
 
-function unformat(input: string, opt: VMoneyOptions = defaults, caller?: any): string|number {
+export default function unformat(input: string, opt: VMoneyOptions = defaults, caller?: any): string|number {
   debug(opt, 'utils unformat() - caller', caller);
   debug(opt, 'utils unformat() - input', input);
 
   const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');
+
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
+
   debug(opt, 'utils unformat() - filtered', filtered);
+
   const numbers = onlyNumbers(filtered);
+
   debug(opt, 'utils unformat() - numbers', numbers);
+
   const bigNumber = new BigNumber(negative + numbersToCurrency(numbers, opt.precision));
 
   debug(opt, 'utils unformat() - bigNumber1', numbers.toString());
@@ -38,5 +43,3 @@ function unformat(input: string, opt: VMoneyOptions = defaults, caller?: any): s
 
   return output;
 }
-
-export default unformat;

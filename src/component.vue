@@ -1,8 +1,8 @@
 <template>
   <input type="tel"
-    :id="id"
-    :value="data.formattedValue"
-    :disabled="disabled"
+    :id="props.id"
+    :value="formattedValue"
+    :disabled="props.disabled"
     @change="change"
     v-bind="listeners"
     v-money3="{
@@ -36,7 +36,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed, getCurrentInstance, reactive, toRefs, useAttrs, watch } from 'vue';
+import { computed, getCurrentInstance, ref, toRefs, useAttrs, watch } from 'vue';
 import defaults from './options';
 import format from './format';
 import unformat from './unformat';
@@ -130,46 +130,47 @@ const props = defineProps({
 });
 
 const {
-  id,
+  modelValue,
   modelModifiers,
   masked,
   precision,
-  disabled,
   shouldRound
 } = toRefs(props);
 
 debug(props,'component setup()', props);
 
-const modelValue = modelModifiers.value && modelModifiers.value.number
-  ? (
-    shouldRound.value
-      ? Number(props.modelValue).toFixed(fixed(precision.value))
-      : Number(props.modelValue).toFixed(fixed(precision.value) + 1).slice(0, -1)
-  )
-  : props.modelValue;
+let value = modelValue.value;
+if (modelModifiers.value && modelModifiers.value.number) {
+  if (shouldRound.value) {
+    value = Number(modelValue.value).toFixed(fixed(precision.value));
+  } else {
+    value = Number(modelValue.value).toFixed(fixed(precision.value) + 1).slice(0, -1);
+  }
+}
+const formattedValue = ref(format(value, props, 'component setup'));
 
-const data = reactive({
-  formattedValue: format(modelValue, props, 'component setup'),
-});
+debug(props,'component setup() - data.formattedValue', formattedValue.value);
 
-debug(props,'component setup() - data.formattedValue', data.formattedValue);
-
-watch(
-  () => props.modelValue, (val) => {
-    debug(props,'component watch() -> val', val);
-    const formatted = format(val, filterOptRestrictions({ ...props }), 'component watch');
-    if (formatted !== data.formattedValue) {
-      debug(props,'component watch() changed -> formatted', formatted);
-      data.formattedValue = formatted;
-    }
-  },
-);
+watch(modelValue, modelValueWatcher);
+function modelValueWatcher(value: string|number|null|undefined) {
+  debug(props,'component watch() -> value', value);
+  const formatted = format(value, filterOptRestrictions({ ...props }), 'component watch');
+  if (formatted !== formattedValue.value) {
+    debug(props,'component watch() changed -> formatted', formatted);
+    formattedValue.value = formatted;
+  }
+}
 
 let lastValue = null;
 const emit = defineEmits<{(e: 'update:model-value', value: string | number): void}>();
 function change(evt) {
   debug(props,'component change() -> evt.target.value', evt.target.value);
-  const value = masked.value && !modelModifiers.value.number ? evt.target.value : unformat(evt.target.value, filterOptRestrictions({ ...props }), 'component change');
+  let value;
+  if (masked.value && !modelModifiers.value.number) {
+    value = evt.target.value;
+  } else {
+    value = unformat(evt.target.value, filterOptRestrictions({ ...props }), 'component change');
+  }
   if (value !== lastValue) {
     lastValue = value;
     debug(props,'component change() -> update:model-value', value);
