@@ -10,7 +10,7 @@ test('unformat min max options should be respected', () => {
   expect(unformat('11.00', { ...defaults, max: 10 })).toBe('10.00');
   expect(unformat('10.01', { ...defaults, max: 10 })).toBe('10.00');
 
-  // code coverage on debug console.log instructions
+  // code coverage on Debug console.log instructions
   expect(unformat('12,345.67', { ...defaults, debug: true }, 'unit test')).toBe('12345.67');
 });
 

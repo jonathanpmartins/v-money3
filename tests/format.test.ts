@@ -49,6 +49,6 @@ test('format function should parse numbers and strings', () => {
     shouldRound: true,
   })).toBe('6.68');
 
-  // code coverage on debug console.log instructions
+  // code coverage on Debug console.log instructions
   expect(format('12345.67', { ...defaults, debug: true })).toBe('12,345.67');
 });

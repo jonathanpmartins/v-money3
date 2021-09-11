@@ -1,5 +1,15 @@
-import Utils, {
-  RESTRICTED_CHARACTERS, RESTRICTED_OPTIONS,
+import {
+  filterNumbersFromRestrictedOptions,
+  filterOptRestrictions,
+  filterRestrictedCharactersFromRestrictedOptions,
+  guessFloatPrecision,
+  isValidFloat,
+  isValidInteger,
+  removeLeadingZeros, replaceAt,
+  RESTRICTED_CHARACTERS,
+  RESTRICTED_OPTIONS, round,
+  validateRestrictedInput,
+  validateRestrictedOptions
 } from '../src/Utils';
 import defaults, { VMoneyOptions } from '../src/options';
 
@@ -19,19 +29,19 @@ beforeAll(() => {
 test('test validateRestrictedInput(value, caller) method', () => {
   const caller = 'unit tester';
   for (const char of RESTRICTED_CHARACTERS) {
-    const isValid = Utils.validateRestrictedInput(char, caller);
+    const isValid = validateRestrictedInput(char, caller);
     expect(isValid).toBe(false);
   }
 
   const UNRESTRICTED_CHARACTERS = ['.', ',', '#', '/', '$'];
   for (const char of UNRESTRICTED_CHARACTERS) {
-    const isValid = Utils.validateRestrictedInput(char, caller);
+    const isValid = validateRestrictedInput(char, caller);
     expect(isValid).toBe(true);
   }
 
   for (const option of RESTRICTED_OPTIONS) {
     for (let i = 0; i < 10; i += 1) {
-      const isValid = Utils.validateRestrictedInput(i, option);
+      const isValid = validateRestrictedInput(i, option);
       expect(isValid).toBe(false);
     }
   }
@@ -42,7 +52,7 @@ test('test validateRestrictedOptions(opt) method', () => {
     for (const char of RESTRICTED_CHARACTERS) {
       const opt: VMoneyOptions = { ...defaults };
       opt[target] = char;
-      const isValid = Utils.validateRestrictedOptions(opt);
+      const isValid = validateRestrictedOptions(opt);
       expect(isValid).toBe(false);
     }
   }
@@ -52,7 +62,7 @@ test('test validateRestrictedOptions(opt) method', () => {
     for (let i = 0; i < 10; i += 1) {
       const opt = { ...defaults };
       opt[option] = i;
-      const isValid = Utils.validateRestrictedOptions(opt);
+      const isValid = validateRestrictedOptions(opt);
       expect(isValid).toBe(false);
     }
   }
@@ -75,7 +85,7 @@ test('test filterRestrictedCharactersFromRestrictedOptions(opt) function', () =>
       const opt = { ...defaults };
       opt[option] = item.set;
 
-      const result = Utils.filterRestrictedCharactersFromRestrictedOptions(opt);
+      const result = filterRestrictedCharactersFromRestrictedOptions(opt);
 
       expect(result[option]).toBe(item.target);
     }
@@ -96,7 +106,7 @@ test('test filterNumbersFromRestrictedOptions(opt, option) function', () => {
       const opt = { ...defaults };
       opt[option] = item.set;
 
-      const result = Utils.filterNumbersFromRestrictedOptions(opt);
+      const result = filterNumbersFromRestrictedOptions(opt);
 
       expect(result[option]).toBe(item.target);
     }
@@ -121,7 +131,7 @@ test('test filterOptRestrictions function', () => {
       const opt = { ...defaults };
       opt[option] = item.set;
 
-      const result = Utils.filterOptRestrictions(opt);
+      const result = filterOptRestrictions(opt);
 
       expect(result[option]).toBe(item.target);
     }
@@ -140,7 +150,7 @@ test('test guessFloatPrecision function', () => {
   ];
 
   for (const item of tests) {
-    expect(Utils.guessFloatPrecision(item.is)).toBe(item.target);
+    expect(guessFloatPrecision(item.is)).toBe(item.target);
   }
 });
 
@@ -154,7 +164,7 @@ test('test removeLeadingZeros function', () => {
   ];
 
   for (const item of tests) {
-    expect(Utils.removeLeadingZeros(item.before)).toBe(item.after);
+    expect(removeLeadingZeros(item.before)).toBe(item.after);
   }
 });
 
@@ -169,7 +179,7 @@ test('test isValidInteger function', () => {
   ];
 
   for (const item of valid) {
-    expect(Utils.isValidInteger(item)).toBe(true);
+    expect(isValidInteger(item)).toBe(true);
   }
 
   const invalid = [
@@ -178,7 +188,7 @@ test('test isValidInteger function', () => {
   ];
 
   for (const item of invalid) {
-    expect(Utils.isValidInteger(item)).toBe(false);
+    expect(isValidInteger(item)).toBe(false);
   }
 });
 
@@ -199,7 +209,7 @@ test('test isValidFloat function', () => {
   ];
 
   for (const item of valid) {
-    expect(Utils.isValidFloat(item)).toBe(true);
+    expect(isValidFloat(item)).toBe(true);
   }
 
   const invalid = [
@@ -212,7 +222,7 @@ test('test isValidFloat function', () => {
   ];
 
   for (const item of invalid) {
-    expect(Utils.isValidFloat(item)).toBe(false);
+    expect(isValidFloat(item)).toBe(false);
   }
 });
 
@@ -230,7 +240,7 @@ test('test replaceAt function', () => {
   ];
 
   for (const item of tests) {
-    const replaced = Utils.replaceAt(item.is, item.index, item.char);
+    const replaced = replaceAt(item.is, item.index, item.char);
 
     expect(replaced).toBe(item.target);
   }
@@ -251,7 +261,7 @@ test('test round function', () => {
     { number: '-8.76543', precision: 2, target: '-8.77' },
   ];
   for (const item of array) {
-    const result = Utils.round(item.number, item.precision);
+    const result = round(item.number, item.precision);
     expect(result).toBe(item.target);
   }
 });

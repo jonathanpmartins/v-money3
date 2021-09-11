@@ -18,7 +18,7 @@
       minimumNumberOfCharacters,
       debug,
       modelModifiers,
-      shouldRound,
+      shouldRound
     }"
     class="v-money3" />
 </template>
@@ -37,10 +37,10 @@ export default {
 
 <script lang="ts" setup>
 import { computed, getCurrentInstance, reactive, toRefs, useAttrs, watch } from 'vue';
-import defaults from './options.ts';
-import Utils from './Utils.ts';
-import format from './format.ts';
-import unformat from './unformat.ts';
+import defaults from './options';
+import format from './format';
+import unformat from './unformat';
+import { Debug, filterOptRestrictions, fixed, validateRestrictedInput } from './Utils';
 
 const props = defineProps({
   debug: {
@@ -75,28 +75,28 @@ const props = defineProps({
     type: String,
     default: () => defaults.decimal,
     validator(value) {
-      return Utils.validateRestrictedInput(value, 'decimal');
+      return validateRestrictedInput(value, 'decimal');
     },
   },
   thousands: {
     type: String,
     default: () => defaults.thousands,
     validator(value) {
-      return Utils.validateRestrictedInput(value, 'thousands');
+      return validateRestrictedInput(value, 'thousands');
     },
   },
   prefix: {
     type: String,
     default: () => defaults.prefix,
     validator(value) {
-      return Utils.validateRestrictedInput(value, 'prefix');
+      return validateRestrictedInput(value, 'prefix');
     },
   },
   suffix: {
     type: String,
     default: () => defaults.suffix,
     validator(value) {
-      return Utils.validateRestrictedInput(value, 'suffix');
+      return validateRestrictedInput(value, 'suffix');
     },
   },
   disableNegative: {
@@ -148,13 +148,13 @@ const {
   shouldRound
 } = toRefs(props);
 
-Utils.debug(props,'component setup()', props);
+Debug(props,'component setup()', props);
 
 const modelValue = modelModifiers.value && modelModifiers.value.number
   ? (
     shouldRound.value
-      ? Number(props.modelValue).toFixed(Utils.fixed(precision.value))
-      : Number(props.modelValue).toFixed(Utils.fixed(precision.value) + 1).slice(0, -1)
+      ? Number(props.modelValue).toFixed(fixed(precision.value))
+      : Number(props.modelValue).toFixed(fixed(precision.value) + 1).slice(0, -1)
   )
   : props.modelValue;
 
@@ -162,14 +162,14 @@ const data = reactive({
   formattedValue: format(modelValue, props, 'component setup'),
 });
 
-Utils.debug(props,'component setup() - data.formattedValue', data.formattedValue);
+Debug(props,'component setup() - data.formattedValue', data.formattedValue);
 
 watch(
   () => props.modelValue, (val) => {
-    Utils.debug(props,'component watch() -> val', val);
-    const formatted = format(val, Utils.filterOptRestrictions({ ...props }), 'component watch');
+    Debug(props,'component watch() -> val', val);
+    const formatted = format(val, filterOptRestrictions({ ...props }), 'component watch');
     if (formatted !== data.formattedValue) {
-      Utils.debug(props,'component watch() changed -> formatted', formatted);
+      Debug(props,'component watch() changed -> formatted', formatted);
       data.formattedValue = formatted;
     }
   },
@@ -178,11 +178,11 @@ watch(
 let lastValue = null;
 const emit = defineEmits<{(e: 'update:model-value', value: string | number): void}>();
 function change(evt) {
-  Utils.debug(props,'component change() -> evt.target.value', evt.target.value);
-  const value = masked.value && !modelModifiers.value.number ? evt.target.value : unformat(evt.target.value, Utils.filterOptRestrictions({ ...props }), 'component change');
+  Debug(props,'component change() -> evt.target.value', evt.target.value);
+  const value = masked.value && !modelModifiers.value.number ? evt.target.value : unformat(evt.target.value, filterOptRestrictions({ ...props }), 'component change');
   if (value !== lastValue) {
     lastValue = value;
-    Utils.debug(props,'component change() -> update:model-value', value);
+    Debug(props,'component change() -> update:model-value', value);
     emit('update:model-value', value);
   }
 }
