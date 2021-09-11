@@ -3,13 +3,9 @@ import { VMoneyOptions } from './options';
 export const RESTRICTED_CHARACTERS: string[] = ['+', '-']; // and number [0-9]
 export const RESTRICTED_OPTIONS: string[] = ['decimal', 'thousands', 'prefix', 'suffix'];
 
-export function between(min: number, n: number, max: number): number {
-  return Math.max(min, Math.min(n, max));
-}
-
 // Uncaught RangeError: toFixed() digits argument must be between 0 and 20 at NumberParam.toFixed
 export function fixed(precision: number): number {
-  return between(0, precision, 1000);
+  return Math.max(0, Math.min(precision, 1000));
 }
 
 export function numbersToCurrency(numbers: string, precision: number): string {
@@ -17,12 +13,9 @@ export function numbersToCurrency(numbers: string, precision: number): string {
   return precision === 0 ? numbers : `${numbers.slice(0, -precision)}.${numbers.slice(-precision)}`;
 }
 
-export function toStr(value: string | number): string {
-  return value ? value.toString() : '';
-}
-
 export function onlyNumbers(input: number | string): string {
-  return toStr(input).replace(/\D+/g, '') || '0';
+  input = input ? input.toString() : '';
+  return input.replace(/\D+/g, '') || '0';
 }
 
 export function addThousandSeparator(integer: string, separator: string): string {
@@ -55,26 +48,15 @@ export function validateRestrictedOptions(opt: VMoneyOptions): boolean {
   return true;
 }
 
-export function filterRestrictedCharactersFromRestrictedOptions(opt: VMoneyOptions): VMoneyOptions {
+export function filterOptRestrictions(opt: VMoneyOptions): VMoneyOptions {
   for (const option of RESTRICTED_OPTIONS) {
+    // Remove numbers from option prop
+    opt[option] = opt[option].replace(/\d+/g, '');
     for (const character of RESTRICTED_CHARACTERS) {
+      // Remove restricted characters from option prop
       opt[option] = opt[option].replaceAll(character, '');
     }
   }
-  return opt;
-}
-
-export function filterNumbersFromRestrictedOptions(opt: VMoneyOptions): VMoneyOptions {
-  for (const option of RESTRICTED_OPTIONS) {
-    opt[option] = opt[option].replace(/\d+/g, '');
-  }
-  return opt;
-}
-
-export function filterOptRestrictions(opt: VMoneyOptions): VMoneyOptions {
-  opt = filterRestrictedCharactersFromRestrictedOptions(opt);
-  opt = filterNumbersFromRestrictedOptions(opt);
-
   return opt;
 }
 

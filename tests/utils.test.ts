@@ -1,7 +1,5 @@
 import {
-  filterNumbersFromRestrictedOptions,
   filterOptRestrictions,
-  filterRestrictedCharactersFromRestrictedOptions,
   guessFloatPrecision,
   isValidFloat,
   isValidInteger,
@@ -68,51 +66,6 @@ test('test validateRestrictedOptions(opt) method', () => {
   }
 });
 
-test('test filterRestrictedCharactersFromRestrictedOptions(opt) function', () => {
-  const array = [
-    { set: '+', target: '' },
-    { set: '-', target: '' },
-    { set: '+$0', target: '$0' },
-    { set: '-$1', target: '$1' },
-    { set: '+1+2+3+', target: '123' },
-    { set: '-1-2-3-', target: '123' },
-    { set: '++++++', target: '' },
-    { set: '------', target: '' },
-  ];
-
-  for (const option of RESTRICTED_OPTIONS) {
-    for (const item of array) {
-      const opt = { ...defaults };
-      opt[option] = item.set;
-
-      const result = filterRestrictedCharactersFromRestrictedOptions(opt);
-
-      expect(result[option]).toBe(item.target);
-    }
-  }
-});
-
-test('test filterNumbersFromRestrictedOptions(opt, option) function', () => {
-  const array = [
-    { set: 'R$1', target: 'R$' },
-    { set: '$/3', target: '$/' },
-    { set: 's0me1hing e1se', target: 'smehing ese' },
-    { set: '+123', target: '+' },
-    { set: '-1-2-3-4-5-6-7-8-9-0-', target: '-----------' },
-  ];
-
-  for (const option of RESTRICTED_OPTIONS) {
-    for (const item of array) {
-      const opt = { ...defaults };
-      opt[option] = item.set;
-
-      const result = filterNumbersFromRestrictedOptions(opt);
-
-      expect(result[option]).toBe(item.target);
-    }
-  }
-});
-
 test('test filterOptRestrictions function', () => {
   const array = [
     { set: '+R$', target: 'R$' },
@@ -124,6 +77,21 @@ test('test filterOptRestrictions function', () => {
     { set: '-0-1-2-3-4-', target: '' },
     { set: '+9,', target: ',' },
     { set: '-.0', target: '.' },
+    // former filterNumbersFromRestrictedOptions
+    { set: 'R$1', target: 'R$' },
+    { set: '$/3', target: '$/' },
+    { set: 's0me1hing e1se', target: 'smehing ese' },
+    { set: '+123', target: '' },
+    { set: '-1-2-3-4-5-6-7-8-9-0-', target: '' },
+    // former filterRestrictedCharactersFromRestrictedOptions
+    { set: '+', target: '' },
+    { set: '-', target: '' },
+    { set: '+$0', target: '$' },
+    { set: '-$1', target: '$' },
+    { set: '+1+2+3+', target: '' },
+    { set: '-1-2-3-', target: '' },
+    { set: '++++++', target: '' },
+    { set: '------', target: '' },
   ];
 
   for (const option of RESTRICTED_OPTIONS) {
