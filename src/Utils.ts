@@ -149,6 +149,6 @@ export function event(name: string): Event {
   return evt;
 }
 
-export function Debug({ debug = false }: VMoneyOptions, ...args: any): void {
+export function debug({ debug = false }: VMoneyOptions, ...args: any): void {
   if (debug) console.log(...args);
 }

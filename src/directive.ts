@@ -1,5 +1,5 @@
 import {
-  Debug,
+  debug,
   filterOptRestrictions,
   fixed,
   numbersToCurrency,
@@ -16,10 +16,10 @@ import { DirectiveBinding } from 'vue';
 let opt: VMoneyOptions|null = null;
 
 const setValue = (el: HTMLInputElement, caller: any) => {
-  Debug(opt!, 'directive setValue() - caller', caller);
+  debug(opt!, 'directive setValue() - caller', caller);
 
   if (!validateRestrictedOptions(opt!)) {
-    Debug(opt!, 'directive setValue() - validateRestrictedOptions() return false. Stopping here...', el.value);
+    debug(opt!, 'directive setValue() - validateRestrictedOptions() return false. Stopping here...', el.value);
     return;
   }
 
@@ -44,7 +44,7 @@ export default {
 
     opt = filterOptRestrictions({ ...defaults, ...binding.value });
 
-    Debug(opt, 'directive mounted() - opt', opt);
+    debug(opt, 'directive mounted() - opt', opt);
 
     // v-money3 used on a component that's not a input
     if (el.tagName.toLocaleUpperCase() !== 'INPUT') {
@@ -61,23 +61,23 @@ export default {
       const backspacePressed = e.code === 'Backspace' || e.code === 'Delete';
       const isAtEndPosition = (el.value.length - el.selectionEnd!) === 0;
 
-      Debug(opt!, 'directive onkeydown() - el.value', el.value);
-      Debug(opt!, 'directive onkeydown() - backspacePressed', backspacePressed);
-      Debug(opt!, 'directive onkeydown() - isAtEndPosition', isAtEndPosition);
+      debug(opt!, 'directive onkeydown() - el.value', el.value);
+      debug(opt!, 'directive onkeydown() - backspacePressed', backspacePressed);
+      debug(opt!, 'directive onkeydown() - isAtEndPosition', isAtEndPosition);
 
       if (opt!.allowBlank
           && backspacePressed
           && isAtEndPosition
           && unformat(el.value, opt!) === 0
       ) {
-        Debug(opt!, 'directive onkeydown() - set el.value = ""', el.value);
+        debug(opt!, 'directive onkeydown() - set el.value = ""', el.value);
         el.value = '';
         el.dispatchEvent(event('change')); // v-model.lazy
       }
 
-      Debug(opt!, 'directive onkeydown() - e.key', e.key);
+      debug(opt!, 'directive onkeydown() - e.key', e.key);
       if (e.key === '+') {
-        Debug(opt!, 'directive onkeydown() - unformat el.value', el.value);
+        debug(opt!, 'directive onkeydown() - unformat el.value', el.value);
         let number = unformat(el.value, opt!);
         if (typeof number === 'string') {
           number = parseFloat(number);
@@ -89,15 +89,15 @@ export default {
     };
 
     el.oninput = () => {
-      Debug(opt!, 'directive oninput()', el.value);
+      debug(opt!, 'directive oninput()', el.value);
       if (/^[1-9]$/.test(el.value)) {
         el.value = numbersToCurrency(el.value, fixed(opt!.precision));
-        Debug(opt!, 'directive oninput() - is 1-9', el.value);
+        debug(opt!, 'directive oninput() - is 1-9', el.value);
       }
       setValue(el, 'directive oninput');
     };
 
-    Debug(opt, 'directive mounted() - el.value', el.value);
+    debug(opt, 'directive mounted() - el.value', el.value);
     setValue(el, 'directive mounted');
   },
   updated(el: HTMLInputElement, binding: DirectiveBinding) {
@@ -105,8 +105,8 @@ export default {
       return;
     }
     opt = filterOptRestrictions({ ...defaults, ...binding.value });
-    Debug(opt, 'directive updated() - el.value', el.value);
-    Debug(opt, 'directive updated() - opt', opt);
+    debug(opt, 'directive updated() - el.value', el.value);
+    debug(opt, 'directive updated() - opt', opt);
     setValue(el, 'directive updated');
   },
   beforeUnmount(el: HTMLInputElement) {

@@ -2,7 +2,7 @@ import defaults, { VMoneyOptions } from './options';
 import BigNumber from './BigNumber';
 import {
   addThousandSeparator,
-  Debug,
+  debug,
   fixed,
   isValidFloat,
   isValidInteger, joinIntegerAndDecimal,
@@ -12,8 +12,8 @@ import {
 } from './Utils';
 
 function format(input: string|number|null|undefined, opt: VMoneyOptions = defaults, caller?: any): string {
-  Debug(opt, 'utils format() - caller', caller);
-  Debug(opt, 'utils format() - input1', input);
+  debug(opt, 'utils format() - caller', caller);
+  debug(opt, 'utils format() - input1', input);
 
   if (input === null || input === undefined) {
     input = '';
@@ -29,21 +29,21 @@ function format(input: string|number|null|undefined, opt: VMoneyOptions = defaul
     }
   }
 
-  Debug(opt, 'utils format() - input2', input);
+  debug(opt, 'utils format() - input2', input);
 
   const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');
   let filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
-  Debug(opt, 'utils format() - filtered', filtered);
+  debug(opt, 'utils format() - filtered', filtered);
   if (!opt.precision && opt.thousands !== '.' && isValidFloat(filtered)) {
     filtered = round(filtered, 0);
-    Debug(opt, 'utils format() - !opt.precision && isValidFloat()', filtered);
+    debug(opt, 'utils format() - !opt.precision && isValidFloat()', filtered);
   }
   const numbers = onlyNumbers(filtered);
-  Debug(opt, 'utils format() - numbers', numbers);
+  debug(opt, 'utils format() - numbers', numbers);
 
-  Debug(opt, 'utils format() - numbersToCurrency', negative + numbersToCurrency(numbers, opt.precision));
+  debug(opt, 'utils format() - numbersToCurrency', negative + numbersToCurrency(numbers, opt.precision));
   const bigNumber = new BigNumber(negative + numbersToCurrency(numbers, opt.precision));
-  Debug(opt, 'utils format() - bigNumber1', bigNumber.toString());
+  debug(opt, 'utils format() - bigNumber1', bigNumber.toString());
 
   /// min and max must be a valid float or integer
   if (opt.max) {
@@ -59,7 +59,7 @@ function format(input: string|number|null|undefined, opt: VMoneyOptions = defaul
 
   const currency = bigNumber.toFixed(fixed(opt.precision), opt.shouldRound);
 
-  Debug(opt, 'utils format() - bigNumber2', bigNumber.toFixed(fixed(opt.precision)));
+  debug(opt, 'utils format() - bigNumber2', bigNumber.toFixed(fixed(opt.precision)));
 
   // test if it is zero 0, or 0.0 or 0.00 and so on...
   if ((/^0(\.0+)?$/g).test(currency) && opt.allowBlank) {
@@ -79,7 +79,7 @@ function format(input: string|number|null|undefined, opt: VMoneyOptions = defaul
         + joinIntegerAndDecimal(integer, decimal, opt.decimal)
         + opt.suffix;
 
-  Debug(opt, 'utils format() - output', output);
+  debug(opt, 'utils format() - output', output);
 
   return output;
 }
