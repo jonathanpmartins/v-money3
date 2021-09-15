@@ -24,7 +24,7 @@ const setValue = (el: HTMLInputElement, caller: string) => {
     return;
   }
 
-  let positionFromEnd = el.value.length - el.selectionEnd!;
+  let positionFromEnd = el.value.length - (el.selectionEnd || 0);
 
   el.value = format(el.value, opt, caller);
 
@@ -60,7 +60,7 @@ export default {
 
     el.onkeydown = (e) => {
       const backspacePressed = e.code === 'Backspace' || e.code === 'Delete';
-      const isAtEndPosition = (el.value.length - el.selectionEnd!) === 0;
+      const isAtEndPosition = (el.value.length - (el.selectionEnd || 0)) === 0;
 
       debug(opt, 'directive onkeydown() - el.value', el.value);
       debug(opt, 'directive onkeydown() - backspacePressed', backspacePressed);
@@ -69,7 +69,7 @@ export default {
       if (opt.allowBlank
           && backspacePressed
           && isAtEndPosition
-          && unformat(el.value, opt) === 0
+          && unformat(el.value, opt, 'directive onkeydown allowBlank') === 0
       ) {
         debug(opt, 'directive onkeydown() - set el.value = ""', el.value);
         el.value = '';
@@ -79,7 +79,7 @@ export default {
       debug(opt, 'directive onkeydown() - e.key', e.key);
       if (e.key === '+') {
         debug(opt, 'directive onkeydown() - unformat el.value', el.value);
-        let number = unformat(el.value, opt);
+        let number = unformat(el.value, opt, 'directive onkeydown +');
         if (typeof number === 'string') {
           number = parseFloat(number);
         }

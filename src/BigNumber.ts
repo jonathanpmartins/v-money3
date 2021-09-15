@@ -71,7 +71,7 @@ export default class BigNumber {
   }
 
   toString(): string {
-    let string = this.number!.toString();
+    let string = this.number.toString();
     if (this.decimal) {
       let isNegative = false;
       if (string.charAt(0) === '-') {
