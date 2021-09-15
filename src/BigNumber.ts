@@ -87,22 +87,22 @@ export default class BigNumber {
     return string;
   }
 
-  lessThan(thatBigNumber: NumberParam|BigNumber): boolean {
+  lessThan(thatBigNumber: NumberParam | BigNumber): boolean {
     const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber < thatNumber;
   }
 
-  biggerThan(thatBigNumber: NumberParam|BigNumber): boolean {
+  biggerThan(thatBigNumber: NumberParam | BigNumber): boolean {
     const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber > thatNumber;
   }
 
-  isEqual(thatBigNumber: NumberParam|BigNumber): boolean {
+  isEqual(thatBigNumber: NumberParam | BigNumber): boolean {
     const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber === thatNumber;
   }
 
-  adjustComparisonNumbers(thatNumberParam: NumberParam|BigNumber): BigInt[] {
+  adjustComparisonNumbers(thatNumberParam: NumberParam | BigNumber): BigInt[] {
     let thatNumber: BigNumber;
     if (thatNumberParam.constructor.name !== 'BigNumber') {
       thatNumber = new BigNumber(thatNumberParam as NumberParam);

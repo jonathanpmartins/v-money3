@@ -73,28 +73,28 @@ const props = defineProps({
   decimal: {
     type: String,
     default: () => defaults.decimal,
-    validator(value) {
+    validator(value: string) {
       return validateRestrictedInput(value, 'decimal');
     },
   },
   thousands: {
     type: String,
     default: () => defaults.thousands,
-    validator(value) {
+    validator(value: string) {
       return validateRestrictedInput(value, 'thousands');
     },
   },
   prefix: {
     type: String,
     default: () => defaults.prefix,
-    validator(value) {
+    validator(value: string) {
       return validateRestrictedInput(value, 'prefix');
     },
   },
   suffix: {
     type: String,
     default: () => defaults.suffix,
-    validator(value) {
+    validator(value: string) {
       return validateRestrictedInput(value, 'suffix');
     },
   },
@@ -134,11 +134,14 @@ const {
   masked,
   precision,
   shouldRound,
+    min,
 } = toRefs(props);
+
+console.log('min', min);
 
 debug(props, 'component setup()', props);
 
-let { value } = modelValue;
+let value: string | number = modelValue.value;
 if (modelModifiers.value && modelModifiers.value.number) {
   if (shouldRound.value) {
     value = Number(modelValue.value).toFixed(fixed(precision.value));
@@ -151,7 +154,7 @@ const formattedValue = ref(format(value, props, 'component setup'));
 debug(props, 'component setup() - data.formattedValue', formattedValue.value);
 
 watch(modelValue, modelValueWatcher);
-function modelValueWatcher(value: string | number | null | undefined) {
+function modelValueWatcher(value: string | number | null | undefined): void {
   debug(props, 'component watch() -> value', value);
   const formatted = format(value, filterOptRestrictions({ ...props }), 'component watch');
   if (formatted !== formattedValue.value) {
@@ -160,7 +163,7 @@ function modelValueWatcher(value: string | number | null | undefined) {
   }
 }
 
-let lastValue: string | number = null;
+let lastValue: string | number | null = null;
 const emit = defineEmits<{(e: 'update:model-value', value: string | number): void}>();
 function change(evt) {
   debug(props, 'component change() -> evt.target.value', evt.target.value);
@@ -190,7 +193,7 @@ const listeners = computed(() => {
 </script>
 
 <script lang="ts">
-import money3 from './directive.ts';
+import money3 from './directive';
 export default {
   inheritAttrs: false,
   name: 'Money3',

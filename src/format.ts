@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/named
 import defaults, { VMoneyOptions } from './options';
 import BigNumber from './BigNumber';
 import {
@@ -12,8 +11,11 @@ import {
   round,
 } from './Utils';
 
-// eslint-disable-next-line max-len
-export default function format(input: string | number | null | undefined, opt: VMoneyOptions = defaults, caller: string): string {
+export default function format(
+  input: string | number | null | undefined,
+  opt: VMoneyOptions = defaults,
+  caller: string,
+): string {
   debug(opt, 'utils format() - caller', caller);
   debug(opt, 'utils format() - input1', input);
 

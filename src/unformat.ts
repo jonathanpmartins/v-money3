@@ -1,12 +1,14 @@
-// eslint-disable-next-line import/named
 import defaults, { VMoneyOptions } from './options';
 import BigNumber from './BigNumber';
 import {
   debug, fixed, numbersToCurrency, onlyNumbers,
 } from './Utils';
 
-// eslint-disable-next-line max-len
-export default function unformat(input: string, opt: VMoneyOptions = defaults, caller: string): string|number {
+export default function unformat(
+  input: string,
+  opt: VMoneyOptions = defaults,
+  caller: string,
+): string | number {
   debug(opt, 'utils unformat() - caller', caller);
   debug(opt, 'utils unformat() - input', input);
 

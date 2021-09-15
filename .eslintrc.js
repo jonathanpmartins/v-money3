@@ -10,25 +10,32 @@ module.exports = {
     context: true,
     jestPuppeteer: true,
   },
+  plugins: [
+    'vue',
+    '@typescript-eslint',
+  ],
   extends: [
-    // 'plugin:vue/base',
-    'plugin:vue/vue3-essential',
+    'eslint:recommended',
+
+    'plugin:vue/vue3-recommended',
+
     'airbnb-base',
-    // 'eslint:recommended',
+    'airbnb-typescript/base',
+
     'plugin:@typescript-eslint/recommended',
     // 'plugin:@typescript-eslint/recommended-requiring-type-checking',
+
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:import/typescript',
   ],
-  // parser: '@typescript-eslint/parser',
   parserOptions: {
-    // parser: 'vue-eslint-parser',
+    project: './tsconfig.eslint.json',
     parser: '@typescript-eslint/parser',
     ecmaVersion: 12,
     sourceType: 'module',
+    extraFileExtensions: ['.vue'],
   },
-  plugins: [
-    'vue',
-    // '@typescript-eslint',
-  ],
   rules: {
     'no-param-reassign': 'off',
     'no-nested-ternary': 'off',
@@ -37,7 +44,6 @@ module.exports = {
     'no-await-in-loop': 'off',
     'no-restricted-syntax': 'off',
     'no-console': 'off',
-    // '@typescript-eslint/rule-name': 'error',
   },
-  ignorePatterns: ['/dist/**', '/node_modules/**'],
+  ignorePatterns: ['/dist/**', '/node_modules/**', '.eslintrc.js'],
 };

@@ -10,7 +10,6 @@ import {
 } from './Utils';
 import format from './format';
 import unformat from './unformat';
-// eslint-disable-next-line import/named
 import defaults, { VMoneyOptions } from './options';
 
 // this option is used for ALL directive instances

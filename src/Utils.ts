@@ -1,10 +1,8 @@
-// eslint-disable-next-line import/named
 import { VMoneyOptions } from './options';
 
 export const RESTRICTED_CHARACTERS: string[] = ['+', '-']; // and number [0-9]
 export const RESTRICTED_OPTIONS: string[] = ['decimal', 'thousands', 'prefix', 'suffix'];
 
-// Uncaught RangeError: toFixed() digits argument must be between 0 and 20 at NumberParam.toFixed
 export function fixed(precision: number): number {
   return Math.max(0, Math.min(precision, 1000));
 }
@@ -23,11 +21,11 @@ export function addThousandSeparator(integer: string, separator: string): string
   return integer.replace(/(\d)(?=(?:\d{3})+\b)/gm, `$1${separator}`);
 }
 
-export function joinIntegerAndDecimal(integer: string, decimal: string, separator: string) {
+export function joinIntegerAndDecimal(integer: string, decimal: string, separator: string): string {
   return decimal ? integer + separator + decimal : integer;
 }
 
-export function validateRestrictedInput(value: any, caller: string): boolean {
+export function validateRestrictedInput(value: string, caller: string): boolean {
   if (RESTRICTED_CHARACTERS.includes(value)) {
     console.warn(`v-money3 "${caller}" property don't accept "${value}" as a value.`);
     return false;
@@ -125,14 +123,12 @@ export function setCursor(el: HTMLInputElement, position: number): void {
   }
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Creating_and_triggering_events#The_old-fashioned_way
 export function event(name: string): Event {
-  const evt = document.createEvent('Event');
-  evt.initEvent(name, true, true);
-  return evt;
+  return new Event(name, { bubbles: true, cancelable: false });
 }
 
-// eslint-disable-next-line no-shadow
+// eslint-disable-next-line max-len
+// eslint-disable-next-line @typescript-eslint/no-shadow,@typescript-eslint/explicit-module-boundary-types,@typescript-eslint/no-explicit-any,no-shadow
 export function debug({ debug = false }: VMoneyOptions, ...args: any): void {
   if (debug) console.log(...args);
 }
