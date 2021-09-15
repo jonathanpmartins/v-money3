@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.19.1] / 2021-09-10
+
+### Improvements
+
+- Smaller bundle by +6%. See pull request [#47](https://github.com/jonathanpmartins/v-money3/pull/47)
+
 ## [3.19.0] / 2021-09-10
 
 ### Improvements
