@@ -1,8 +1,12 @@
+// eslint-disable-next-line import/named
 import defaults, { VMoneyOptions } from './options';
 import BigNumber from './BigNumber';
-import { debug, fixed, numbersToCurrency, onlyNumbers } from './Utils';
+import {
+  debug, fixed, numbersToCurrency, onlyNumbers,
+} from './Utils';
 
-export default function unformat(input: string, opt: VMoneyOptions = defaults, caller?: any): string|number {
+// eslint-disable-next-line max-len
+export default function unformat(input: string, opt: VMoneyOptions = defaults, caller: string): string|number {
   debug(opt, 'utils unformat() - caller', caller);
   debug(opt, 'utils unformat() - input', input);
 
@@ -32,10 +36,9 @@ export default function unformat(input: string, opt: VMoneyOptions = defaults, c
     }
   }
 
-  let output = bigNumber.toFixed(fixed(opt.precision), opt.shouldRound);
+  let output: string | number = bigNumber.toFixed(fixed(opt.precision), opt.shouldRound);
 
   if (opt.modelModifiers && opt.modelModifiers.number) {
-    // @ts-ignore
     output = parseFloat(output);
   }
 

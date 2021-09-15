@@ -8,8 +8,8 @@ export interface VMoneyOptions {
   precision: number;
   disableNegative: boolean;
   disabled: boolean;
-  min: number | null;
-  max: number | null;
+  min: number | string | null;
+  max: number | string | null;
   allowBlank: boolean;
   minimumNumberOfCharacters: number;
   modelModifiers: any;
@@ -33,7 +33,7 @@ export default {
   allowBlank: false,
   minimumNumberOfCharacters: 0,
   modelModifiers: {
-    number: false
+    number: false,
   },
-  shouldRound: true
+  shouldRound: true,
 } as VMoneyOptions;

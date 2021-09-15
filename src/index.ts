@@ -1,19 +1,20 @@
+import { App } from 'vue';
 import Money3Component from './component.vue';
 import Money3Directive from './directive';
 import format from './format';
+// eslint-disable-next-line import/named
 import { VMoneyOptions } from './options';
 import unformat from './unformat';
-import { App } from 'vue';
 
 export default {
-  install(app: App) {
+  install(app: App): void {
     app.component('money3', Money3Component);
     app.directive('money3', Money3Directive);
-  }
+  },
 };
 
 export type {
-  VMoneyOptions
+  VMoneyOptions,
 };
 
 export {

@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/named
 import { VMoneyOptions } from './options';
 
 export const RESTRICTED_CHARACTERS: string[] = ['+', '-']; // and number [0-9]
@@ -131,6 +132,7 @@ export function event(name: string): Event {
   return evt;
 }
 
+// eslint-disable-next-line no-shadow
 export function debug({ debug = false }: VMoneyOptions, ...args: any): void {
   if (debug) console.log(...args);
 }

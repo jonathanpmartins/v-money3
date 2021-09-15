@@ -1,5 +1,7 @@
 <template>
-  <input type="tel"
+  <input
+    type="tel"
+    class="v-money3"
     :id="props.id"
     :value="formattedValue"
     :disabled="props.disabled"
@@ -20,27 +22,19 @@
       modelModifiers,
       shouldRound
     }"
-    class="v-money3" />
+  />
 </template>
 
-<script lang="ts">
-import money3 from './directive.ts';
-
-export default {
-  inheritAttrs: false,
-  name: 'Money3',
-  directives: {
-    money3
-  }
-};
-</script>
-
 <script lang="ts" setup>
-import { computed, getCurrentInstance, ref, toRefs, useAttrs, watch } from 'vue';
+import {
+  computed, getCurrentInstance, ref, toRefs, useAttrs, watch,
+} from 'vue';
 import defaults from './options';
 import format from './format';
 import unformat from './unformat';
-import { debug, filterOptRestrictions, fixed, validateRestrictedInput } from './Utils';
+import {
+  debug, filterOptRestrictions, fixed, validateRestrictedInput,
+} from './Utils';
 
 const props = defineProps({
   debug: {
@@ -51,12 +45,17 @@ const props = defineProps({
   id: {
     required: false,
     type: [Number, String],
-    default: () => getCurrentInstance().uid,
+    default: () => {
+      const instante = getCurrentInstance();
+      if (instante) {
+        return instante.uid;
+      }
+      return null;
+    },
   },
   modelValue: {
-    required: false,
-    type: [Number, String, undefined, null],
-    default: null,
+    required: true,
+    type: [Number, String],
   },
   modelModifiers: {
     required: false,
@@ -108,11 +107,11 @@ const props = defineProps({
     default: false,
   },
   max: {
-    type: [String, Number],
+    type: [Number, String],
     default: () => defaults.max,
   },
   min: {
-    type: [String, Number],
+    type: [Number, String],
     default: () => defaults.min,
   },
   allowBlank: {
@@ -125,8 +124,8 @@ const props = defineProps({
   },
   shouldRound: {
     type: Boolean,
-    default: () => defaults.shouldRound
-  }
+    default: () => defaults.shouldRound,
+  },
 });
 
 const {
@@ -134,12 +133,12 @@ const {
   modelModifiers,
   masked,
   precision,
-  shouldRound
+  shouldRound,
 } = toRefs(props);
 
-debug(props,'component setup()', props);
+debug(props, 'component setup()', props);
 
-let value = modelValue.value;
+let { value } = modelValue;
 if (modelModifiers.value && modelModifiers.value.number) {
   if (shouldRound.value) {
     value = Number(modelValue.value).toFixed(fixed(precision.value));
@@ -149,22 +148,22 @@ if (modelModifiers.value && modelModifiers.value.number) {
 }
 const formattedValue = ref(format(value, props, 'component setup'));
 
-debug(props,'component setup() - data.formattedValue', formattedValue.value);
+debug(props, 'component setup() - data.formattedValue', formattedValue.value);
 
 watch(modelValue, modelValueWatcher);
-function modelValueWatcher(value: string|number|null|undefined) {
-  debug(props,'component watch() -> value', value);
+function modelValueWatcher(value: string | number | null | undefined) {
+  debug(props, 'component watch() -> value', value);
   const formatted = format(value, filterOptRestrictions({ ...props }), 'component watch');
   if (formatted !== formattedValue.value) {
-    debug(props,'component watch() changed -> formatted', formatted);
+    debug(props, 'component watch() changed -> formatted', formatted);
     formattedValue.value = formatted;
   }
 }
 
-let lastValue = null;
+let lastValue: string | number = null;
 const emit = defineEmits<{(e: 'update:model-value', value: string | number): void}>();
 function change(evt) {
-  debug(props,'component change() -> evt.target.value', evt.target.value);
+  debug(props, 'component change() -> evt.target.value', evt.target.value);
   let value;
   if (masked.value && !modelModifiers.value.number) {
     value = evt.target.value;
@@ -173,7 +172,7 @@ function change(evt) {
   }
   if (value !== lastValue) {
     lastValue = value;
-    debug(props,'component change() -> update:model-value', value);
+    debug(props, 'component change() -> update:model-value', value);
     emit('update:model-value', value);
   }
 }
@@ -188,4 +187,15 @@ const listeners = computed(() => {
 
   return payload;
 });
+</script>
+
+<script lang="ts">
+import money3 from './directive.ts';
+export default {
+  inheritAttrs: false,
+  name: 'Money3',
+  directives: {
+    money3,
+  },
+};
 </script>

@@ -1,30 +1,27 @@
-import { guessFloatPrecision, isValidFloat, isValidInteger, removeLeadingZeros, round } from './Utils';
+import {
+  guessFloatPrecision, isValidFloat, isValidInteger, removeLeadingZeros, round,
+} from './Utils';
 
-type NumberParam = number|string|BigInt;
-
-// @ts-ignore
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt#use_within_json
-BigInt.prototype.toJSON = function () {
-  return this.toString();
-}
+type NumberParam = bigint | number | string;
 
 export default class BigNumber {
-  private number?: BigInt;
-  private decimal?: number;
+  private number = 0n;
+
+  private decimal = 0;
 
   constructor(number: NumberParam) {
     this.setNumber(number);
   }
 
-  getNumber(): BigInt {
-    return this.number!;
+  getNumber(): bigint {
+    return this.number;
   }
 
   getDecimalPrecision(): number {
-    return this.decimal!;
+    return this.decimal;
   }
 
-  setNumber(number: any): void {
+  setNumber(number: NumberParam): void {
     this.decimal = 0;
 
     if (typeof number === 'bigint') {
@@ -91,17 +88,17 @@ export default class BigNumber {
   }
 
   lessThan(thatBigNumber: NumberParam|BigNumber): boolean {
-    const [ thisNumber, thatNumber ] = this.adjustComparisonNumbers(thatBigNumber);
+    const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber < thatNumber;
   }
 
   biggerThan(thatBigNumber: NumberParam|BigNumber): boolean {
-    const [ thisNumber, thatNumber ] = this.adjustComparisonNumbers(thatBigNumber);
+    const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber > thatNumber;
   }
 
   isEqual(thatBigNumber: NumberParam|BigNumber): boolean {
-    const [ thisNumber, thatNumber ] = this.adjustComparisonNumbers(thatBigNumber);
+    const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber === thatNumber;
   }
 
@@ -119,13 +116,11 @@ export default class BigNumber {
     let thatNum = thatNumber.getNumber();
 
     if (diff > 0) {
-      // @ts-ignore
       thatNum = thatNumber.getNumber() * (10n ** BigInt(diff));
     } else if (diff < 0) {
-      // @ts-ignore
       thisNum = this.getNumber() * (10n ** BigInt(diff * -1));
     }
 
     return [thisNum, thatNum];
   }
-};
+}

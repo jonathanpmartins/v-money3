@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/named
 import defaults, { VMoneyOptions } from './options';
 import BigNumber from './BigNumber';
 import {
@@ -8,25 +9,24 @@ import {
   isValidInteger, joinIntegerAndDecimal,
   numbersToCurrency,
   onlyNumbers,
-  round
+  round,
 } from './Utils';
 
-export default function format(input: string|number|null|undefined, opt: VMoneyOptions = defaults, caller?: any): string {
+// eslint-disable-next-line max-len
+export default function format(input: string | number | null | undefined, opt: VMoneyOptions = defaults, caller: string): string {
   debug(opt, 'utils format() - caller', caller);
   debug(opt, 'utils format() - input1', input);
 
   if (input === null || input === undefined) {
     input = '';
-  } else {
-    if (typeof input === 'number') {
-      if (opt.shouldRound) {
-        input = input.toFixed(fixed(opt.precision));
-      } else {
-        input = input.toFixed(fixed(opt.precision) + 1).slice(0, -1);
-      }
-    } else if (opt.modelModifiers && opt.modelModifiers.number && isValidInteger(input)) {
-      input = Number(input).toFixed(fixed(opt.precision));
+  } else if (typeof input === 'number') {
+    if (opt.shouldRound) {
+      input = input.toFixed(fixed(opt.precision));
+    } else {
+      input = input.toFixed(fixed(opt.precision) + 1).slice(0, -1);
     }
+  } else if (opt.modelModifiers && opt.modelModifiers.number && isValidInteger(input)) {
+    input = Number(input).toFixed(fixed(opt.precision));
   }
 
   debug(opt, 'utils format() - input2', input);
@@ -73,6 +73,7 @@ export default function format(input: string|number|null|undefined, opt: VMoneyO
     return '';
   }
 
+  // eslint-disable-next-line prefer-const
   let [integer, decimal] = currency.split('.');
 
   const decimalLength = decimal !== undefined ? decimal.length : 0;

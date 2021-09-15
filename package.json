@@ -11,7 +11,7 @@
     }
   },
   "scripts": {
-    "lint": "./node_modules/node/bin/node ./node_modules/eslint/bin/eslint.js --ext .js,.vue ./",
+    "lint": "./node_modules/node/bin/node ./node_modules/eslint/bin/eslint.js --ext .js,.ts,.vue ./",
     "serve": "./node_modules/node/bin/node ./node_modules/vite/bin/vite.js --host=localhost --port=3000 --open --force",
     "build": "./node_modules/node/bin/node ./node_modules/vite/bin/vite.js build",
     "test": "./node_modules/node/bin/node ./node_modules/jest/bin/jest.js",
@@ -48,6 +48,7 @@
     "@types/jest": "27.0.1",
     "@types/jest-environment-puppeteer": "4.4.1",
     "@types/puppeteer": "5.4.4",
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@vitejs/plugin-vue": "^1.6.1",
     "@vue/compiler-sfc": "^3.2.9",
     "@vue/test-utils": "^2.0.0-rc.14",
