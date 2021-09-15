@@ -28,10 +28,8 @@ export default class BigNumber {
       this.number = number;
     } else if (typeof number === 'number') {
       this.setupString(number.toString());
-    } else if (typeof number === 'string') {
-      this.setupString(number);
     } else {
-      throw new Error(`BigNumber has received and invalid typeof: ${typeof number}. Only bigint, number and string are permitted.`);
+      this.setupString(number);
     }
   }
 

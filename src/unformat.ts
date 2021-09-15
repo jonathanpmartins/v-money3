@@ -7,7 +7,7 @@ import {
 export default function unformat(
   input: string,
   opt: VMoneyOptions = defaults,
-  caller: string,
+  caller = '',
 ): string | number {
   debug(opt, 'utils unformat() - caller', caller);
   debug(opt, 'utils unformat() - input', input);

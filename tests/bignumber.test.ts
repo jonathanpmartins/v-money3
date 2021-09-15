@@ -44,13 +44,6 @@ test('test setNumber function', () => {
 
   expect(number.getNumber()).toBe(12345678901234567890n);
   expect(number.getDecimalPrecision()).toBe(18);
-
-  try {
-    number.setNumber(['123.456.7']);
-  } catch (e: any) {
-    const includes = e.message.includes('BigNumber has received and invalid typeof');
-    expect(includes).toBe(true);
-  }
 });
 
 test('test setupString function', () => {

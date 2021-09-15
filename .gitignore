@@ -4,3 +4,5 @@ dist/
 coverage/
 src/*.map
 src/*.js
+tests/*.map
+tests/*.js

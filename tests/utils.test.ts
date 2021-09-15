@@ -7,7 +7,7 @@ import {
   RESTRICTED_CHARACTERS,
   RESTRICTED_OPTIONS, round,
   validateRestrictedInput,
-  validateRestrictedOptions
+  validateRestrictedOptions,
 } from '../src/Utils';
 import defaults, { VMoneyOptions } from '../src/options';
 
@@ -39,7 +39,7 @@ test('test validateRestrictedInput(value, caller) method', () => {
 
   for (const option of RESTRICTED_OPTIONS) {
     for (let i = 0; i < 10; i += 1) {
-      const isValid = validateRestrictedInput(i, option);
+      const isValid = validateRestrictedInput(i.toString(), option);
       expect(isValid).toBe(false);
     }
   }
