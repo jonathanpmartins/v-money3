@@ -12,9 +12,10 @@ export interface VMoneyOptions {
   max: number | string | null;
   allowBlank: boolean;
   minimumNumberOfCharacters: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   modelModifiers: any;
   shouldRound: boolean;
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 

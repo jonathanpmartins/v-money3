@@ -1,11 +1,6 @@
 <template>
   <input
-    type="tel"
-    class="v-money3"
     :id="props.id"
-    :value="formattedValue"
-    :disabled="props.disabled"
-    @change="change"
     v-bind="listeners"
     v-money3="{
       precision,
@@ -22,7 +17,12 @@
       modelModifiers,
       shouldRound
     }"
-  />
+    type="tel"
+    class="v-money3"
+    :value="formattedValue"
+    :disabled="props.disabled"
+    @change="change"
+  >
 </template>
 
 <script lang="ts" setup>
@@ -134,10 +134,7 @@ const {
   masked,
   precision,
   shouldRound,
-    min,
 } = toRefs(props);
-
-console.log('min', min);
 
 debug(props, 'component setup()', props);
 
@@ -164,7 +161,7 @@ function modelValueWatcher(value: string | number | null | undefined): void {
 }
 
 let lastValue: string | number | null = null;
-const emit = defineEmits<{(e: 'update:model-value', value: string | number): void}>();
+const emit = defineEmits<{(e: 'update:model-value', value: string | number): void }>();
 function change(evt) {
   debug(props, 'component change() -> evt.target.value', evt.target.value);
   let value;
