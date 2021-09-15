@@ -1,24 +1,24 @@
 <template>
   <input type="tel"
-    :id="id"
-    :value="data.formattedValue"
-    :disabled="disabled"
+    :id="props.id"
+    :value="formattedValue"
+    :disabled="props.disabled"
     @change="change"
     v-bind="listeners"
     v-money3="{
       precision,
-      decimal,
-      thousands,
-      prefix,
-      suffix,
-      disableNegative,
-      min,
-      max,
-      allowBlank,
-      minimumNumberOfCharacters,
-      debug,
+      decimal: props.decimal,
+      thousands: props.thousands,
+      prefix: props.prefix,
+      suffix: props.suffix,
+      disableNegative: props.disableNegative,
+      min: props.min,
+      max: props.max,
+      allowBlank: props.allowBlank,
+      minimumNumberOfCharacters: props.minimumNumberOfCharacters,
+      debug: props.debug,
       modelModifiers,
-      shouldRound,
+      shouldRound
     }"
     class="v-money3" />
 </template>
@@ -36,11 +36,11 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed, getCurrentInstance, reactive, toRefs, useAttrs, watch } from 'vue';
-import defaults from './options.ts';
-import Utils from './Utils.ts';
-import format from './format.ts';
-import unformat from './unformat.ts';
+import { computed, getCurrentInstance, ref, toRefs, useAttrs, watch } from 'vue';
+import defaults from './options';
+import format from './format';
+import unformat from './unformat';
+import { debug, filterOptRestrictions, fixed, validateRestrictedInput } from './Utils';
 
 const props = defineProps({
   debug: {
@@ -75,28 +75,28 @@ const props = defineProps({
     type: String,
     default: () => defaults.decimal,
     validator(value) {
-      return Utils.validateRestrictedInput(value, 'decimal');
+      return validateRestrictedInput(value, 'decimal');
     },
   },
   thousands: {
     type: String,
     default: () => defaults.thousands,
     validator(value) {
-      return Utils.validateRestrictedInput(value, 'thousands');
+      return validateRestrictedInput(value, 'thousands');
     },
   },
   prefix: {
     type: String,
     default: () => defaults.prefix,
     validator(value) {
-      return Utils.validateRestrictedInput(value, 'prefix');
+      return validateRestrictedInput(value, 'prefix');
     },
   },
   suffix: {
     type: String,
     default: () => defaults.suffix,
     validator(value) {
-      return Utils.validateRestrictedInput(value, 'suffix');
+      return validateRestrictedInput(value, 'suffix');
     },
   },
   disableNegative: {
@@ -130,59 +130,50 @@ const props = defineProps({
 });
 
 const {
-  debug,
-  id,
+  modelValue,
   modelModifiers,
   masked,
   precision,
-  decimal,
-  thousands,
-  prefix,
-  suffix,
-  disableNegative,
-  disabled,
-  max,
-  min,
-  allowBlank,
-  minimumNumberOfCharacters,
   shouldRound
 } = toRefs(props);
 
-Utils.debug(props,'component setup()', props);
+debug(props,'component setup()', props);
 
-const modelValue = modelModifiers.value && modelModifiers.value.number
-  ? (
-    shouldRound.value
-      ? Number(props.modelValue).toFixed(Utils.fixed(precision.value))
-      : Number(props.modelValue).toFixed(Utils.fixed(precision.value) + 1).slice(0, -1)
-  )
-  : props.modelValue;
+let value = modelValue.value;
+if (modelModifiers.value && modelModifiers.value.number) {
+  if (shouldRound.value) {
+    value = Number(modelValue.value).toFixed(fixed(precision.value));
+  } else {
+    value = Number(modelValue.value).toFixed(fixed(precision.value) + 1).slice(0, -1);
+  }
+}
+const formattedValue = ref(format(value, props, 'component setup'));
 
-const data = reactive({
-  formattedValue: format(modelValue, props, 'component setup'),
-});
+debug(props,'component setup() - data.formattedValue', formattedValue.value);
 
-Utils.debug(props,'component setup() - data.formattedValue', data.formattedValue);
-
-watch(
-  () => props.modelValue, (val) => {
-    Utils.debug(props,'component watch() -> val', val);
-    const formatted = format(val, Utils.filterOptRestrictions({ ...props }), 'component watch');
-    if (formatted !== data.formattedValue) {
-      Utils.debug(props,'component watch() changed -> formatted', formatted);
-      data.formattedValue = formatted;
-    }
-  },
-);
+watch(modelValue, modelValueWatcher);
+function modelValueWatcher(value: string|number|null|undefined) {
+  debug(props,'component watch() -> value', value);
+  const formatted = format(value, filterOptRestrictions({ ...props }), 'component watch');
+  if (formatted !== formattedValue.value) {
+    debug(props,'component watch() changed -> formatted', formatted);
+    formattedValue.value = formatted;
+  }
+}
 
 let lastValue = null;
 const emit = defineEmits<{(e: 'update:model-value', value: string | number): void}>();
 function change(evt) {
-  Utils.debug(props,'component change() -> evt.target.value', evt.target.value);
-  const value = masked.value && !modelModifiers.value.number ? evt.target.value : unformat(evt.target.value, Utils.filterOptRestrictions({ ...props }), 'component change');
+  debug(props,'component change() -> evt.target.value', evt.target.value);
+  let value;
+  if (masked.value && !modelModifiers.value.number) {
+    value = evt.target.value;
+  } else {
+    value = unformat(evt.target.value, filterOptRestrictions({ ...props }), 'component change');
+  }
   if (value !== lastValue) {
     lastValue = value;
-    Utils.debug(props,'component change() -> update:model-value', value);
+    debug(props,'component change() -> update:model-value', value);
     emit('update:model-value', value);
   }
 }

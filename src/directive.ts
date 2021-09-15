@@ -1,4 +1,12 @@
-import Utils from './Utils';
+import {
+  debug,
+  filterOptRestrictions,
+  fixed,
+  numbersToCurrency,
+  setCursor,
+  validateRestrictedOptions,
+  event
+} from './Utils';
 import format from './format';
 import unformat from './unformat';
 import defaults, { VMoneyOptions } from './options';
@@ -8,10 +16,10 @@ import { DirectiveBinding } from 'vue';
 let opt: VMoneyOptions|null = null;
 
 const setValue = (el: HTMLInputElement, caller: any) => {
-  Utils.debug(opt!, 'directive setValue() - caller', caller);
+  debug(opt!, 'directive setValue() - caller', caller);
 
-  if (!Utils.validateRestrictedOptions(opt!)) {
-    Utils.debug(opt!, 'directive setValue() - validateRestrictedOptions() return false. Stopping here...', el.value);
+  if (!validateRestrictedOptions(opt!)) {
+    debug(opt!, 'directive setValue() - validateRestrictedOptions() return false. Stopping here...', el.value);
     return;
   }
 
@@ -23,9 +31,9 @@ const setValue = (el: HTMLInputElement, caller: any) => {
   positionFromEnd = el.value.length - positionFromEnd;
   positionFromEnd = Math.max(positionFromEnd, opt!.prefix.length); // left
 
-  Utils.setCursor(el, positionFromEnd);
+  setCursor(el, positionFromEnd);
 
-  el.dispatchEvent(Utils.event('change')); // v-model.lazy
+  el.dispatchEvent(event('change')); // v-model.lazy
 };
 
 export default {
@@ -34,9 +42,9 @@ export default {
       return;
     }
 
-    opt = Utils.filterOptRestrictions({ ...defaults, ...binding.value });
+    opt = filterOptRestrictions({ ...defaults, ...binding.value });
 
-    Utils.debug(opt, 'directive mounted() - opt', opt);
+    debug(opt, 'directive mounted() - opt', opt);
 
     // v-money3 used on a component that's not a input
     if (el.tagName.toLocaleUpperCase() !== 'INPUT') {
@@ -53,23 +61,23 @@ export default {
       const backspacePressed = e.code === 'Backspace' || e.code === 'Delete';
       const isAtEndPosition = (el.value.length - el.selectionEnd!) === 0;
 
-      Utils.debug(opt!, 'directive onkeydown() - el.value', el.value);
-      Utils.debug(opt!, 'directive onkeydown() - backspacePressed', backspacePressed);
-      Utils.debug(opt!, 'directive onkeydown() - isAtEndPosition', isAtEndPosition);
+      debug(opt!, 'directive onkeydown() - el.value', el.value);
+      debug(opt!, 'directive onkeydown() - backspacePressed', backspacePressed);
+      debug(opt!, 'directive onkeydown() - isAtEndPosition', isAtEndPosition);
 
       if (opt!.allowBlank
           && backspacePressed
           && isAtEndPosition
           && unformat(el.value, opt!) === 0
       ) {
-        Utils.debug(opt!, 'directive onkeydown() - set el.value = ""', el.value);
+        debug(opt!, 'directive onkeydown() - set el.value = ""', el.value);
         el.value = '';
-        el.dispatchEvent(Utils.event('change')); // v-model.lazy
+        el.dispatchEvent(event('change')); // v-model.lazy
       }
 
-      Utils.debug(opt!, 'directive onkeydown() - e.key', e.key);
+      debug(opt!, 'directive onkeydown() - e.key', e.key);
       if (e.key === '+') {
-        Utils.debug(opt!, 'directive onkeydown() - unformat el.value', el.value);
+        debug(opt!, 'directive onkeydown() - unformat el.value', el.value);
         let number = unformat(el.value, opt!);
         if (typeof number === 'string') {
           number = parseFloat(number);
@@ -81,24 +89,24 @@ export default {
     };
 
     el.oninput = () => {
-      Utils.debug(opt!, 'directive oninput()', el.value);
+      debug(opt!, 'directive oninput()', el.value);
       if (/^[1-9]$/.test(el.value)) {
-        el.value = Utils.numbersToCurrency(el.value, Utils.fixed(opt!.precision));
-        Utils.debug(opt!, 'directive oninput() - is 1-9', el.value);
+        el.value = numbersToCurrency(el.value, fixed(opt!.precision));
+        debug(opt!, 'directive oninput() - is 1-9', el.value);
       }
       setValue(el, 'directive oninput');
     };
 
-    Utils.debug(opt, 'directive mounted() - el.value', el.value);
+    debug(opt, 'directive mounted() - el.value', el.value);
     setValue(el, 'directive mounted');
   },
   updated(el: HTMLInputElement, binding: DirectiveBinding) {
     if (!binding.value) {
       return;
     }
-    opt = Utils.filterOptRestrictions({ ...defaults, ...binding.value });
-    Utils.debug(opt, 'directive updated() - el.value', el.value);
-    Utils.debug(opt, 'directive updated() - opt', opt);
+    opt = filterOptRestrictions({ ...defaults, ...binding.value });
+    debug(opt, 'directive updated() - el.value', el.value);
+    debug(opt, 'directive updated() - opt', opt);
     setValue(el, 'directive updated');
   },
   beforeUnmount(el: HTMLInputElement) {
