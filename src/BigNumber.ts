@@ -13,15 +13,15 @@ export default class BigNumber {
     this.setNumber(number);
   }
 
-  public getNumber(): bigint {
+  getNumber(): bigint {
     return this.number;
   }
 
-  public getDecimalPrecision(): number {
+  getDecimalPrecision(): number {
     return this.decimal;
   }
 
-  public setNumber(number: NumberParam): void {
+  setNumber(number: NumberParam): void {
     this.decimal = 0;
 
     if (typeof number === 'bigint') {
@@ -33,7 +33,7 @@ export default class BigNumber {
     }
   }
 
-  public toFixed(precision = 0, shouldRound = true): string {
+  toFixed(precision = 0, shouldRound = true): string {
     let string = this.toString();
     const diff = precision - this.getDecimalPrecision();
     if (diff > 0) {
@@ -55,7 +55,7 @@ export default class BigNumber {
     return string;
   }
 
-  public toString(): string {
+  toString(): string {
     let string = this.number.toString();
     if (this.decimal) {
       let isNegative = false;
@@ -72,22 +72,22 @@ export default class BigNumber {
     return string;
   }
 
-  public lessThan(thatBigNumber: NumberParam | BigNumber): boolean {
+  lessThan(thatBigNumber: NumberParam | BigNumber): boolean {
     const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber < thatNumber;
   }
 
-  public biggerThan(thatBigNumber: NumberParam | BigNumber): boolean {
+  biggerThan(thatBigNumber: NumberParam | BigNumber): boolean {
     const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber > thatNumber;
   }
 
-  public isEqual(thatBigNumber: NumberParam | BigNumber): boolean {
+  isEqual(thatBigNumber: NumberParam | BigNumber): boolean {
     const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber === thatNumber;
   }
 
-  private setupString(number: string): void {
+  setupString(number: string): void {
     number = removeLeadingZeros(number);
 
     if (isValidInteger(number)) {
@@ -100,7 +100,7 @@ export default class BigNumber {
     }
   }
 
-  private adjustComparisonNumbers(thatNumberParam: NumberParam | BigNumber): BigInt[] {
+  adjustComparisonNumbers(thatNumberParam: NumberParam | BigNumber): BigInt[] {
     let thatNumber: BigNumber;
     if (thatNumberParam.constructor.name !== 'BigNumber') {
       thatNumber = new BigNumber(thatNumberParam as NumberParam);
