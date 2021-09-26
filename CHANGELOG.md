@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.20.0] / 2021-09-25
+
+### New export
+
+- Exporting `BigNumber` class. See issue [#48](https://github.com/jonathanpmartins/v-money3/issues/48)
+- TS improvements.
+- Dev dependencies upgrade.
+
 ## [3.19.1] / 2021-09-10
 
 ### Improvements
@@ -321,6 +329,8 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.20.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.19.1...v3.20.0
+[3.19.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.19.0...v3.19.1
 [3.19.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.18.0...v3.19.0
 [3.18.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.6...v3.18.0
 [3.17.6]: https://github.com/jonathanpmartins/v-money3/compare/v3.17.5...v3.17.6
