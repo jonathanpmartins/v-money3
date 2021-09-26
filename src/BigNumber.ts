@@ -13,15 +13,15 @@ export default class BigNumber {
     this.setNumber(number);
   }
 
-  getNumber(): bigint {
+  public getNumber(): bigint {
     return this.number;
   }
 
-  getDecimalPrecision(): number {
+  public getDecimalPrecision(): number {
     return this.decimal;
   }
 
-  setNumber(number: NumberParam): void {
+  public setNumber(number: NumberParam): void {
     this.decimal = 0;
 
     if (typeof number === 'bigint') {
@@ -33,20 +33,7 @@ export default class BigNumber {
     }
   }
 
-  setupString(number: string): void {
-    number = removeLeadingZeros(number);
-
-    if (isValidInteger(number)) {
-      this.number = BigInt(number);
-    } else if (isValidFloat(number)) {
-      this.decimal = guessFloatPrecision(number);
-      this.number = BigInt(number.replace('.', ''));
-    } else {
-      throw new Error(`BigNumber has received and invalid format for the constructor: ${number}`);
-    }
-  }
-
-  toFixed(precision = 0, shouldRound = true): string {
+  public toFixed(precision = 0, shouldRound = true): string {
     let string = this.toString();
     const diff = precision - this.getDecimalPrecision();
     if (diff > 0) {
@@ -68,7 +55,7 @@ export default class BigNumber {
     return string;
   }
 
-  toString(): string {
+  public toString(): string {
     let string = this.number.toString();
     if (this.decimal) {
       let isNegative = false;
@@ -85,22 +72,35 @@ export default class BigNumber {
     return string;
   }
 
-  lessThan(thatBigNumber: NumberParam | BigNumber): boolean {
+  public lessThan(thatBigNumber: NumberParam | BigNumber): boolean {
     const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber < thatNumber;
   }
 
-  biggerThan(thatBigNumber: NumberParam | BigNumber): boolean {
+  public biggerThan(thatBigNumber: NumberParam | BigNumber): boolean {
     const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber > thatNumber;
   }
 
-  isEqual(thatBigNumber: NumberParam | BigNumber): boolean {
+  public isEqual(thatBigNumber: NumberParam | BigNumber): boolean {
     const [thisNumber, thatNumber] = this.adjustComparisonNumbers(thatBigNumber);
     return thisNumber === thatNumber;
   }
 
-  adjustComparisonNumbers(thatNumberParam: NumberParam | BigNumber): BigInt[] {
+  private setupString(number: string): void {
+    number = removeLeadingZeros(number);
+
+    if (isValidInteger(number)) {
+      this.number = BigInt(number);
+    } else if (isValidFloat(number)) {
+      this.decimal = guessFloatPrecision(number);
+      this.number = BigInt(number.replace('.', ''));
+    } else {
+      throw new Error(`BigNumber has received and invalid format for the constructor: ${number}`);
+    }
+  }
+
+  private adjustComparisonNumbers(thatNumberParam: NumberParam | BigNumber): BigInt[] {
     let thatNumber: BigNumber;
     if (thatNumberParam.constructor.name !== 'BigNumber') {
       thatNumber = new BigNumber(thatNumberParam as NumberParam);

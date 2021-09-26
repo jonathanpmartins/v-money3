@@ -4,6 +4,7 @@ import Money3Directive from './directive';
 import format from './format';
 import { VMoneyOptions } from './options';
 import unformat from './unformat';
+import BigNumber from './BigNumber';
 
 export default {
   install(app: App): void {
@@ -21,6 +22,7 @@ export {
   Money3Directive,
   format,
   unformat,
+  BigNumber,
   // backwards compatibility
   Money3Component as Money3,
   Money3Directive as VMoney3,
