@@ -16,6 +16,7 @@
     "build": "./node_modules/node/bin/node ./node_modules/vite/bin/vite.js build",
     "test": "./node_modules/node/bin/node ./node_modules/jest/bin/jest.js",
     "lock": "npm i --package-lock-only",
+    "pack": "npm run build; npm pack;",
     "prepublish": "npm run build"
   },
   "files": [
