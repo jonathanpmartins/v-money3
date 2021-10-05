@@ -13,9 +13,9 @@ import unformat from './unformat';
 import defaults, { VMoneyOptions } from './options';
 
 // this option is used for ALL directive instances
-let opt: VMoneyOptions = defaults;
+// let opt: VMoneyOptions = defaults;
 
-const setValue = (el: HTMLInputElement, caller: string) => {
+const setValue = (el: HTMLInputElement, opt: VMoneyOptions, caller: string) => {
   debug(opt, 'directive setValue() - caller', caller);
 
   if (!validateRestrictedOptions(opt)) {
@@ -36,13 +36,56 @@ const setValue = (el: HTMLInputElement, caller: string) => {
   el.dispatchEvent(event('change')); // v-model.lazy
 };
 
+const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions) => {
+  const el = e.currentTarget as HTMLInputElement;
+
+  const backspacePressed = e.code === 'Backspace' || e.code === 'Delete';
+  const isAtEndPosition = (el.value.length - (el.selectionEnd || 0)) === 0;
+
+  debug(opt, 'directive onkeydown() - el.value', el.value);
+  debug(opt, 'directive onkeydown() - backspacePressed', backspacePressed);
+  debug(opt, 'directive onkeydown() - isAtEndPosition', isAtEndPosition);
+
+  if (opt.allowBlank
+      && backspacePressed
+      && isAtEndPosition
+      && unformat(el.value, opt, 'directive onkeydown allowBlank') === 0
+  ) {
+    debug(opt, 'directive onkeydown() - set el.value = ""', el.value);
+    el.value = '';
+    el.dispatchEvent(event('change')); // v-model.lazy
+  }
+
+  debug(opt, 'directive onkeydown() - e.key', e.key);
+  if (e.key === '+') {
+    debug(opt, 'directive onkeydown() - unformat el.value', el.value);
+    let number = unformat(el.value, opt, 'directive onkeydown +');
+    if (typeof number === 'string') {
+      number = parseFloat(number);
+    }
+    if (number < 0) {
+      el.value = String(number * -1);
+    }
+  }
+};
+
+const onInput = (e: Event, opt: VMoneyOptions) => {
+  const el = e.currentTarget as HTMLInputElement;
+  debug(opt, 'directive oninput()', el.value);
+  if (/^[1-9]$/.test(el.value)) {
+    el.value = numbersToCurrency(el.value, fixed(opt.precision));
+    debug(opt, 'directive oninput() - is 1-9', el.value);
+  }
+  setValue(el, opt, 'directive oninput');
+};
+
 export default {
   mounted(el: HTMLInputElement, binding: DirectiveBinding): void {
     if (!binding.value) {
       return;
     }
 
-    opt = filterOptRestrictions({ ...defaults, ...binding.value });
+    const opt = filterOptRestrictions({ ...defaults, ...binding.value });
 
     debug(opt, 'directive mounted() - opt', opt);
 
@@ -57,57 +100,34 @@ export default {
       }
     }
 
-    el.onkeydown = (e) => {
-      const backspacePressed = e.code === 'Backspace' || e.code === 'Delete';
-      const isAtEndPosition = (el.value.length - (el.selectionEnd || 0)) === 0;
-
-      debug(opt, 'directive onkeydown() - el.value', el.value);
-      debug(opt, 'directive onkeydown() - backspacePressed', backspacePressed);
-      debug(opt, 'directive onkeydown() - isAtEndPosition', isAtEndPosition);
-
-      if (opt.allowBlank
-          && backspacePressed
-          && isAtEndPosition
-          && unformat(el.value, opt, 'directive onkeydown allowBlank') === 0
-      ) {
-        debug(opt, 'directive onkeydown() - set el.value = ""', el.value);
-        el.value = '';
-        el.dispatchEvent(event('change')); // v-model.lazy
-      }
-
-      debug(opt, 'directive onkeydown() - e.key', e.key);
-      if (e.key === '+') {
-        debug(opt, 'directive onkeydown() - unformat el.value', el.value);
-        let number = unformat(el.value, opt, 'directive onkeydown +');
-        if (typeof number === 'string') {
-          number = parseFloat(number);
-        }
-        if (number < 0) {
-          el.value = String(number * -1);
-        }
-      }
+    el.onkeydown = (e: KeyboardEvent) => {
+      onKeyDown(e, opt);
     };
 
-    el.oninput = () => {
-      debug(opt, 'directive oninput()', el.value);
-      if (/^[1-9]$/.test(el.value)) {
-        el.value = numbersToCurrency(el.value, fixed(opt.precision));
-        debug(opt, 'directive oninput() - is 1-9', el.value);
-      }
-      setValue(el, 'directive oninput');
+    el.oninput = (e: Event) => {
+      onInput(e, opt);
     };
 
     debug(opt, 'directive mounted() - el.value', el.value);
-    setValue(el, 'directive mounted');
+    setValue(el, opt, 'directive mounted');
   },
   updated(el: HTMLInputElement, binding: DirectiveBinding): void {
     if (!binding.value) {
       return;
     }
-    opt = filterOptRestrictions({ ...defaults, ...binding.value });
+    const opt = filterOptRestrictions({ ...defaults, ...binding.value });
+
+    el.onkeydown = (e: KeyboardEvent) => {
+      onKeyDown(e, opt);
+    };
+
+    el.oninput = (e: Event) => {
+      onInput(e, opt);
+    };
+
     debug(opt, 'directive updated() - el.value', el.value);
     debug(opt, 'directive updated() - opt', opt);
-    setValue(el, 'directive updated');
+    setValue(el, opt, 'directive updated');
   },
   beforeUnmount(el: HTMLInputElement): void {
     el.onkeydown = null;
