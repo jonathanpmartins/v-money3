@@ -3,7 +3,7 @@
  */
 
 describe('Puppeteer Component Tests', () => {
-  const target = '#component';
+  const target = '#component-0';
   const serverUrl = 'http://127.0.0.1:12345';
   const serverUrlWithTarget = `${serverUrl}?target=${target.substring(1)}`;
 
@@ -11,8 +11,8 @@ describe('Puppeteer Component Tests', () => {
     jest.setTimeout(60000);
   });
 
-  async function getValue() {
-    return page.$eval<string>(target, (input: Element) => (input as HTMLInputElement).value);
+  async function getValue(t = target) {
+    return page.$eval<string>(t, (input: Element) => (input as HTMLInputElement).value);
   }
 
   it(`Test prefix attribute ${target}`, async () => {
@@ -95,35 +95,35 @@ describe('Puppeteer Component Tests', () => {
   });
 
   it(`Test default integer model ${target}`, async () => {
-    await page.goto(`${serverUrlWithTarget}&componentAmount=12`);
+    await page.goto(`${serverUrlWithTarget}&modelValue=12`);
 
     expect(await getValue()).toBe('0.12');
 
-    await page.goto(`${serverUrlWithTarget}&componentAmount=12.00`);
+    await page.goto(`${serverUrlWithTarget}&modelValue=12.00`);
 
     expect(await getValue()).toBe('12.00');
 
-    await page.goto(`${serverUrlWithTarget}&componentAmount=12&useModelNumberModifier=true`);
+    await page.goto(`${serverUrlWithTarget}&modelValue=12&useModelNumberModifier=true`);
 
     expect(await getValue()).toBe('12.00');
 
-    await page.goto(`${serverUrlWithTarget}&componentAmount=12.1&useModelNumberModifier=true`);
+    await page.goto(`${serverUrlWithTarget}&modelValue=12.1&useModelNumberModifier=true`);
 
     expect(await getValue()).toBe('12.10');
   });
 
   it(`Test default float model ${target}`, async () => {
-    await page.goto(`${serverUrlWithTarget}&componentAmount=12.1`);
+    await page.goto(`${serverUrlWithTarget}&modelValue=12.1`);
 
     expect(await getValue()).toBe('1.21');
 
-    await page.goto(`${serverUrlWithTarget}&componentAmount=12.1&useModelNumberModifier=true`);
+    await page.goto(`${serverUrlWithTarget}&modelValue=12.1&useModelNumberModifier=true`);
 
     expect(await getValue()).toBe('12.10');
   });
 
   it(`Test if "v-model.number" modifier is working when typed ${target}`, async () => {
-    await page.goto(`${serverUrlWithTarget}&componentAmount=15&useModelNumberModifier=true`);
+    await page.goto(`${serverUrlWithTarget}&modelValue=15&useModelNumberModifier=true`);
 
     expect(await getValue()).toBe('15.00');
 
@@ -132,7 +132,7 @@ describe('Puppeteer Component Tests', () => {
 
     expect(await getValue()).toBe('150.03');
 
-    await page.goto(`${serverUrlWithTarget}&componentAmount=15.1&useModelNumberModifier=true`);
+    await page.goto(`${serverUrlWithTarget}&modelValue=15.1&useModelNumberModifier=true`);
 
     expect(await getValue()).toBe('15.10');
 
@@ -295,7 +295,8 @@ describe('Puppeteer Component Tests', () => {
 
     await page.$eval<void>(target, (input: Element) => {
       input.addEventListener('change', (event: Event) => {
-        const value = (event.target as HTMLInputElement).value;
+        const { value } = event.target as HTMLInputElement;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         window.onCustomEvent(event, value);
       });
@@ -361,12 +362,39 @@ describe('Puppeteer Component Tests', () => {
   });
 
   it('Test shouldRound property works correctly with puppeteer', async () => {
-    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true&componentAmount=12345.678`);
+    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true&modelValue=12345.678`);
 
     expect(await getValue()).toBe('12,345.68');
 
-    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true&componentAmount=123456.789&shouldRound=false`);
+    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true&modelValue=123456.789&shouldRound=false`);
 
     expect(await getValue()).toBe('123,456.78');
+  });
+
+  it('Tests that the Options of the directive cannot share information inside a loop of components', async () => {
+    const options = [
+      {
+        modelValue: 0, prefix: '', suffix: '#', thousands: ',', decimal: '.', precision: 2,
+      },
+      {
+        modelValue: 0, prefix: '', suffix: '%', thousands: ',', decimal: '.', precision: 2,
+      },
+      {
+        modelValue: 0, prefix: '', suffix: 'º', thousands: ',', decimal: '.', precision: 2,
+      },
+    ];
+
+    const payload = encodeURIComponent(JSON.stringify(options));
+
+    await page.goto(`${serverUrlWithTarget}&payload=${payload}`);
+
+    for (let i = 0; i < options.length; i += 1) {
+      await page.waitForSelector(`#component-${i}`);
+
+      await page.click(`#component-${i}`);
+      await page.keyboard.press('Backspace');
+
+      expect(await getValue(`#component-${i}`)).toBe(`0.00${options[i].suffix}`);
+    }
   });
 });
