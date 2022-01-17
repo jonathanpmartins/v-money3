@@ -10,10 +10,12 @@
       "require": "./dist/v-money3.umd.js"
     }
   },
+  "typings": "./dist/index.d.ts",
   "scripts": {
     "lint": "./node_modules/node/bin/node ./node_modules/eslint/bin/eslint.js --ext .ts,.vue ./src",
+    "dts": "vue-tsc --declaration --emitDeclarationOnly --declarationDir ./dist --removeComments false",
     "serve": "./node_modules/node/bin/node ./node_modules/vite/bin/vite.js --host=localhost --port=3000 --open --force",
-    "build": "./node_modules/node/bin/node ./node_modules/vite/bin/vite.js build",
+    "build": "./node_modules/node/bin/node ./node_modules/vite/bin/vite.js build; npm run dts",
     "test": "./node_modules/node/bin/node ./node_modules/jest/bin/jest.js",
     "lock": "npm i --package-lock-only",
     "pack": "npm run build; npm pack;",
@@ -66,6 +68,7 @@
     "ts-jest": "^26.5.6",
     "vite": "^2.5.10",
     "vue": "^3.2.19",
-    "vue-jest": "^5.0.0-alpha.10"
+    "vue-jest": "^5.0.0-alpha.10",
+    "vue-tsc": "^0.30.4"
   }
 }

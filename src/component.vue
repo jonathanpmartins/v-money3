@@ -1,6 +1,6 @@
 <template>
   <input
-    :id="props.id"
+    :id="`${id}`"
     v-bind="listeners"
     v-money3="{
       precision,
@@ -15,25 +15,33 @@
       minimumNumberOfCharacters: props.minimumNumberOfCharacters,
       debug: props.debug,
       modelModifiers,
-      shouldRound
+      shouldRound,
     }"
     type="tel"
     class="v-money3"
     :value="formattedValue"
     :disabled="props.disabled"
     @change="change"
-  >
+  />
 </template>
 
 <script lang="ts" setup>
 import {
-  computed, getCurrentInstance, ref, toRefs, useAttrs, watch,
+  computed,
+  getCurrentInstance,
+  ref,
+  toRefs,
+  useAttrs,
+  watch,
 } from 'vue';
 import defaults from './options';
 import format from './format';
 import unformat from './unformat';
 import {
-  debug, filterOptRestrictions, fixed, validateRestrictedInput,
+  debug,
+  filterOptRestrictions,
+  fixed,
+  validateRestrictedInput,
 } from './Utils';
 
 const props = defineProps({
@@ -128,13 +136,8 @@ const props = defineProps({
   },
 });
 
-const {
-  modelValue,
-  modelModifiers,
-  masked,
-  precision,
-  shouldRound,
-} = toRefs(props);
+const { modelValue, modelModifiers, masked, precision, shouldRound } =
+  toRefs(props);
 
 debug(props, 'component setup()', props);
 
@@ -143,7 +146,9 @@ if (modelModifiers.value && modelModifiers.value.number) {
   if (shouldRound.value) {
     value = Number(modelValue.value).toFixed(fixed(precision.value));
   } else {
-    value = Number(modelValue.value).toFixed(fixed(precision.value) + 1).slice(0, -1);
+    value = Number(modelValue.value)
+      .toFixed(fixed(precision.value) + 1)
+      .slice(0, -1);
   }
 }
 const formattedValue = ref(format(value, props, 'component setup'));
@@ -153,7 +158,11 @@ debug(props, 'component setup() - data.formattedValue', formattedValue.value);
 watch(modelValue, modelValueWatcher);
 function modelValueWatcher(value: string | number | null | undefined): void {
   debug(props, 'component watch() -> value', value);
-  const formatted = format(value, filterOptRestrictions({ ...props }), 'component watch');
+  const formatted = format(
+    value,
+    filterOptRestrictions({ ...props }),
+    'component watch',
+  );
   if (formatted !== formattedValue.value) {
     debug(props, 'component watch() changed -> formatted', formatted);
     formattedValue.value = formatted;
@@ -161,14 +170,22 @@ function modelValueWatcher(value: string | number | null | undefined): void {
 }
 
 let lastValue: string | number | null = null;
-const emit = defineEmits<{(e: 'update:model-value', value: string | number): void }>();
-function change(evt) {
-  debug(props, 'component change() -> evt.target.value', evt.target.value);
-  let value;
+const emit =
+  defineEmits<{ (e: 'update:model-value', value: string | number): void }>();
+
+function change(evt: Event) {
+  let value: string | number = (evt.target as HTMLInputElement)?.value;
+
+  debug(props, 'component change() -> evt.target.value', value);
+
   if (masked.value && !modelModifiers.value.number) {
-    value = evt.target.value;
+    value = value;
   } else {
-    value = unformat(evt.target.value, filterOptRestrictions({ ...props }), 'component change');
+    value = unformat(
+      value,
+      filterOptRestrictions({ ...props }),
+      'component change',
+    );
   }
   if (value !== lastValue) {
     lastValue = value;

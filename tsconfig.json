@@ -9,11 +9,8 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
-    "types": [
-      "jest",
-      "jest-environment-puppeteer",
-      "puppeteer"
-    ]
+    "types": ["jest", "jest-environment-puppeteer", "puppeteer"],
+    "skipLibCheck": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],
   "exclude": ["node_modules", "dist"]
