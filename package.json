@@ -53,9 +53,9 @@
     "@types/puppeteer": "5.4.4",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",
-    "@vitejs/plugin-vue": "^1.9.2",
-    "@vue/compiler-sfc": "^3.2.19",
-    "@vue/test-utils": "^2.0.0-rc.15",
+    "@vitejs/plugin-vue": "^1.10.2",
+    "@vue/compiler-sfc": "^3.2.27",
+    "@vue/test-utils": "^2.0.0-rc.18",
     "babel-jest": "^26.6.3",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
@@ -63,12 +63,12 @@
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-vue": "^7.18.0",
     "jest": "^26.6.3",
-    "jest-puppeteer": "^5.0.4",
-    "node": "^16.9.1",
+    "jest-puppeteer": "^6.0.3",
+    "node": "^16.13.2",
     "ts-jest": "^26.5.6",
-    "vite": "^2.5.10",
-    "vue": "^3.2.19",
+    "vite": "^2.7.13",
+    "vue": "^3.2.27",
     "vue-jest": "^5.0.0-alpha.10",
-    "vue-tsc": "^0.30.4"
+    "vue-tsc": "^0.30.6"
   }
 }
