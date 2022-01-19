@@ -178,13 +178,11 @@ function change(evt: Event) {
 
   debug(props, 'component change() -> evt.target.value', value);
 
-  if (masked.value && !modelModifiers.value.number) {
-    value = value;
-  } else {
+  if (!(masked.value && !modelModifiers.value.number)) {
     value = unformat(
-      value,
-      filterOptRestrictions({ ...props }),
-      'component change',
+        value,
+        filterOptRestrictions({ ...props }),
+        'component change',
     );
   }
   if (value !== lastValue) {
