@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.21.0] / 2022-01-19
+
+### Feature
+
+- Properly exporting typescript types. Pull request [#54](https://github.com/jonathanpmartins/v-money3/pull/54) thanks to [@sambitevidev](https://github.com/sambitevidev)
+
 ## [3.20.1] / 2021-10-05
 
 ### Fix
@@ -335,6 +341,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.21.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.20.1...v3.21.0
 [3.20.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.20.0...v3.20.1
 [3.20.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.19.1...v3.20.0
 [3.19.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.19.0...v3.19.1
