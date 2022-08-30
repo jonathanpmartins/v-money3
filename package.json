@@ -67,7 +67,7 @@
     "jest-puppeteer": "6.1.0",
     "node": "16.14.2",
     "ts-jest": "26.5.6",
-    "vite": "2.9.12",
+    "vite": "2.9.13",
     "vue": "3.2.31",
     "vue-jest": "5.0.0-alpha.10",
     "vue-tsc": "0.37.7"
