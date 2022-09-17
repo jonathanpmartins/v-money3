@@ -7,7 +7,7 @@ const path = require('path');
 export default defineConfig({
   plugins: [vue()],
   build: {
-    target: 'es2020',
+    target: 'esnext',
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'v-money3',
