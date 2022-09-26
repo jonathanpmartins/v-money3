@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.22.0] / 2022-09-26
+
+### Feature
+
+- Possibility to start with negative symbol. Pull request [#69](https://github.com/jonathanpmartins/v-money3/pull/69) thanks to [@ddlaat](https://github.com/ddlaat)
+
 ## [3.21.1] / 2022-02-15
 
 ### Update
@@ -347,6 +353,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.22.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.21.1...v3.22.0
 [3.21.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.20.0...v3.21.1
 [3.21.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.20.1...v3.21.0
 [3.20.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.20.0...v3.20.1
