@@ -1,4 +1,8 @@
-import BigNumber from '../src/BigNumber';
+/**
+ * @jest-environment jsdom
+ */
+
+import BigNumber from '../../../src/BigNumber';
 
 test('test getNumber function', () => {
   const number = new BigNumber('1234.567');
