@@ -100,7 +100,7 @@ export default class BigNumber {
     }
   }
 
-  adjustComparisonNumbers(thatNumberParam: NumberParam | BigNumber): BigInt[] {
+  adjustComparisonNumbers(thatNumberParam: NumberParam | BigNumber): bigint[] {
     let thatNumber: BigNumber;
     if (thatNumberParam.constructor.name !== 'BigNumber') {
       thatNumber = new BigNumber(thatNumberParam as NumberParam);
