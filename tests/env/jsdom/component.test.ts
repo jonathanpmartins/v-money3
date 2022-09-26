@@ -318,16 +318,19 @@ test('Test if watcher correctly propagates changes made on v-model', async () =>
 
   await component.setProps({ modelValue: 5 });
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   expect(component.vm.formattedValue).toBe('5.00');
 
   await component.setProps({ modelValue: 5.1 });
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   expect(component.vm.formattedValue).toBe('5.10');
 
   await component.setProps({ modelValue: '5.13' });
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   expect(component.vm.formattedValue).toBe('5.13');
 });
@@ -522,4 +525,13 @@ test('Test shouldRound property works correctly', async () => {
   await component.setProps({ modelValue: 123456.789 });
 
   expect(input.element.value).toBe('123,456.78');
+});
+
+test('Test start with negative symbol', async () => {
+  const component = mountComponent({ modelModifiers: { number: true } });
+  const input = component.find('input');
+
+  await component.setProps({ modelValue: '-' });
+
+  expect(input.element.value).toBe('-');
 });

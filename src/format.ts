@@ -29,7 +29,7 @@ export default function format(
     }
   } else if (opt.modelModifiers && opt.modelModifiers.number && isValidInteger(input)) {
     input = Number(input).toFixed(fixed(opt.precision));
-  } else if (!opt.disableNegative && input == '-') {
+  } else if (!opt.disableNegative && input === '-') {
     return input;
   }
 

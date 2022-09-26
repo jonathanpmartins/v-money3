@@ -142,13 +142,15 @@ const { modelValue, modelModifiers, masked, precision, shouldRound } =
 debug(props, 'component setup()', props);
 
 let value: string | number = modelValue.value;
-if (modelModifiers.value && modelModifiers.value.number) {
-  if (shouldRound.value) {
-    value = Number(modelValue.value).toFixed(fixed(precision.value));
-  } else {
-    value = Number(modelValue.value)
-      .toFixed(fixed(precision.value) + 1)
-      .slice(0, -1);
+if (props.disableNegative || value !== '-') {
+  if (modelModifiers.value && modelModifiers.value.number) {
+    if (shouldRound.value) {
+      value = Number(modelValue.value).toFixed(fixed(precision.value));
+    } else {
+      value = Number(modelValue.value)
+          .toFixed(fixed(precision.value) + 1)
+          .slice(0, -1);
+    }
   }
 }
 const formattedValue = ref(format(value, props, 'component setup'));

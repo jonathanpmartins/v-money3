@@ -175,6 +175,7 @@ describe('Puppeteer Component Tests', () => {
   it(`Test disable attribute ${target}`, async () => {
     await page.goto(`${serverUrlWithTarget}&disabled=true`);
 
+    // eslint-disable-next-line max-len
     const isDisabled = await page.$eval<boolean>(target, (input: Element) => (input as HTMLInputElement).disabled);
 
     expect(isDisabled).toBe(true);
@@ -369,6 +370,16 @@ describe('Puppeteer Component Tests', () => {
     await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true&modelValue=123456.789&shouldRound=false`);
 
     expect(await getValue()).toBe('123,456.78');
+  });
+
+  it('Test start with negative symbol with puppeteer', async () => {
+    await page.goto(`${serverUrlWithTarget}&modelValue=-`);
+
+    expect(await getValue()).toBe('-');
+
+    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true&modelValue=-`);
+
+    expect(await getValue()).toBe('-');
   });
 
   it('Tests that the Options of the directive cannot share information inside a loop of components', async () => {

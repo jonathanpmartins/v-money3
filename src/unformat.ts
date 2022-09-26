@@ -12,6 +12,11 @@ export default function unformat(
   debug(opt, 'utils unformat() - caller', caller);
   debug(opt, 'utils unformat() - input', input);
 
+  if (!opt.disableNegative && input === '-') {
+    debug(opt, 'utils unformat() - return netagive symbol', input);
+    return input;
+  }
+
   const negative = opt.disableNegative ? '' : (input.indexOf('-') >= 0 ? '-' : '');
 
   const filtered = input.replace(opt.prefix, '').replace(opt.suffix, '');
