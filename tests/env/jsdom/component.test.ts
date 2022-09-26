@@ -1,9 +1,13 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import { mount } from '@vue/test-utils';
 import {
   RESTRICTED_CHARACTERS, RESTRICTED_OPTIONS,
-} from '../src/Utils';
-import Money3Component from '../src/component.vue';
-import Money3Directive from '../src/directive';
+} from '../../../src/Utils';
+import Money3Component from '../../../src/component.vue';
+import Money3Directive from '../../../src/directive';
 
 beforeAll(() => {
   console.warn = () => {};

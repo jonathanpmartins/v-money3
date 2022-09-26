@@ -1,5 +1,9 @@
-import format from '../src/format';
-import defaults from '../src/options';
+/**
+ * @jest-environment jsdom
+ */
+
+import format from '../../../src/format';
+import defaults from '../../../src/options';
 
 test('format function should parse numbers and strings', () => {
   expect(format('$123.001')).toBe('1,230.01');

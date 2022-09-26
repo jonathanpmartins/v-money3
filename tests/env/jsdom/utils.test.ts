@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import {
   filterOptRestrictions,
   guessFloatPrecision,
@@ -8,8 +12,8 @@ import {
   RESTRICTED_OPTIONS, round,
   validateRestrictedInput,
   validateRestrictedOptions,
-} from '../src/Utils';
-import defaults, { VMoneyOptions } from '../src/options';
+} from '../../../src/Utils';
+import defaults, { VMoneyOptions } from '../../../src/options';
 
 beforeAll(() => {
   console.warn = () => {};

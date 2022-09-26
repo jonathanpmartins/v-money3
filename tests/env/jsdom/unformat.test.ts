@@ -1,5 +1,9 @@
-import unformat from '../src/unformat';
-import defaults from '../src/options';
+/**
+ * @jest-environment jsdom
+ */
+
+import unformat from '../../../src/unformat';
+import defaults from '../../../src/options';
 
 test('unformat min max options should be respected', () => {
   expect(unformat('9.00', { ...defaults, min: 10 })).toBe('10.00');
