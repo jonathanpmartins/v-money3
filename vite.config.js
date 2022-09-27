@@ -11,6 +11,8 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'v-money3',
+      // formats: ['es', 'cjs' ,'iife', 'umd'],
+      // formats: ['es', 'cjs' ,'iife', 'umd'],
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled

@@ -1,12 +1,12 @@
 {
   "name": "v-money3",
-  "version": "3.22.0",
+  "version": "3.22.1",
   "description": "Vue3 currency input/directive mask",
   "main": "./dist/v-money3.umd.js",
-  "module": "./dist/v-money3.es.js",
+  "module": "./dist/v-money3.mjs",
   "exports": {
     ".": {
-      "import": "./dist/v-money3.es.js",
+      "import": "./dist/v-money3.mjs",
       "require": "./dist/v-money3.umd.js"
     }
   },
