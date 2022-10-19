@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.22.2] / 2022-10-19
+
+### Build Change
+
+- "Safari14" added to build target on vite.config.js
+
 ## [3.22.1] / 2022-09-27
 
 ### Fix
@@ -359,6 +365,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.22.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.1...v3.22.2
 [3.22.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.0...v3.22.1
 [3.22.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.21.1...v3.22.0
 [3.21.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.21.0...v3.21.1
