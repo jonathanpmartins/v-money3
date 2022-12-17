@@ -12,7 +12,7 @@ describe('Puppeteer Component Tests', () => {
   });
 
   async function getValue(t = target) {
-    return page.$eval<string>(t, (input: Element) => (input as HTMLInputElement).value);
+    return page.$eval(t, (input: Element) => (input as HTMLInputElement).value);
   }
 
   it(`Test prefix attribute ${target}`, async () => {
@@ -176,7 +176,7 @@ describe('Puppeteer Component Tests', () => {
     await page.goto(`${serverUrlWithTarget}&disabled=true`);
 
     // eslint-disable-next-line max-len
-    const isDisabled = await page.$eval<boolean>(target, (input: Element) => (input as HTMLInputElement).disabled);
+    const isDisabled = await page.$eval(target, (input: Element) => (input as HTMLInputElement).disabled);
 
     expect(isDisabled).toBe(true);
   });
@@ -294,7 +294,7 @@ describe('Puppeteer Component Tests', () => {
 
     await page.goto(`${serverUrlWithTarget}`);
 
-    await page.$eval<void>(target, (input: Element) => {
+    await page.$eval(target, (input: Element) => {
       input.addEventListener('change', (event: Event) => {
         const { value } = event.target as HTMLInputElement;
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
