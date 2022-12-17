@@ -22,7 +22,7 @@
     "lock": "npm i --package-lock-only",
     "pack": "npm run build; npm pack;",
     "prepublish": "npm run build",
-    "update": "export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true; npm update --verbose;"
+    "update": "export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=true; export PUPPETEER_SKIP_DOWNLOAD=true; npm update --verbose;"
   },
   "files": [
     "dist"
