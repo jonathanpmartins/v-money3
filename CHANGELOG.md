@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [3.22.3] / 2022-12-16
 
-#### npm audit report @ 2022-12-16 23:12
+#### npm audit report @ 2022-12-16 02:12 UTC
 
 ### Before
 ```shell
