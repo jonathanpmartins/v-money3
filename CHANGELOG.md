@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.22.3] / 2022-12-16
+
+#### npm audit report @ 2022-12-16 23:12
+
+### Before
+```shell
+$ npm audit;
+
+decode-uri-component  <0.2.1
+decode-uri-component vulnerable to Denial of Service (DoS) - https://github.com/advisories/GHSA-w573-4hg7-7wgq
+fix available via `npm audit fix`
+node_modules/decode-uri-component
+
+1 low severity vulnerability
+```
+### Fix
+```shell
+npm run update;
+```
+
+### After
+```shell
+$ npm audit;
+
+found 0 vulnerabilities
+```
+
 ## [3.22.2] / 2022-10-19
 
 ### Build Change
@@ -365,6 +392,8 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.22.3]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.3...v3.22.2
+[3.22.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.2...v3.22.1
 [3.22.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.1...v3.22.2
 [3.22.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.0...v3.22.1
 [3.22.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.21.1...v3.22.0
