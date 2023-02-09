@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.23.0] / 2023-02-08
+
+#### Fix issue #56. Thanks to @ivancorrea.
+#### "npm update" development dependencies.
+
 ## [3.22.3] / 2022-12-16
 
 #### npm audit report @ 2022-12-16 02:12 UTC
@@ -392,6 +397,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.23.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.23.0...v3.22.3
 [3.22.3]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.3...v3.22.2
 [3.22.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.2...v3.22.1
 [3.22.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.1...v3.22.2
