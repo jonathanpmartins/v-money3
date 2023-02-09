@@ -176,7 +176,7 @@ const emit =
   defineEmits<{ (e: 'update:model-value', value: string | number): void }>();
 
 function change(evt: Event) {
-  let value: string | number = (evt.target as HTMLInputElement)?.value;
+  let value: string | number = (evt.target as HTMLInputElement).value;
 
   debug(props, 'component change() -> evt.target.value', value);
 
