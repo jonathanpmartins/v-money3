@@ -79,6 +79,14 @@ const onInput = (e: Event, opt: VMoneyOptions) => {
   setValue(el, opt, 'directive oninput');
 };
 
+const onFocus = (e: Event, opt: VMoneyOptions) => {
+  const el = e.currentTarget as HTMLInputElement;
+  debug(opt, 'directive onFocus()', el.value);
+  if (opt.focusOnRight) {
+    setCursor(el, el.value.length - opt.suffix.length);
+  }
+};
+
 export default {
   mounted(el: HTMLInputElement, binding: DirectiveBinding): void {
     if (!binding.value) {
@@ -108,6 +116,10 @@ export default {
       onInput(e, opt);
     };
 
+    el.onfocus = (e: Event) => {
+      onFocus(e, opt);
+    };
+
     debug(opt, 'directive mounted() - el.value', el.value);
     setValue(el, opt, 'directive mounted');
   },
@@ -123,6 +135,10 @@ export default {
 
     el.oninput = (e: Event) => {
       onInput(e, opt);
+    };
+
+    el.onfocus = (e: Event) => {
+      onFocus(e, opt);
     };
 
     debug(opt, 'directive updated() - el.value', el.value);

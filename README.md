@@ -223,21 +223,23 @@ If you bind it directly you are just fine too:
 
 ## Properties
 
-| property  | Required | Type    | Default | Description                                             |
-|-----------|----------|---------|---------|---------------------------------------------------------|
-| precision | **true** | Number  | 2       | How many decimal places                                 |
-| decimal   | false    | String  | "."     | Decimal separator                                       |
-| thousands | false    | String  | ","     | Thousands separator                                     |
-| prefix    | false    | String  | ""      | Currency symbol followed by a Space, like "R$ "         |
-| suffix    | false    | String  | ""      | Percentage for example: " %"                            |
-| masked    | false    | Boolean | false   | If the component output should include the mask or not  |
-| disable-negative | false | Boolean | false | Component does not allow negative values              |
-| disabled  | false    | Boolean | false   | Disable the inner input tag                             |
-| min       | false    | Number  | null | The min value allowed                   |
-| max       | false    | Number  | null | The max value allowed                   |
-| allow-blank | false  | Boolean | false   | If the field can start blank and be cleared out by user |
-| minimum-number-of-characters | false | Number | 0 | The minimum number of characters that the mask should show |
-| should-round | false | Boolean | true | Should default values be rounded or sliced                 |
+| property  | Required | Type    | Default | Description                                                |
+|-----------|----------|---------|---------|------------------------------------------------------------|
+| precision | **true** | Number  | 2       | How many decimal places                                    |
+| decimal   | false    | String  | "."     | Decimal separator                                          |
+| thousands | false    | String  | ","     | Thousands separator                                        |
+| prefix    | false    | String  | ""      | Currency symbol followed by a Space, like "R$ "            |
+| suffix    | false    | String  | ""      | Percentage for example: " %"                               |
+| masked    | false    | Boolean | false   | If the component output should include the mask or not     |
+| disable-negative | false | Boolean | false   | Component does not allow negative values                   |
+| disabled  | false    | Boolean | false   | Disable the inner input tag                                |
+| min       | false    | Number  | null    | The min value allowed                                      |
+| max       | false    | Number  | null    | The max value allowed                                      |
+| allow-blank | false  | Boolean | false   | If the field can start blank and be cleared out by user    |
+| minimum-number-of-characters | false | Number | 0       | The minimum number of characters that the mask should show |
+| should-round | false | Boolean | true    | Should default values be rounded or sliced                 |
+| focusOnRight | false | Boolean | false   | When focus, set the cursor to the far right                |
+
 
 ## Restricted Characters
 
