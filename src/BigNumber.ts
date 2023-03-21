@@ -5,9 +5,9 @@ import {
 type NumberParam = bigint | number | string;
 
 export default class BigNumber {
-  private number = 0n;
+  protected number = 0n;
 
-  private decimal = 0;
+  protected decimal = 0;
 
   constructor(number: NumberParam) {
     this.setNumber(number);
