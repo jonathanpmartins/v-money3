@@ -14,7 +14,7 @@ import {
 
 export default function format(
   input: string | number | null | undefined,
-  opt: VMoneyOptions | ExtractPropTypes<any> = defaults,
+  opt: VMoneyOptions | ExtractPropTypes<never> = defaults,
   caller = '',
 ): string {
   debug(opt, 'utils format() - caller', caller);

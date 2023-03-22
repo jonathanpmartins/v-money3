@@ -38,7 +38,7 @@ export function validateRestrictedInput(value: string, caller: string): boolean 
   return true;
 }
 
-export function validateRestrictedOptions(opt: VMoneyOptions | ExtractPropTypes<any>): boolean {
+export function validateRestrictedOptions(opt: VMoneyOptions | ExtractPropTypes<never>): boolean {
   for (const target of RESTRICTED_OPTIONS) {
     const isValid = validateRestrictedInput(opt[target], target);
     if (!isValid) {
@@ -49,7 +49,7 @@ export function validateRestrictedOptions(opt: VMoneyOptions | ExtractPropTypes<
 }
 
 // eslint-disable-next-line max-len
-export function filterOptRestrictions(opt: VMoneyOptions | ExtractPropTypes<any>): VMoneyOptions | ExtractPropTypes<any> {
+export function filterOptRestrictions(opt: VMoneyOptions | ExtractPropTypes<never>): VMoneyOptions | ExtractPropTypes<never> {
   for (const option of RESTRICTED_OPTIONS) {
     // Remove numbers from option prop
     opt[option] = opt[option].replace(/\d+/g, '');
@@ -131,6 +131,6 @@ export function event(name: string): Event {
 
 // eslint-disable-next-line max-len
 // eslint-disable-next-line @typescript-eslint/no-shadow,@typescript-eslint/explicit-module-boundary-types,@typescript-eslint/no-explicit-any,no-shadow,max-len
-export function debug({ debug = false }: VMoneyOptions | ExtractPropTypes<any>, ...args: any): void {
+export function debug({ debug = false }: VMoneyOptions | ExtractPropTypes<never>, ...args: any): void {
   if (debug) console.log(...args);
 }

@@ -1,13 +1,13 @@
+import { ExtractPropTypes } from 'vue';
 import defaults, { VMoneyOptions } from './options';
 import BigNumber from './BigNumber';
 import {
   debug, fixed, numbersToCurrency, onlyNumbers,
 } from './Utils';
-import {ExtractPropTypes} from "vue";
 
 export default function unformat(
   input: string,
-  opt: VMoneyOptions | ExtractPropTypes<any> = defaults,
+  opt: VMoneyOptions | ExtractPropTypes<never> = defaults,
   caller = '',
 ): string | number {
   debug(opt, 'utils unformat() - caller', caller);

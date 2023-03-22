@@ -16,7 +16,7 @@ import defaults, { VMoneyOptions } from './options';
 // let opt: VMoneyOptions = defaults;
 
 // eslint-disable-next-line max-len
-const setValue = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<any>, caller: string) => {
+const setValue = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<never>, caller: string) => {
   debug(opt, 'directive setValue() - caller', caller);
 
   if (!validateRestrictedOptions(opt)) {
@@ -37,7 +37,7 @@ const setValue = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<an
   el.dispatchEvent(event('change')); // v-model.lazy
 };
 
-const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<any>) => {
+const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<never>) => {
   const el = e.currentTarget as HTMLInputElement;
 
   const backspacePressed = e.code === 'Backspace' || e.code === 'Delete';
@@ -70,7 +70,7 @@ const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<any>)
   }
 };
 
-const onInput = (e: Event, opt: VMoneyOptions | ExtractPropTypes<any>) => {
+const onInput = (e: Event, opt: VMoneyOptions | ExtractPropTypes<never>) => {
   const el = e.currentTarget as HTMLInputElement;
   debug(opt, 'directive oninput()', el.value);
   if (/^[1-9]$/.test(el.value)) {
@@ -80,7 +80,7 @@ const onInput = (e: Event, opt: VMoneyOptions | ExtractPropTypes<any>) => {
   setValue(el, opt, 'directive oninput');
 };
 
-const onFocus = (e: Event, opt: VMoneyOptions | ExtractPropTypes<any>) => {
+const onFocus = (e: Event, opt: VMoneyOptions | ExtractPropTypes<never>) => {
   const el = e.currentTarget as HTMLInputElement;
   debug(opt, 'directive onFocus()', el.value);
   if (opt.focusOnRight) {
