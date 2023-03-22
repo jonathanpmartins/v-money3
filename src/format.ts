@@ -1,3 +1,4 @@
+import { ExtractPropTypes } from 'vue';
 import defaults, { VMoneyOptions } from './options';
 import BigNumber from './BigNumber';
 import {
@@ -13,7 +14,7 @@ import {
 
 export default function format(
   input: string | number | null | undefined,
-  opt: VMoneyOptions = defaults,
+  opt: VMoneyOptions | ExtractPropTypes<any> = defaults,
   caller = '',
 ): string {
   debug(opt, 'utils format() - caller', caller);

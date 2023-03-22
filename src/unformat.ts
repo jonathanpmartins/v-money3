@@ -3,10 +3,11 @@ import BigNumber from './BigNumber';
 import {
   debug, fixed, numbersToCurrency, onlyNumbers,
 } from './Utils';
+import {ExtractPropTypes} from "vue";
 
 export default function unformat(
   input: string,
-  opt: VMoneyOptions = defaults,
+  opt: VMoneyOptions | ExtractPropTypes<any> = defaults,
   caller = '',
 ): string | number {
   debug(opt, 'utils unformat() - caller', caller);

@@ -1,4 +1,4 @@
-import { DirectiveBinding } from 'vue';
+import { DirectiveBinding, ExtractPropTypes } from 'vue';
 import {
   debug,
   filterOptRestrictions,
@@ -15,7 +15,8 @@ import defaults, { VMoneyOptions } from './options';
 // this option is used for ALL directive instances
 // let opt: VMoneyOptions = defaults;
 
-const setValue = (el: HTMLInputElement, opt: VMoneyOptions, caller: string) => {
+// eslint-disable-next-line max-len
+const setValue = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<any>, caller: string) => {
   debug(opt, 'directive setValue() - caller', caller);
 
   if (!validateRestrictedOptions(opt)) {
@@ -36,7 +37,7 @@ const setValue = (el: HTMLInputElement, opt: VMoneyOptions, caller: string) => {
   el.dispatchEvent(event('change')); // v-model.lazy
 };
 
-const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions) => {
+const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<any>) => {
   const el = e.currentTarget as HTMLInputElement;
 
   const backspacePressed = e.code === 'Backspace' || e.code === 'Delete';
@@ -69,7 +70,7 @@ const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions) => {
   }
 };
 
-const onInput = (e: Event, opt: VMoneyOptions) => {
+const onInput = (e: Event, opt: VMoneyOptions | ExtractPropTypes<any>) => {
   const el = e.currentTarget as HTMLInputElement;
   debug(opt, 'directive oninput()', el.value);
   if (/^[1-9]$/.test(el.value)) {
@@ -79,7 +80,7 @@ const onInput = (e: Event, opt: VMoneyOptions) => {
   setValue(el, opt, 'directive oninput');
 };
 
-const onFocus = (e: Event, opt: VMoneyOptions) => {
+const onFocus = (e: Event, opt: VMoneyOptions | ExtractPropTypes<any>) => {
   const el = e.currentTarget as HTMLInputElement;
   debug(opt, 'directive onFocus()', el.value);
   if (opt.focusOnRight) {
