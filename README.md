@@ -29,9 +29,9 @@ Feel free to open an issue or post a pull request!
 ## Arbitrary precision
 
 Arbitrary precision is only supported with `v-model`.
-It expects to receive a string representation of a number. `'12345.67'`
+It expects to receive a string representation of a number, such as `'12345.67'`
 
-Some break changes where introduced in this release.
+Some break changes were introduced in this release.
 Let's follow a train of thought:   
 If your precision is set to `2` and you set a default model value of `'55'`, 
 it will be interpreted as `'0.55'`.
@@ -45,11 +45,10 @@ boundaries of [`Number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript
 If you fit this instance, you need to use `v-model`
 with the number modifier, or `v-model.number`. But than,
 you are stuck with numbers smaller than `2^53 - 1` or
-`9007199254740991` or `9,007,199,254,740,991`.
-Little more than nine quadrilion...
+`9007199254740991` or `9,007,199,254,740,991`. - Little more than nine quadrilion...
 See [MAX_SAFE_INTEGER](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER).
 
-For those who are using `v-model.number`, integers and floats are compleatly
+For those who are using `v-model.number`, integers and floats are completely
 understood.  
 Let's follow another train of thought:  
 If your precision is set to `2` and you set a default model value of `55`,
@@ -131,6 +130,8 @@ app.directive('money3', Money3Directive)
           max: null,
           allowBlank: false,
           minimumNumberOfCharacters: 0,
+          shouldRound: true,
+          focusOnRight: false,
         }
       }
     }
@@ -197,6 +198,8 @@ Must use `v-model.lazy` to bind works properly.
           max: null,
           allowBlank: false,
           minimumNumberOfCharacters: 0,
+          shouldRound: true,
+          focusOnRight: false,
         }
       }
     },
@@ -205,7 +208,7 @@ Must use `v-model.lazy` to bind works properly.
 </script>
 ```
 
-By default directives work with `v-model`.
+By default, directives work with `v-model`.
 It is not possible to use `v-model.number` on directives, so, if you need
 to work with floats/integers on directives you need to configure the `number`
 modifier manually.
@@ -223,22 +226,22 @@ If you bind it directly you are just fine too:
 
 ## Properties
 
-| property  | Required | Type    | Default | Description                                                |
-|-----------|----------|---------|---------|------------------------------------------------------------|
-| precision | **true** | Number  | 2       | How many decimal places                                    |
-| decimal   | false    | String  | "."     | Decimal separator                                          |
-| thousands | false    | String  | ","     | Thousands separator                                        |
-| prefix    | false    | String  | ""      | Currency symbol followed by a Space, like "R$ "            |
-| suffix    | false    | String  | ""      | Percentage for example: " %"                               |
-| masked    | false    | Boolean | false   | If the component output should include the mask or not     |
-| disable-negative | false | Boolean | false   | Component does not allow negative values                   |
-| disabled  | false    | Boolean | false   | Disable the inner input tag                                |
-| min       | false    | Number  | null    | The min value allowed                                      |
-| max       | false    | Number  | null    | The max value allowed                                      |
-| allow-blank | false  | Boolean | false   | If the field can start blank and be cleared out by user    |
-| minimum-number-of-characters | false | Number | 0       | The minimum number of characters that the mask should show |
-| should-round | false | Boolean | true    | Should default values be rounded or sliced                 |
-| focusOnRight | false | Boolean | false   | When focus, set the cursor to the far right                |
+| property                     | Required | Type     | Default | Description                                                |
+|------------------------------|----------|----------|---------|------------------------------------------------------------|
+| precision                    | **true** | Number   | 2       | How many decimal places                                    |
+| decimal                      | false    | String   | "."     | Decimal separator                                          |
+| thousands                    | false    | String   | ","     | Thousands separator                                        |
+| prefix                       | false    | String   | ""      | Currency symbol followed by a Space, like "R$ "            |
+| suffix                       | false    | String   | ""      | Percentage for example: " %"                               |
+| masked                       | false    | Boolean  | false   | If the component output should include the mask or not     |
+| disable-negative             | false    | Boolean  | false   | Component does not allow negative values                   |
+| disabled                     | false    | Boolean  | false   | Disable the inner input tag                                |
+| min                          | false    | Number   | null    | The min value allowed                                      |
+| max                          | false    | Number   | null    | The max value allowed                                      |
+| allow-blank                  | false    | Boolean  | false   | If the field can start blank and be cleared out by user    |
+| minimum-number-of-characters | false    | Number   | 0       | The minimum number of characters that the mask should show |
+| should-round                 | false    | Boolean  | true    | Should default values be rounded or sliced                 |
+| focus-on-right               | false    | Boolean  | false   | When focus, set the cursor to the far right                |
 
 
 ## Restricted Characters
@@ -290,6 +293,8 @@ const config = {
     modelModifiers: {
         number: false,
     },
+    shouldRound: true,
+    focusOnRight: false,
 }
 
 const formatted = format(12345.67, config);
