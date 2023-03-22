@@ -408,4 +408,30 @@ describe('Puppeteer Component Tests', () => {
       expect(await getValue(`#component-${i}`)).toBe(`0.00${options[i].suffix}`);
     }
   });
+
+  it('Test focusOnRight property works correctly with puppeteer', async () => {
+    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true`);
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('ArrowLeft');
+    await page.type(target, '123456');
+    expect(await getValue()).toBe('1,234,560.00');
+
+    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true`);
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('ArrowRight');
+    await page.type(target, '123456');
+    expect(await getValue()).toBe('1,234.56');
+
+    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true&focusOnRight=true`);
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('ArrowLeft');
+    await page.type(target, '123456');
+    expect(await getValue()).toBe('12,345.60');
+
+    await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true&focusOnRight=true`);
+    await page.keyboard.press('Tab');
+    await page.keyboard.press('ArrowRight');
+    await page.type(target, '123456');
+    expect(await getValue()).toBe('1,234.56');
+  });
 });
