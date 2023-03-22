@@ -4,8 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [3.24.0] / 2023-03-22
 
-#### New property `focusOnRight` brings back the default behaviour on the old v-money library. Requested by @SDIjeremy in issue #77.
-#### Added access to variables when extending class. Pull request #81, thanks to @joserick.
+### Feature
+- New property `focusOnRight` brings back the default behaviour on the old v-money library. Requested by @SDIjeremy in issue #77.
+### Update
+- Added access to variables when extending class. Pull request #81, thanks to @joserick.
 
 ## [3.23.0] / 2023-02-08
 
