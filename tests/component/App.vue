@@ -64,6 +64,7 @@ if (payload && payload.length) {
       number: ref(!!get('useModelNumberModifier', false)),
     },
     shouldRound: get('shouldRound') !== 'false',
+    focusOnRight: get('focusOnRight') === 'true',
   });
 }
 

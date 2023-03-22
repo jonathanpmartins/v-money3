@@ -16,6 +16,7 @@
       debug: props.debug,
       modelModifiers,
       shouldRound,
+      focusOnRight,
     }"
     type="tel"
     class="v-money3"
@@ -134,9 +135,13 @@ const props = defineProps({
     type: Boolean,
     default: () => defaults.shouldRound,
   },
+  focusOnRight: {
+    type: Boolean,
+    default: () => defaults.focusOnRight,
+  },
 });
 
-const { modelValue, modelModifiers, masked, precision, shouldRound } =
+const { modelValue, modelModifiers, masked, precision, shouldRound, focusOnRight } =
   toRefs(props);
 
 debug(props, 'component setup()', props);
