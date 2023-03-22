@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.24.0] / 2023-03-22
+
+#### New property `focusOnRight` brings back the default behaviour on the old v-money library. Requested by @SDIjeremy in issue #77.
+#### Added access to variables when extending class. Pull request #81, thanks to @joserick.
+
 ## [3.23.0] / 2023-02-08
 
 #### Fix issue #56. Thanks to @ivancorrea.
@@ -397,6 +402,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.24.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.24.0...v3.23.0
 [3.23.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.23.0...v3.22.3
 [3.22.3]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.3...v3.22.2
 [3.22.2]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.2...v3.22.1
