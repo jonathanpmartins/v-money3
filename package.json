@@ -6,8 +6,14 @@
   "module": "./dist/v-money3.mjs",
   "exports": {
     ".": {
-      "import": "./dist/v-money3.mjs",
-      "require": "./dist/v-money3.umd.js"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/v-money3.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/v-money3.umd.js"
+      }
     }
   },
   "typings": "./dist/index.d.ts",
