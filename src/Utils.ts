@@ -134,3 +134,17 @@ export function event(name: string): Event {
 export function debug({ debug = false }: VMoneyOptions | ExtractPropTypes<any>, ...args: any): void {
   if (debug) console.log(...args);
 }
+
+export const getInputElement = (el: HTMLInputElement): HTMLInputElement => {
+  // v-money3 used on a component that's not a input
+  if (el.tagName.toLocaleUpperCase() !== "INPUT") {
+    const els = el.getElementsByTagName("input");
+    if (els.length !== 1) {
+      // throw new Error("v-money3 requires 1 input, found " + els.length)
+    } else {
+      // eslint-disable-next-line prefer-destructuring
+      return els[0];
+    }
+  }
+  return el;
+};  

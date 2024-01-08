@@ -7,6 +7,7 @@ import {
   setCursor,
   validateRestrictedOptions,
   event,
+  getInputElement,
 } from './Utils';
 import format from './format';
 import unformat from './unformat';
@@ -26,7 +27,11 @@ const setValue = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<an
 
   let positionFromEnd = el.value.length - (el.selectionEnd || 0);
 
-  el.value = format(el.value, opt, caller);
+  const formatted = format(el.value, opt, caller);
+  
+  if(formatted === el.value) return; //prevent unnecessary updates
+  
+  el.value = formatted;
 
   positionFromEnd = Math.max(positionFromEnd, opt.suffix.length); // right
   positionFromEnd = el.value.length - positionFromEnd;
@@ -34,7 +39,7 @@ const setValue = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<an
 
   setCursor(el, positionFromEnd);
 
-  el.dispatchEvent(event('change')); // v-model.lazy
+  el.dispatchEvent(event( opt.lazy ? 'change' : 'input')); // v-model.lazy or not
 };
 
 const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<any>) => {
@@ -98,16 +103,7 @@ export default {
 
     debug(opt, 'directive mounted() - opt', opt);
 
-    // v-money3 used on a component that's not a input
-    if (el.tagName.toLocaleUpperCase() !== 'INPUT') {
-      const els = el.getElementsByTagName('input');
-      if (els.length !== 1) {
-        // throw new Error("v-money3 requires 1 input, found " + els.length)
-      } else {
-        // eslint-disable-next-line prefer-destructuring
-        el = els[0];
-      }
-    }
+    el = getInputElement(el)
 
     el.onkeydown = (e: KeyboardEvent) => {
       onKeyDown(e, opt);
@@ -129,6 +125,8 @@ export default {
       return;
     }
     const opt = filterOptRestrictions({ ...defaults, ...binding.value });
+
+    el = getInputElement(el)
 
     el.onkeydown = (e: KeyboardEvent) => {
       onKeyDown(e, opt);
