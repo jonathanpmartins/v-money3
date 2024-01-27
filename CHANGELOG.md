@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.24.1] / 2024-01-27
+#### Fix typescript error TS7016. Pull request #84, thanks to @christhofer.
+
+
 ## [3.24.0] / 2023-03-22
 
 ### Feature
@@ -404,6 +408,7 @@ Fixing a problem with cursor position when deleting a digit.
 
 - First Release with Vue 3 integration.
 
+[3.24.1]: https://github.com/jonathanpmartins/v-money3/compare/v3.24.1...v3.24.0
 [3.24.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.24.0...v3.23.0
 [3.23.0]: https://github.com/jonathanpmartins/v-money3/compare/v3.23.0...v3.22.3
 [3.22.3]: https://github.com/jonathanpmartins/v-money3/compare/v3.22.3...v3.22.2
