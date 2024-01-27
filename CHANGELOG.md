@@ -3,15 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 ## [3.24.1] / 2024-01-27
-#### Fix typescript error TS7016. Pull request #84, thanks to @christhofer.
-
+#### Problem 
+ - Fix typescript error TS7016. Pull request [#84](https://github.com/jonathanpmartins/v-money3/pull/84), thanks to [@christhofer](https://github.com/christhofer).
 
 ## [3.24.0] / 2023-03-22
 
 ### Feature
-- New property `focusOnRight` brings back the default behaviour on the old v-money library. Requested by @SDIjeremy in issue #77.
+- New property `focusOnRight` brings back the default behaviour on the old v-money library. Requested by [@SDIjeremy](https://github.com/SDIjeremy) in issue [#77](https://github.com/jonathanpmartins/v-money3/pull/77).
 ### Update
-- Added access to variables when extending class. Pull request #81, thanks to @joserick.
+- Added access to variables when extending class. Pull request [#81](https://github.com/jonathanpmartins/v-money3/pull/81), thanks to [@joserick](https://github.com/joserick).
 
 ## [3.23.0] / 2023-02-08
 
