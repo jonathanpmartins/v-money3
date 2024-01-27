@@ -7,7 +7,7 @@ import {
   setCursor,
   validateRestrictedOptions,
   event,
-  getInputElement,
+  getValidatedInputElement,
 } from './Utils';
 import format from './format';
 import unformat from './unformat';
@@ -28,9 +28,9 @@ const setValue = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<ne
   let positionFromEnd = el.value.length - (el.selectionEnd || 0);
 
   const formatted = format(el.value, opt, caller);
-  
-  if(formatted === el.value) return; //prevent unnecessary updates
-  
+
+  // if(formatted === el.value) return; //prevent unnecessary updates
+
   el.value = formatted;
 
   positionFromEnd = Math.max(positionFromEnd, opt.suffix.length); // right
@@ -39,7 +39,7 @@ const setValue = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<ne
 
   setCursor(el, positionFromEnd);
 
-  el.dispatchEvent(event( opt.lazy ? 'change' : 'input')); // v-model.lazy or not
+  el.dispatchEvent(event(opt.lazy ? 'change' : 'input')); // v-model.lazy or not
 };
 
 const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<never>) => {
@@ -103,7 +103,7 @@ export default {
 
     debug(opt, 'directive mounted() - opt', opt);
 
-    el = getInputElement(el)
+    el = getValidatedInputElement(el);
 
     el.onkeydown = (e: KeyboardEvent) => {
       onKeyDown(e, opt);
@@ -126,7 +126,7 @@ export default {
     }
     const opt = filterOptRestrictions({ ...defaults, ...binding.value });
 
-    el = getInputElement(el)
+    el = getValidatedInputElement(el);
 
     el.onkeydown = (e: KeyboardEvent) => {
       onKeyDown(e, opt);

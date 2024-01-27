@@ -135,16 +135,16 @@ export function debug({ debug = false }: VMoneyOptions | ExtractPropTypes<never>
   if (debug) console.log(...args);
 }
 
-export const getInputElement = (el: HTMLInputElement): HTMLInputElement => {
-  // v-money3 used on a component that's not a input
-  if (el.tagName.toLocaleUpperCase() !== "INPUT") {
-    const els = el.getElementsByTagName("input");
+export const getValidatedInputElement = (el: HTMLInputElement): HTMLInputElement => {
+  // v-money3 used on a component that's not an input
+  if (el.tagName.toLocaleUpperCase() !== 'INPUT') {
+    const els = el.getElementsByTagName('input');
     if (els.length !== 1) {
-      // throw new Error("v-money3 requires 1 input, found " + els.length)
+      throw new Error(`v-money3 requires 1 input, found ${els.length} elements.`);
     } else {
       // eslint-disable-next-line prefer-destructuring
       return els[0];
     }
   }
   return el;
-};  
+};
