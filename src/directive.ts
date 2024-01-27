@@ -7,7 +7,6 @@ import {
   setCursor,
   validateRestrictedOptions,
   event,
-  getValidatedInputElement,
 } from './Utils';
 import format from './format';
 import unformat from './unformat';
@@ -16,8 +15,11 @@ import defaults, { VMoneyOptions } from './options';
 // this option is used for ALL directive instances
 // let opt: VMoneyOptions = defaults;
 
-// eslint-disable-next-line max-len
-const setValue = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<never>, caller: string) => {
+const setValue = (
+  el: HTMLInputElement,
+  opt: VMoneyOptions | ExtractPropTypes<never>,
+  caller: string,
+) => {
   debug(opt, 'directive setValue() - caller', caller);
 
   if (!validateRestrictedOptions(opt)) {
@@ -93,29 +95,50 @@ const onFocus = (e: Event, opt: VMoneyOptions | ExtractPropTypes<never>) => {
   }
 };
 
+const getValidatedInputElement = (el: HTMLInputElement): HTMLInputElement => {
+  // v-money3 used on a component that's not an input
+  if (el.tagName.toLocaleUpperCase() !== 'INPUT') {
+    const els = el.getElementsByTagName('input');
+    if (els.length !== 1) {
+      throw new Error(`v-money3 requires 1 input, found ${els.length} elements.`);
+    } else {
+      // eslint-disable-next-line prefer-destructuring
+      return els[0];
+    }
+  }
+  return el;
+};
+
+const registerListeners = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<never>) => {
+  el.onkeydown = (e: KeyboardEvent) => {
+    onKeyDown(e, opt);
+  };
+
+  el.oninput = (e: Event) => {
+    onInput(e, opt);
+  };
+
+  el.onfocus = (e: Event) => {
+    onFocus(e, opt);
+  };
+};
+
 export default {
   mounted(el: HTMLInputElement, binding: DirectiveBinding): void {
     if (!binding.value) {
       return;
     }
 
-    const opt = filterOptRestrictions({ ...defaults, ...binding.value });
+    const opt: VMoneyOptions | ExtractPropTypes<never> = filterOptRestrictions({
+      ...defaults,
+      ...binding.value,
+    });
 
     debug(opt, 'directive mounted() - opt', opt);
 
     el = getValidatedInputElement(el);
 
-    el.onkeydown = (e: KeyboardEvent) => {
-      onKeyDown(e, opt);
-    };
-
-    el.oninput = (e: Event) => {
-      onInput(e, opt);
-    };
-
-    el.onfocus = (e: Event) => {
-      onFocus(e, opt);
-    };
+    registerListeners(el, opt);
 
     debug(opt, 'directive mounted() - el.value', el.value);
     setValue(el, opt, 'directive mounted');
@@ -124,22 +147,14 @@ export default {
     if (!binding.value) {
       return;
     }
-    const opt = filterOptRestrictions({ ...defaults, ...binding.value });
 
-    el.onkeydown = (e: KeyboardEvent) => {
-      onKeyDown(e, opt);
-    };
+    const opt = filterOptRestrictions({
+      ...defaults,
+      ...binding.value,
+    });
 
-    el.oninput = (e: Event) => {
-      onInput(e, opt);
-    };
-
-    el.onfocus = (e: Event) => {
-      onFocus(e, opt);
-    };
-
-    debug(opt, 'directive updated() - el.value', el.value);
     debug(opt, 'directive updated() - opt', opt);
+    debug(opt, 'directive updated() - el.value', el.value);
     setValue(el, opt, 'directive updated');
   },
   beforeUnmount(el: HTMLInputElement): void {
