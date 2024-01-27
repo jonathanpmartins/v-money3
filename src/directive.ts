@@ -148,7 +148,7 @@ export default {
       return;
     }
 
-    const opt = filterOptRestrictions({
+    const opt: VMoneyOptions | ExtractPropTypes<never> = filterOptRestrictions({
       ...defaults,
       ...binding.value,
     });
