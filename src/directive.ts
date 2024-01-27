@@ -126,8 +126,6 @@ export default {
     }
     const opt = filterOptRestrictions({ ...defaults, ...binding.value });
 
-    el = getValidatedInputElement(el);
-
     el.onkeydown = (e: KeyboardEvent) => {
       onKeyDown(e, opt);
     };
