@@ -6,7 +6,7 @@ module.exports = {
   },
   launch: {
     headless: process.env.HEADLESS !== "false" ? "new" : false,
-    slowMo: 15,
+    slowMo: 10,
     product: 'chrome',
   },
   browserContext: 'default',
