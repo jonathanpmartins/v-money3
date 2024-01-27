@@ -16,6 +16,7 @@ export interface VMoneyOptions {
   modelModifiers: any;
   shouldRound: boolean;
   focusOnRight: boolean;
+  lazy: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
@@ -39,4 +40,5 @@ export default {
   },
   shouldRound: true,
   focusOnRight: false,
+  lazy: true,
 } as VMoneyOptions;
