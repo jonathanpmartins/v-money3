@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [3.24.1] / 2024-01-27
-#### Problem 
+#### Fix 
  - Fix typescript error TS7016. Pull request [#84](https://github.com/jonathanpmartins/v-money3/pull/84), thanks to [@christhofer](https://github.com/christhofer).
 
 ## [3.24.0] / 2023-03-22
@@ -15,7 +15,7 @@ All notable changes to this project will be documented in this file.
 
 ## [3.23.0] / 2023-02-08
 
-#### Fix issue #56. Thanks to @ivancorrea.
+#### Fix issue [#56](https://github.com/jonathanpmartins/v-money3/issues/56). Thanks to [@ivancorrea](https://github.com/ivancorrea).
 #### "npm update" development dependencies.
 
 ## [3.22.3] / 2022-12-16
