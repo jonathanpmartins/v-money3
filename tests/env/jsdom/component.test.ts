@@ -485,7 +485,7 @@ test('Event count', async () => {
   await input.setValue('1234567.89');
 
   const updates = component.emitted()['update:model-value'];
-  expect(updates.length).toBe(3); // Starting 0.00 plus 2 changes
+  expect(updates.length).toBe(2); // Starting 0.00 plus 2 changes
 });
 
 test('Leading zeroes', async () => {
@@ -499,7 +499,7 @@ test('Leading zeroes', async () => {
   await input.setValue('0.00001234');
 
   const updates = component.emitted()['update:model-value'];
-  expect(updates.length).toBe(2); // Make sure it doesn't take multiple rounds of formatting
+  expect(updates.length).toBe(1); // Make sure it doesn't take multiple rounds of formatting
   expect(input.element.value).toBe('0d1234');
 });
 

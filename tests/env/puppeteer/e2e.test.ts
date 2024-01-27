@@ -310,14 +310,11 @@ describe('Puppeteer Component Tests', () => {
     // does trigger change events 2 times every time the user type.
     // First time on the oninput event, and after on the updated event.
 
-    expect(events.length).toBe(6);
+    expect(events.length).toBe(3);
 
     expect(events[0]).toBe('0.01');
-    expect(events[1]).toBe('0.01');
-    expect(events[2]).toBe('0.12');
-    expect(events[3]).toBe('0.12');
-    expect(events[4]).toBe('1.23');
-    expect(events[5]).toBe('1.23');
+    expect(events[1]).toBe('0.12');
+    expect(events[2]).toBe('1.23');
   });
 
   it(`Test if US format works correctly ${target}`, async () => {

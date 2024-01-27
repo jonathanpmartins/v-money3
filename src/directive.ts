@@ -29,7 +29,7 @@ const setValue = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<ne
 
   const formatted = format(el.value, opt, caller);
 
-  // if(formatted === el.value) return; //prevent unnecessary updates
+  if (formatted === el.value) return; // prevent unnecessary updates
 
   el.value = formatted;
 
