@@ -39,7 +39,7 @@ const setValue = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPropTypes<ne
 
   setCursor(el, positionFromEnd);
 
-  el.dispatchEvent(event(opt.lazy ? 'change' : 'input')); // v-model.lazy or not
+  el.dispatchEvent(event('change')); // v-model.lazy or not
 };
 
 const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<never>) => {
