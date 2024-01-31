@@ -7,64 +7,49 @@
 
 ![The Mask Money](https://cdn-images-1.medium.com/max/600/1*Rpc289FpghuHrnzyVpOUig.gif)
 
-## Disclaimer
+## Introduction
 
-The old [`v-money`](https://github.com/vuejs-tips/v-money) library seems to be abandoned!
-Since I use it in many projects and part of then will be upgraded to Vue3,
-I needed it to work after the upgrades.
-
-Feel free to open an issue or post a pull request!
+Welcome to `v-money3`, a versatile money masking solution designed specifically for `Vue 3` applications. This library serves as a replacement for the now-abandoned [`v-money`](https://github.com/vuejs-tips/v-money) library, ensuring compatibility and functionality for projects transitioning to `Vue 3`.
 
 ## Features
 
-- Arbitrary Precision with `BigInt`
-- Lightweight (<4KB gzipped)
-- Dependency free
-- Mobile support
-- Component or Directive flavors
-- Accept copy/paste
-- Editable
-- Min / Max Limits
+- **Arbitrary Precision:** Utilize [`BigInt`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) for precise calculations.
+- **Lightweight:** Less than 4KB when gzipped.
+- **Dependency-free:** No external dependencies for seamless integration.
+- **Mobile Support:** Ensures a consistent experience across devices.
+- **Component or Directive Flavors:** Choose between component-based or directive-based implementation.
+- **Copy/Paste Support:** Easily accept input via copy/paste actions.
+- **Min/Max Limits:** Set minimum and maximum limits for input values.
 
-## Arbitrary precision
+## Arbitrary Precision
 
-Arbitrary precision is only supported with `v-model`.
-It expects to receive a string representation of a number, such as `'12345.67'`
+In this release, some breaking changes have been introduced. Let's delve into the details:
 
-Some break changes were introduced in this release.
-Let's follow a train of thought:   
-If your precision is set to `2` and you set a default model value of `'55'`, 
-it will be interpreted as `'0.55'`.
-To instruct the correct format on setup you need to pass in `'55.00'`
-when using `v-model`. The same is true for `'5.5'`.
-It will be interpreted as `'0.55'`. Another example: `'55.5'` => `'5.55'`.
-Arbitrary precision is supported by using `string` and `BigInt` with `v-model`.
+`v-money3` supports arbitrary precision through the use of `BigInt`. Arbitrary precision is only supported with `v-model`. When using `v-model`, ensure the input is provided as a string representation of a number (e.g., `'12345.67'`). If your precision is set to `2` and you provide a default `v-model` value of `'55'`, it will be interpreted as `'0.55'`. To maintain the correct format, ensure you pass `'55.00'` when using `v-model`.
 
-For the majority of users, it will make sense to use float numbers and stay within the
-boundaries of [`Number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number).
-If you fit this instance, you need to use `v-model`
-with the number modifier, or `v-model.number`. But than,
-you are stuck with numbers smaller than `2^53 - 1` or
-`9007199254740991` or `9,007,199,254,740,991`. - Little more than nine quadrilion...
-See [MAX_SAFE_INTEGER](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER).
 
-For those who are using `v-model.number`, integers and floats are completely
-understood.  
-Let's follow another train of thought:  
-If your precision is set to `2` and you set a default model value of `55`,
-it will be interpreted as `55.00`. The same is true for `5.5`.
-It will be interpreted as `5.50`. Another example: `55.5` => `55.50`.
+For most users, it's advisable to utilize floating-point numbers and adhere to the boundaries of [`Number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number). In such cases, employing `v-model` with the number modifier, or `v-model.number`, is recommended. However, this limits you to numbers smaller than `2^53 - 1` or `9007199254740991` (approximately nine quadrillion). Refer to [MAX_SAFE_INTEGER](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER) for more information. For users employing `v-model.number`, integers and floats are intuitively understood. If your precision is set to `2` and you input a default `v-model.number` value of `55`, it will be interpreted as `55.00`. The same applies to `5.5`, which will be rendered as `5.50`.
+
 
 [More Examples](https://github.com/jonathanpmartins/v-money3/issues/38#issuecomment-903214235)
 
-## Usage
+## Browser Target
 
-### Installation
+If you encounter the error message: `Big integer literals are not available in the configured target environment`, please ensure your browser targets are updated to include at least the following entries:
+```
+['es2020', 'safari14']
+```
+Can I use `bigInt`? https://caniuse.com/bigint
+
+More information: [#66](https://github.com/jonathanpmartins/v-money3/issues/66), [#70](https://github.com/jonathanpmartins/v-money3/issues/70), [#89](https://github.com/jonathanpmartins/v-money3/issues/89)
+
+## Installation
 
 ```bash
 npm i v-money3 --save
 ```
 
+## Usage
 
 ### Register Globally ([view codesandbox](https://codesandbox.io/s/v-money3-global-registering-lv1jv?file=/src/main.js))
 
@@ -141,16 +126,12 @@ app.directive('money3', Money3Directive)
 
 ### Component v-model number modifier ([view codesandbox](https://codesandbox.io/s/v-money3-use-as-component-forked-523de?file=/src/App.vue))
 
-`v-model` will always return a string.
-If the `masked` property is set to true it will be formatted,
-otherwise it will be a fixed string representation of a float number.
-If you need your model to be a float number use the `number` modifier.
-Ex.: `v-model.number="amount"`
+When using `v-model`, the returned value will always be a `string`.
+If the `masked` property is set to `true`, it will be formatted accordingly; otherwise, it will be a fixed string representation of a floating-point number.
+If you require your model to be a floating-point number, utilize the `number` modifier. For example:
 
-- `v-model="amount"` will return a fixed string with typeof `string`.
-Ex.: "123456.78"
-- `v-model.number="amount"` will return a float number with typeof
-`number`. Ex.: 123456.78
+- `v-model="amount"` will return a fixed string with a typeof `string`. For instance: `'123456.78'`
+- `v-model.number="amount"` will return a floating-point number with a typeof `number`. For example: `123456.78`
 
 ```html
 <template>
@@ -173,7 +154,7 @@ Ex.: "123456.78"
 ```
 
 ### Use as directive ([view codesandbox](https://codesandbox.io/s/v-money3-use-as-directive-e7ror?file=/src/App.vue))
-Must use `v-model.lazy` to bind works properly.
+To ensure proper functionality, you must use `v-model.lazy` for binding.
 ```html
 <template>
   <input v-model.lazy="amount" v-money3="config" />
@@ -208,10 +189,8 @@ Must use `v-model.lazy` to bind works properly.
 </script>
 ```
 
-By default, directives work with `v-model`.
-It is not possible to use `v-model.number` on directives, so, if you need
-to work with floats/integers on directives you need to configure the `number`
-modifier manually.
+By default, directives are only compatible with `v-model`. It's important to note that using `v-model.number` directly on directives is not supported.
+If you need to work with `float` or `integer` on directives, you'll need to manually configure the number modifier.
 
 Using config:
 ```javascipt
@@ -219,7 +198,7 @@ modelModifiers: {
   number: true,
 }
 ```
-If you bind it directly you are just fine too:
+If you directly bind it, you're perfectly fine as well:
 ```html
 <input :model-modifiers="{ number: true }" v-model.lazy="amount" v-money3="config" />
 ```
@@ -257,8 +236,7 @@ Numbers `0-9` and the following characters...
 - `prefix`
 - `suffix`
 
-Restricted inputs will be filter out of the final mask.
-A console warn with more information will be shown!
+Restricted inputs will be filtered out of the final mask, and a console warning with more information will be displayed.
 
 
 ## Don't want to use a package manager?
@@ -313,6 +291,15 @@ const unformatted = unformat(formatted, config);
 console.log(unformatted);
 // output float number: 12345.67
 ```
+
+
+### Contribution and Feedback
+Your contributions and feedback are highly valued! If you encounter any issues or have suggestions for improvement, please feel free to open an issue or submit a pull request on GitHub.
+
+The previous `v-money` library has been abandoned, prompting the development of v-money3 to accommodate projects migrating to `Vue 3`.
+
+Happy coding with v-money3!
+
 
 ### References
 
