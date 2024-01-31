@@ -304,3 +304,4 @@ Happy coding with v-money3!
 ### References
 
 - https://github.com/vuejs-tips/v-money (based on `v-money`)
+
