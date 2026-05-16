@@ -11,6 +11,7 @@ export interface VMoneyOptions {
   min: number | string | null;
   max: number | string | null;
   allowBlank: boolean;
+  treatZeroAsBlank: boolean;
   minimumNumberOfCharacters: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   modelModifiers: any;
@@ -34,6 +35,7 @@ export default {
   min: null,
   max: null,
   allowBlank: false,
+  treatZeroAsBlank: true,
   minimumNumberOfCharacters: 0,
   modelModifiers: {
     number: false,

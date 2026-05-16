@@ -12,6 +12,7 @@
       min: props.min,
       max: props.max,
       allowBlank: props.allowBlank,
+      treatZeroAsBlank: props.treatZeroAsBlank,
       minimumNumberOfCharacters: props.minimumNumberOfCharacters,
       debug: props.debug,
       modelModifiers,
@@ -135,6 +136,10 @@ const props = defineProps({
   allowBlank: {
     type: Boolean,
     default: () => defaults.allowBlank,
+  },
+  treatZeroAsBlank: {
+    type: Boolean,
+    default: () => defaults.treatZeroAsBlank,
   },
   minimumNumberOfCharacters: {
     type: Number,

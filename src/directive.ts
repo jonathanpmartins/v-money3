@@ -55,6 +55,7 @@ const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<never
   debug(opt, 'directive onkeydown() - isAtEndPosition', isAtEndPosition);
 
   if (opt.allowBlank
+      && opt.treatZeroAsBlank
       && backspacePressed
       && isAtEndPosition
       && unformat(el.value, opt, 'directive onkeydown allowBlank') === 0
