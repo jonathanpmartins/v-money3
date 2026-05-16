@@ -96,7 +96,7 @@ export default class BigNumber {
       this.decimal = guessFloatPrecision(number);
       this.number = BigInt(number.replace('.', ''));
     } else {
-      throw new Error(`BigNumber has received and invalid format for the constructor: ${number}`);
+      throw new Error(`BigNumber has received an invalid format for the constructor: ${number}`);
     }
   }
 
