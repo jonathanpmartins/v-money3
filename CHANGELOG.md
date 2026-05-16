@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - Dependencies updated to clear all `npm audit` vulnerabilities.
 - `jest-puppeteer` bumped to v11 for `puppeteer` v25 compatibility.
 - CI workflow updated to Node 20 LTS + `npm ci`, with `--no-sandbox` puppeteer launch args for current GitHub Actions runners.
+- `directive.ts` raised to 100% statements/branches/functions/lines via 15 new unit tests covering `onInput` pre-format, `onKeyDown` (`+`, `Backspace`, null `selectionEnd`), `onFocus` with `focusOnRight`, `getValidatedInputElement` (nested input + 0/2 input throw paths), mounted/updated falsy binding, non-format-affecting opts change, `oldValue=null` transition, `validateRestrictedOptions` failure, and `beforeUnmount` cleanup. Closes issue [#31](https://github.com/jonathanpmartins/v-money3/issues/31).
 
 ## [3.24.1] / 2024-01-27
 #### Fix 
