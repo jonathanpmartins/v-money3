@@ -14,11 +14,14 @@ beforeAll(() => {
   console.log = () => {};
 });
 
-function mountComponent(attr = {}) {
+function mountComponent(attr: Record<string, unknown> = {}) {
+  // modelValue is forced to null so tests can drive initial state via
+  // setProps() after mount. Cast bypasses the prop's declared
+  // [Number, String] type — intentional in tests, not a runtime issue.
   const props = {
     ...attr,
     modelValue: null,
-  };
+  } as never;
   const global = {
     directives: {
       money3: Money3Directive,
