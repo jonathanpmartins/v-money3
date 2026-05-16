@@ -10,7 +10,7 @@ module.exports = {
     context: true,
     jestPuppeteer: true,
   },
-  // parser: 'vue-eslint-parser',
+  parser: 'vue-eslint-parser',
   parserOptions: {
     tsconfigRootDir: __dirname,
     project: './tsconfig.eslint.json',
