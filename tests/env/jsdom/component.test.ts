@@ -264,13 +264,13 @@ test('Test if restricted characters are correctly validated!', async () => {
   for (const character of RESTRICTED_CHARACTERS) {
     for (const option of RESTRICTED_OPTIONS) {
       try {
-        const attr: any = {};
+        const attr: Record<string, string> = {};
         attr[option] = character;
         mountComponent(attr);
-      } catch (e: any) {
+      } catch (e) {
         const message = `v-money3 "${option}" property don't accept "${character}" as a value`;
 
-        const hasException = e.message.includes(message);
+        const hasException = (e as Error).message.includes(message);
 
         expect(hasException).toBe(true);
       }
