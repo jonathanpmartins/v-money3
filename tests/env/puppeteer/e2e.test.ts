@@ -431,4 +431,82 @@ describe('Puppeteer Component Tests', () => {
     await page.type(target, '123456');
     expect(await getValue()).toBe('1,234.56');
   });
+
+  it(`#99 — precision change at runtime preserves model value ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}&precision=2&modelValue=2.22&useModelNumberModifier=true&decimal=%2C&thousands=.`);
+
+    await page.waitForFunction(() => Array.isArray((window as unknown as { __configs?: unknown[] }).__configs)
+      && (window as unknown as { __configs: unknown[] }).__configs.length > 0);
+
+    expect(await getValue()).toBe('2,22');
+
+    await page.evaluate(() => {
+      (window as unknown as { __configs: Array<{ precision: number }> }).__configs[0].precision = 3;
+    });
+
+    await page.waitForFunction(
+      (sel: string) => (document.querySelector(sel) as HTMLInputElement | null)?.value === '2,220',
+      {},
+      target,
+    );
+
+    expect(await getValue()).toBe('2,220');
+
+    const modelText = await page.$eval(
+      `${target} ~ div`,
+      (el) => el.textContent || '',
+    );
+    expect(modelText).toMatch(/2\.22/);
+  });
+
+  it(`#99 — precision round-trip preserves model value ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}&precision=2&modelValue=2.22&useModelNumberModifier=true&decimal=%2C&thousands=.`);
+
+    await page.waitForFunction(() => Array.isArray((window as unknown as { __configs?: unknown[] }).__configs)
+      && (window as unknown as { __configs: unknown[] }).__configs.length > 0);
+
+    await page.evaluate(() => {
+      (window as unknown as { __configs: Array<{ precision: number }> }).__configs[0].precision = 4;
+    });
+    await page.waitForFunction(
+      (sel: string) => (document.querySelector(sel) as HTMLInputElement | null)?.value === '2,2200',
+      {},
+      target,
+    );
+    expect(await getValue()).toBe('2,2200');
+
+    await page.evaluate(() => {
+      (window as unknown as { __configs: Array<{ precision: number }> }).__configs[0].precision = 2;
+    });
+    await page.waitForFunction(
+      (sel: string) => (document.querySelector(sel) as HTMLInputElement | null)?.value === '2,22',
+      {},
+      target,
+    );
+    expect(await getValue()).toBe('2,22');
+  });
+
+  it(`#99 — precision decrease with shouldRound emits rounded model ${target}`, async () => {
+    await page.goto(`${serverUrlWithTarget}&precision=3&modelValue=2.225&useModelNumberModifier=true&shouldRound=true&decimal=%2C&thousands=.`);
+
+    await page.waitForFunction(() => Array.isArray((window as unknown as { __configs?: unknown[] }).__configs)
+      && (window as unknown as { __configs: unknown[] }).__configs.length > 0);
+
+    expect(await getValue()).toBe('2,225');
+
+    await page.evaluate(() => {
+      (window as unknown as { __configs: Array<{ precision: number }> }).__configs[0].precision = 2;
+    });
+    await page.waitForFunction(
+      (sel: string) => (document.querySelector(sel) as HTMLInputElement | null)?.value === '2,23',
+      {},
+      target,
+    );
+
+    const modelText = await page.$eval(
+      `${target} ~ div`,
+      (el) => el.textContent || '',
+    );
+    expect(modelText).toMatch(/2\.23/);
+  });
 });

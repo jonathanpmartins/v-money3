@@ -15,6 +15,12 @@ import defaults, { VMoneyOptions } from './options';
 // this option is used for ALL directive instances
 // let opt: VMoneyOptions = defaults;
 
+const FORMAT_AFFECTING_KEYS = [
+  'precision', 'decimal', 'thousands', 'prefix', 'suffix',
+  'min', 'max', 'allowBlank', 'treatZeroAsBlank',
+  'minimumNumberOfCharacters', 'shouldRound', 'modelModifiers',
+] as const;
+
 const setValue = (
   el: HTMLInputElement,
   opt: VMoneyOptions | ExtractPropTypes<never>,
@@ -124,6 +130,20 @@ const registerListeners = (el: HTMLInputElement, opt: VMoneyOptions | ExtractPro
   };
 };
 
+function someFormatKeyChanged(
+  oldOpt: VMoneyOptions | ExtractPropTypes<never> | null,
+  newOpt: VMoneyOptions | ExtractPropTypes<never>,
+): boolean {
+  if (!oldOpt) return false;
+  return FORMAT_AFFECTING_KEYS.some(
+    (k) => JSON.stringify(
+      (oldOpt as Record<string, unknown>)[k],
+    ) !== JSON.stringify(
+      (newOpt as Record<string, unknown>)[k],
+    ),
+  );
+}
+
 export default {
   mounted(el: HTMLInputElement, binding: DirectiveBinding): void {
     if (!binding.value) {
@@ -156,6 +176,32 @@ export default {
 
     debug(opt, 'directive updated() - opt', opt);
     debug(opt, 'directive updated() - el.value', el.value);
+
+    el = getValidatedInputElement(el);
+
+    // If the would-be reformat already matches the input, the component layer
+    // has already pre-synced the display via its format-prop watcher. No-op.
+    const formatted = format(el.value, opt, 'directive updated check');
+    if (formatted === el.value) {
+      return;
+    }
+
+    // Display differs from what current opts would produce. If any
+    // format-affecting opt also changed since the previous updated() call,
+    // this is the bare-directive corruption case — warn and skip.
+    const oldOpt = binding.oldValue
+      ? filterOptRestrictions({ ...defaults, ...binding.oldValue })
+      : null;
+    if (someFormatKeyChanged(oldOpt, opt) && el.value !== '') {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'v-money3: runtime change of format options on the bare directive is '
+        + 'unsupported and was skipped to avoid corrupting the value. '
+        + 'Re-mount the directive or use the Money3 component instead.',
+      );
+      return;
+    }
+
     setValue(el, opt, 'directive updated');
   },
   beforeUnmount(el: HTMLInputElement): void {

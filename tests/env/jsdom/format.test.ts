@@ -72,3 +72,30 @@ test('treatZeroAsBlank=false preserves zero when allowBlank=true', () => {
 test('treatZeroAsBlank=false still allows blank string input when allowBlank=true', () => {
   expect(format('', { ...defaults, allowBlank: true, treatZeroAsBlank: false })).toBe('');
 });
+
+test('#99 — format(number, precision=3) handles number input correctly', () => {
+  const result = format(2.22, {
+    ...defaults,
+    decimal: ',',
+    thousands: '.',
+    precision: 3,
+    shouldRound: true,
+  });
+  expect(result).toBe('2,220');
+});
+
+test('#99 — format(string, precision=3) with modelModifiers.number documents digit-stripping behavior (format() is also a digit accumulator)', () => {
+  const result = format('2.22', {
+    ...defaults,
+    decimal: ',',
+    thousands: '.',
+    precision: 3,
+    shouldRound: true,
+    modelModifiers: { number: true },
+  });
+  // format() doubles as the directive's digit-accumulator for typed input.
+  // String floats are intentionally treated as digit sequences here, not as
+  // numeric values. Components passing string modelValues should convert to
+  // number before relying on precision normalization.
+  expect(result).toBe('0,222');
+});

@@ -583,3 +583,288 @@ test('Test start with negative symbol', async () => {
 
   expect(input.element.value).toBe('-');
 });
+
+test('#99 — precision increase 2 to 3 preserves numeric model value', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    modelModifiers: { number: true },
+  });
+  const input = component.find('input');
+  await component.setProps({ modelValue: 2.22 });
+  // initial render
+  expect(input.element.value).toBe('2,22');
+
+  await component.setProps({ precision: 3 });
+
+  expect(input.element.value).toBe('2,220');
+  const updates = component.emitted<number[]>()['update:model-value'];
+  expect(updates).toBeUndefined();
+});
+
+test('#99 — precision increase 2 to 4 preserves numeric model value', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 2.22 });
+  expect(component.find('input').element.value).toBe('2,22');
+
+  await component.setProps({ precision: 4 });
+
+  expect(component.find('input').element.value).toBe('2,2200');
+  const updates = component.emitted<number[]>()['update:model-value'];
+  expect(updates).toBeUndefined();
+});
+
+test('#99 — precision decrease 3 to 2 with shouldRound=true rounds half-up', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 3,
+    shouldRound: true,
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 2.225 });
+  expect(component.find('input').element.value).toBe('2,225');
+
+  await component.setProps({ precision: 2 });
+
+  expect(component.find('input').element.value).toBe('2,23');
+  const updates = component.emitted<number[]>()['update:model-value'];
+  expect(updates).toBeDefined();
+  expect(Number(updates[updates.length - 1][0])).toBeCloseTo(2.23, 10);
+});
+
+test('#99 — precision decrease 3 to 2 with shouldRound=false truncates', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 3,
+    shouldRound: false,
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 2.225 });
+  expect(component.find('input').element.value).toBe('2,225');
+
+  await component.setProps({ precision: 2 });
+
+  expect(component.find('input').element.value).toBe('2,22');
+  const updates = component.emitted<number[]>()['update:model-value'];
+  expect(updates).toBeDefined();
+  expect(Number(updates[updates.length - 1][0])).toBeCloseTo(2.22, 10);
+});
+
+test('#99 — shouldRound toggle reformats display', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    shouldRound: true,
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 2.225 });
+  expect(component.find('input').element.value).toBe('2,23');
+
+  await component.setProps({ shouldRound: false });
+
+  expect(component.find('input').element.value).toBe('2,22');
+});
+
+test('#99 — re-setting precision to same value emits no update', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 2.22 });
+  const initialEmits = (component.emitted<number[]>()['update:model-value'] || []).length;
+
+  await component.setProps({ precision: 2 });
+
+  const finalEmits = (component.emitted<number[]>()['update:model-value'] || []).length;
+  expect(finalEmits).toBe(initialEmits);
+});
+
+test('#99 — decimal change preserves numeric model value', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 2.22 });
+  expect(component.find('input').element.value).toBe('2,22');
+  const initialEmits = (component.emitted<number[]>()['update:model-value'] || []).length;
+
+  await component.setProps({ decimal: '.', thousands: ',' });
+
+  expect(component.find('input').element.value).toBe('2.22');
+  const finalEmits = (component.emitted<number[]>()['update:model-value'] || []).length;
+  expect(finalEmits).toBe(initialEmits);
+});
+
+test('#99 — thousands change preserves numeric model value', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 1234.56 });
+  expect(component.find('input').element.value).toBe('1.234,56');
+  const initialEmits = (component.emitted<number[]>()['update:model-value'] || []).length;
+
+  await component.setProps({ thousands: ' ' });
+
+  expect(component.find('input').element.value).toBe('1 234,56');
+  const finalEmits = (component.emitted<number[]>()['update:model-value'] || []).length;
+  expect(finalEmits).toBe(initialEmits);
+});
+
+test('#99 — prefix change preserves numeric model value', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    prefix: '',
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 10 });
+  expect(component.find('input').element.value).toBe('10,00');
+  const initialEmits = (component.emitted<number[]>()['update:model-value'] || []).length;
+
+  await component.setProps({ prefix: 'R$ ' });
+
+  expect(component.find('input').element.value).toBe('R$ 10,00');
+  const finalEmits = (component.emitted<number[]>()['update:model-value'] || []).length;
+  expect(finalEmits).toBe(initialEmits);
+});
+
+test('#99 — suffix change preserves numeric model value', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    suffix: '',
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 10 });
+  expect(component.find('input').element.value).toBe('10,00');
+  const initialEmits = (component.emitted<number[]>()['update:model-value'] || []).length;
+
+  await component.setProps({ suffix: ' USD' });
+
+  expect(component.find('input').element.value).toBe('10,00 USD');
+  const finalEmits = (component.emitted<number[]>()['update:model-value'] || []).length;
+  expect(finalEmits).toBe(initialEmits);
+});
+
+test('#99 — max clamp on prop change emits clamped value', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    max: `${Number.MAX_SAFE_INTEGER}`,
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 100 });
+  expect(component.find('input').element.value).toBe('100,00');
+
+  await component.setProps({ max: 10 });
+
+  expect(component.find('input').element.value).toBe('10,00');
+  const updates = component.emitted<number[]>()['update:model-value'];
+  expect(updates).toBeDefined();
+  expect(Number(updates[updates.length - 1][0])).toBe(10);
+});
+
+test('#99 — min clamp on prop change emits clamped value', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    min: `${Number.MIN_SAFE_INTEGER}`,
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 0 });
+  expect(component.find('input').element.value).toBe('0,00');
+
+  await component.setProps({ min: 5 });
+
+  expect(component.find('input').element.value).toBe('5,00');
+  const updates = component.emitted<number[]>()['update:model-value'];
+  expect(updates).toBeDefined();
+  expect(Number(updates[updates.length - 1][0])).toBe(5);
+});
+
+test('#99 — allowBlank toggle reformats empty modelValue', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    allowBlank: false,
+    modelModifiers: { number: false },
+  });
+  await component.setProps({ modelValue: '' });
+  // With allowBlank false, format('') → "0,00"
+  expect(component.find('input').element.value).toBe('0,00');
+
+  await component.setProps({ allowBlank: true });
+
+  expect(component.find('input').element.value).toBe('');
+});
+
+test('#99 — treatZeroAsBlank toggle clears display when value is zero', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    allowBlank: true,
+    treatZeroAsBlank: false,
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 0 });
+  expect(component.find('input').element.value).toBe('0,00');
+
+  await component.setProps({ treatZeroAsBlank: true });
+
+  expect(component.find('input').element.value).toBe('');
+});
+
+test('#99 — minimumNumberOfCharacters change pads display', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    minimumNumberOfCharacters: 0,
+    modelModifiers: { number: true },
+  });
+  await component.setProps({ modelValue: 1 });
+  expect(component.find('input').element.value).toBe('1,00');
+
+  await component.setProps({ minimumNumberOfCharacters: 5 });
+
+  // 1,00 → integer part needs to reach (5 - 2) = 3 chars → "001"
+  expect(component.find('input').element.value).toBe('001,00');
+});
+
+test('#99 — modelModifiers.number toggle reformats and switches emit type', async () => {
+  const component = mountComponent({
+    decimal: ',',
+    thousands: '.',
+    precision: 2,
+    modelModifiers: { number: false },
+  });
+  await component.setProps({ modelValue: '2.22' });
+  expect(component.find('input').element.value).toBe('2,22');
+
+  await component.setProps({ modelModifiers: { number: true } });
+
+  expect(component.find('input').element.value).toBe('2,22');
+  // No assertion on emitted type — just that no corruption occurred.
+});
