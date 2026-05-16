@@ -64,7 +64,7 @@ const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<never
       && opt.treatZeroAsBlank
       && backspacePressed
       && isAtEndPosition
-      && unformat(el.value, opt, 'directive onkeydown allowBlank') === 0
+      && parseFloat(String(unformat(el.value, opt, 'directive onkeydown allowBlank'))) === 0
   ) {
     debug(opt, 'directive onkeydown() - set el.value = ""', el.value);
     el.value = '';

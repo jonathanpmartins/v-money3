@@ -237,6 +237,31 @@ test('directive — Backspace clears zero when allowBlank + treatZeroAsBlank', a
   expect(input.element.value).toBe('');
 });
 
+test('directive — Backspace clears zero when allowBlank + treatZeroAsBlank (no .number modifier)', async () => {
+  // Same scenario as the test above, but WITHOUT modelModifiers.number.
+  // unformat() then returns a string ("0.00"), and the directive's
+  // `unformat(...) === 0` strict-equality check silently fails — leaving
+  // the input stuck at "0.00" instead of clearing.
+  const wrapper = mount(makeHost(), {
+    props: {
+      opts: {
+        ...baseOpts,
+        allowBlank: true,
+        treatZeroAsBlank: true,
+        // modelModifiers.number intentionally left false (default)
+      },
+    },
+    global: { directives },
+  });
+
+  const input = wrapper.find('input');
+  input.element.value = '0.00';
+  input.element.setSelectionRange(input.element.value.length, input.element.value.length);
+  await input.trigger('keydown', { code: 'Backspace' });
+
+  expect(input.element.value).toBe('');
+});
+
 test('directive — onFocus with focusOnRight runs without error', async () => {
   const wrapper = mount(makeHost(), {
     props: {
