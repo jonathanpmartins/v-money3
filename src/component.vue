@@ -195,6 +195,54 @@ let lastValue: string | number | null = null;
 // eslint-disable-next-line no-spaced-func, func-call-spacing
 const emit = defineEmits<{ (e: 'update:model-value', value: string | number): void }>();
 
+function reformatOnOptsChange(): void {
+  const opt = filterOptRestrictions({ ...props });
+  const current = modelValue.value;
+
+  // Skip transient negative-typing state — directive owns it
+  if (current === '-') return;
+
+  const formatted = format(current, opt, 'component opts watch');
+  if (formatted !== formattedValue.value) {
+    formattedValue.value = formatted;
+  }
+
+  // Detect whether new opts changed the effective numeric value
+  // (e.g. min/max clamp, precision decrease with rounding).
+  const reUnformatted = unformat(formatted, opt, 'component opts watch reunformat');
+  const a = Number(current);
+  const b = Number(reUnformatted);
+  // lastValue may hold a string (set by change() in masked mode) or a number;
+  // strict !== handles both — see change() handler below.
+  if (!Number.isNaN(a) && !Number.isNaN(b) && a !== b && b !== lastValue) {
+    lastValue = b;
+    emit('update:model-value', reUnformatted);
+  }
+}
+
+watch(
+  () => [
+    props.precision,
+    props.decimal,
+    props.thousands,
+    props.prefix,
+    props.suffix,
+    props.min,
+    props.max,
+    props.allowBlank,
+    props.treatZeroAsBlank,
+    props.minimumNumberOfCharacters,
+    props.shouldRound,
+  ],
+  reformatOnOptsChange,
+);
+
+watch(
+  () => props.modelModifiers,
+  reformatOnOptsChange,
+  { deep: true },
+);
+
 function change(evt: Event) {
   // eslint-disable-next-line prefer-destructuring
   let next: string | number = (evt.target as HTMLInputElement).value;

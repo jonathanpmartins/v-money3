@@ -2,6 +2,11 @@
  * @jest-environment puppeteer
  */
 
+/* eslint-disable no-underscore-dangle */
+// The dev harness (tests/component/App.vue) exposes its reactive configs as
+// `window.__configs` for these e2e tests. The leading underscores are a
+// deliberate "don't touch from app code" marker — disabled file-wide here.
+
 describe('Puppeteer Component Tests', () => {
   const target = '#component-0';
   const serverUrl = 'http://127.0.0.1:12345';
@@ -13,6 +18,31 @@ describe('Puppeteer Component Tests', () => {
 
   async function getValue(t = target) {
     return page.$eval(t, (input: Element) => (input as HTMLInputElement).value);
+  }
+
+  type HarnessWindow = Window & { __configs?: Array<Record<string, unknown>> };
+
+  async function waitForConfigs() {
+    await page.waitForFunction(() => {
+      const cfgs = (window as HarnessWindow).__configs;
+      return Array.isArray(cfgs) && cfgs.length > 0;
+    });
+  }
+
+  async function patchConfig(patch: Record<string, unknown>) {
+    await page.evaluate((p) => {
+      const cfgs = (window as HarnessWindow).__configs;
+      if (cfgs && cfgs[0]) Object.assign(cfgs[0], p);
+    }, patch);
+  }
+
+  async function waitForInputValue(value: string, sel = target) {
+    await page.waitForFunction(
+      (s, v) => (document.querySelector(s) as HTMLInputElement | null)?.value === v,
+      {},
+      sel,
+      value,
+    );
   }
 
   it(`Test prefix attribute ${target}`, async () => {
@@ -286,9 +316,9 @@ describe('Puppeteer Component Tests', () => {
   });
 
   it(`Change event is emitted ${target}`, async () => {
-    const events: any[] = [];
+    const events: string[] = [];
 
-    await page.exposeFunction('onCustomEvent', (event: any, value: any) => {
+    await page.exposeFunction('onCustomEvent', (_event: Event, value: string) => {
       events.push(value);
     });
 
@@ -430,5 +460,52 @@ describe('Puppeteer Component Tests', () => {
     await page.keyboard.press('ArrowRight');
     await page.type(target, '123456');
     expect(await getValue()).toBe('1,234.56');
+  });
+
+  const precision222Url = `${serverUrlWithTarget}`
+    + '&precision=2&modelValue=2.22&useModelNumberModifier=true&decimal=%2C&thousands=.';
+
+  const precision3225Url = `${serverUrlWithTarget}`
+    + '&precision=3&modelValue=2.225&useModelNumberModifier=true&shouldRound=true'
+    + '&decimal=%2C&thousands=.';
+
+  async function getModelText() {
+    return page.$eval(`${target} ~ div`, (el) => el.textContent || '');
+  }
+
+  it(`#99 — precision change at runtime preserves model value ${target}`, async () => {
+    await page.goto(precision222Url);
+    await waitForConfigs();
+    expect(await getValue()).toBe('2,22');
+
+    await patchConfig({ precision: 3 });
+    await waitForInputValue('2,220');
+
+    expect(await getValue()).toBe('2,220');
+    expect(await getModelText()).toMatch(/2\.22/);
+  });
+
+  it(`#99 — precision round-trip preserves model value ${target}`, async () => {
+    await page.goto(precision222Url);
+    await waitForConfigs();
+
+    await patchConfig({ precision: 4 });
+    await waitForInputValue('2,2200');
+    expect(await getValue()).toBe('2,2200');
+
+    await patchConfig({ precision: 2 });
+    await waitForInputValue('2,22');
+    expect(await getValue()).toBe('2,22');
+  });
+
+  it(`#99 — precision decrease with shouldRound emits rounded model ${target}`, async () => {
+    await page.goto(precision3225Url);
+    await waitForConfigs();
+    expect(await getValue()).toBe('2,225');
+
+    await patchConfig({ precision: 2 });
+    await waitForInputValue('2,23');
+
+    expect(await getModelText()).toMatch(/2\.23/);
   });
 });

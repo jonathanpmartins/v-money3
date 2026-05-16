@@ -46,7 +46,12 @@ if (payload && payload.length) {
   }
 } else {
   configs.push({
-    modelValue: ref(get('modelValue', 0)),
+    modelValue: ref((() => {
+      const raw = get('modelValue', 0);
+      if (!get('useModelNumberModifier', false)) return raw;
+      const n = Number(raw);
+      return Number.isNaN(n) ? raw : n;
+    })()),
     debug: !!get('debug', false),
     masked: false,
     prefix: get('prefix', ''),
@@ -67,6 +72,10 @@ if (payload && payload.length) {
     focusOnRight: get('focusOnRight') === 'true',
   });
 }
+
+// Expose reactive configs so puppeteer e2e tests can mutate them
+// to verify runtime prop reactivity (e.g. #99 precision change).
+window.__configs = configs;
 
 // This starter template is using Vue 3 experimental <script setup> SFCs
 // Check out https://github.com/vuejs/rfcs/blob/master/active-rfcs/0040-script-setup.md
