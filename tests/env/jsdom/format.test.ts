@@ -99,3 +99,19 @@ test('#99 — format(string, precision=3) with modelModifiers.number documents d
   // number before relying on precision normalization.
   expect(result).toBe('0,222');
 });
+
+test('format should clamp when min or max is zero (number or string)', () => {
+  // max: 0 should cap positive values at 0 (allow negatives only)
+  expect(format(5, { ...defaults, min: -10, max: 0 })).toBe('0.00');
+  expect(format(0.01, { ...defaults, min: -10, max: 0 })).toBe('0.00');
+  expect(format(-3, { ...defaults, min: -10, max: 0 })).toBe('-3.00');
+
+  // min: 0 should floor negative values at 0 (allow positives only)
+  expect(format(-5, { ...defaults, min: 0, max: 10 })).toBe('0.00');
+  expect(format(-0.01, { ...defaults, min: 0, max: 10 })).toBe('0.00');
+  expect(format(3, { ...defaults, min: 0, max: 10 })).toBe('3.00');
+
+  // string "0" bound should behave identically
+  expect(format(5, { ...defaults, min: '-10', max: '0' })).toBe('0.00');
+  expect(format(-5, { ...defaults, min: '0', max: '10' })).toBe('0.00');
+});

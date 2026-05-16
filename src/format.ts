@@ -63,12 +63,12 @@ export default function format(
   debug(opt, 'utils format() - bigNumber1', bigNumber.toString());
 
   // min and max must be a valid float or integer
-  if (opt.max) {
+  if (opt.max !== null && opt.max !== undefined && opt.max !== '') {
     if (bigNumber.biggerThan(opt.max)) {
       bigNumber.setNumber(opt.max);
     }
   }
-  if (opt.min) {
+  if (opt.min !== null && opt.min !== undefined && opt.min !== '') {
     if (bigNumber.lessThan(opt.min)) {
       bigNumber.setNumber(opt.min);
     }
