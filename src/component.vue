@@ -44,6 +44,15 @@ import {
   fixed,
   validateRestrictedInput,
 } from './Utils';
+import money3 from './directive';
+
+defineOptions({
+  inheritAttrs: false,
+  name: 'Money3',
+  directives: {
+    money3,
+  },
+});
 
 const props = defineProps({
   debug: {
@@ -141,20 +150,21 @@ const props = defineProps({
   },
 });
 
-const { modelValue, modelModifiers, masked, precision, shouldRound, focusOnRight } =
-  toRefs(props);
+const {
+  modelValue, modelModifiers, masked, precision, shouldRound, focusOnRight,
+} = toRefs(props);
 
 debug(props, 'component setup()', props);
 
-let value: string | number = modelValue.value;
+let { value } = modelValue;
 if (props.disableNegative || value !== '-') {
   if (modelModifiers.value && modelModifiers.value.number) {
     if (shouldRound.value) {
       value = Number(modelValue.value).toFixed(fixed(precision.value));
     } else {
       value = Number(modelValue.value)
-          .toFixed(fixed(precision.value) + 1)
-          .slice(0, -1);
+        .toFixed(fixed(precision.value) + 1)
+        .slice(0, -1);
     }
   }
 }
@@ -162,11 +172,10 @@ const formattedValue = ref(format(value, props, 'component setup'));
 
 debug(props, 'component setup() - data.formattedValue', formattedValue.value);
 
-watch(modelValue, modelValueWatcher);
-function modelValueWatcher(value: string | number | null | undefined): void {
-  debug(props, 'component watch() -> value', value);
+function modelValueWatcher(next: string | number | null | undefined): void {
+  debug(props, 'component watch() -> value', next);
   const formatted = format(
-    value,
+    next,
     filterOptRestrictions({ ...props }),
     'component watch',
   );
@@ -175,27 +184,29 @@ function modelValueWatcher(value: string | number | null | undefined): void {
     formattedValue.value = formatted;
   }
 }
+watch(modelValue, modelValueWatcher);
 
 let lastValue: string | number | null = null;
-const emit =
-  defineEmits<{ (e: 'update:model-value', value: string | number): void }>();
+// eslint-disable-next-line no-spaced-func, func-call-spacing
+const emit = defineEmits<{ (e: 'update:model-value', value: string | number): void }>();
 
 function change(evt: Event) {
-  let value: string | number = (evt.target as HTMLInputElement).value;
+  // eslint-disable-next-line prefer-destructuring
+  let next: string | number = (evt.target as HTMLInputElement).value;
 
-  debug(props, 'component change() -> evt.target.value', value);
+  debug(props, 'component change() -> evt.target.value', next);
 
   if (!(masked.value && !modelModifiers.value.number)) {
-    value = unformat(
-        value,
-        filterOptRestrictions({ ...props }),
-        'component change',
+    next = unformat(
+      next,
+      filterOptRestrictions({ ...props }),
+      'component change',
     );
   }
-  if (value !== lastValue) {
-    lastValue = value;
-    debug(props, 'component change() -> update:model-value', value);
-    emit('update:model-value', value);
+  if (next !== lastValue) {
+    lastValue = next;
+    debug(props, 'component change() -> update:model-value', next);
+    emit('update:model-value', next);
   }
 }
 
@@ -209,15 +220,4 @@ const listeners = computed(() => {
 
   return payload;
 });
-</script>
-
-<script lang="ts">
-import money3 from './directive';
-export default {
-  inheritAttrs: false,
-  name: 'Money3',
-  directives: {
-    money3,
-  },
-};
 </script>
