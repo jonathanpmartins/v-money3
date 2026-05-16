@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.25.0] / 2026-05-16
+
+### Feature
+- New property `treatZeroAsBlank` distinguishes zero from blank when `allowBlank` is enabled. Closes issue [#101](https://github.com/jonathanpmartins/v-money3/issues/101). Pull request [#102](https://github.com/jonathanpmartins/v-money3/pull/102).
+
+### Fix
+- Changing `precision` (or any other format-affecting prop) at runtime no longer corrupts the v-model. The component now re-derives the display from the underlying numeric `modelValue` when format-affecting props change, and re-emits `update:model-value` when the new opts numerically change the value (min/max clamp, precision-decrease rounding). The bare directive warns and skips on runtime opt changes to avoid corrupting `el.value` as the only source of truth. Closes issue [#99](https://github.com/jonathanpmartins/v-money3/issues/99). Pull request [#103](https://github.com/jonathanpmartins/v-money3/pull/103).
+
+### Chore
+- Dependencies updated to clear all `npm audit` vulnerabilities.
+- `jest-puppeteer` bumped to v11 for `puppeteer` v25 compatibility.
+- CI workflow updated to Node 20 LTS + `npm ci`, with `--no-sandbox` puppeteer launch args for current GitHub Actions runners.
+
 ## [3.24.1] / 2024-01-27
 #### Fix 
  - Fix typescript error TS7016. Pull request [#84](https://github.com/jonathanpmartins/v-money3/pull/84), thanks to [@christhofer](https://github.com/christhofer).
