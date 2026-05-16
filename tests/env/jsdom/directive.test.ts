@@ -176,7 +176,7 @@ test('directive — onKeyDown + key flips negative to positive', async () => {
 
   await input.trigger('keydown', { key: '+' });
 
-  expect(input.element.value).toBe('1.5');
+  expect(input.element.value).toBe('1.50');
 });
 
 test('directive — onKeyDown handles null selectionEnd', async () => {
@@ -211,6 +211,32 @@ test('directive — onKeyDown + key on positive value is a no-op', async () => {
   await input.trigger('keydown', { key: '+' });
 
   expect(input.element.value).toBe('1.50');
+});
+
+test('directive — onKeyDown + key on negative value flips sign and keeps formatting', async () => {
+  // Pressing "+" on a negative value should flip the sign and leave the
+  // input in the same formatted shape (prefix, thousands, precision, suffix).
+  // The current implementation assigns el.value = String(number * -1) raw,
+  // skipping format() and producing "1.5" instead of "1.50".
+  const wrapper = mount(makeHost(), {
+    props: {
+      opts: {
+        ...baseOpts,
+        prefix: 'R$ ',
+        thousands: ',',
+        decimal: '.',
+      },
+    },
+    global: { directives },
+  });
+
+  const input = wrapper.find('input');
+  await input.setValue('-1234567'); // typed digits with leading '-'
+  expect(input.element.value).toBe('R$ -12,345.67');
+
+  await input.trigger('keydown', { key: '+' });
+
+  expect(input.element.value).toBe('R$ 12,345.67');
 });
 
 test('directive — Backspace clears zero when allowBlank + treatZeroAsBlank', async () => {

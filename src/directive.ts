@@ -72,15 +72,10 @@ const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<never
   }
 
   debug(opt, 'directive onkeydown() - e.key', e.key);
-  if (e.key === '+') {
-    debug(opt, 'directive onkeydown() - unformat el.value', el.value);
-    let number = unformat(el.value, opt, 'directive onkeydown +');
-    if (typeof number === 'string') {
-      number = parseFloat(number);
-    }
-    if (number < 0) {
-      el.value = String(number * -1);
-    }
+  if (e.key === '+' && el.value.indexOf('-') >= 0) {
+    debug(opt, 'directive onkeydown() - flipping sign on el.value', el.value);
+    el.value = el.value.replace('-', '');
+    setValue(el, opt, 'directive onkeydown +');
   }
 };
 
