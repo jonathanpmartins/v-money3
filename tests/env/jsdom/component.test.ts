@@ -177,6 +177,54 @@ test('Test allow-blank attribute', async () => {
   expect(input.element.value).toBe('');
 });
 
+test('Test allow-blank with treat-zero-as-blank=true (default) coalesces zero to blank', async () => {
+  const input = mountComponent({ allowBlank: true }).find('input');
+
+  await input.setValue('0');
+
+  expect(input.element.value).toBe('');
+});
+
+test('Test allow-blank with treat-zero-as-blank=false preserves zero', async () => {
+  const input = mountComponent({ allowBlank: true, treatZeroAsBlank: false }).find('input');
+
+  await input.setValue('0');
+
+  expect(input.element.value).toBe('0.00');
+});
+
+test('Test allow-blank with treat-zero-as-blank=false still allows clearing the input', async () => {
+  const input = mountComponent({ allowBlank: true, treatZeroAsBlank: false }).find('input');
+
+  await input.setValue('');
+
+  expect(input.element.value).toBe('');
+});
+
+test('Backspace on zero does not clear input when treat-zero-as-blank=false', async () => {
+  const input = mountComponent({ allowBlank: true, treatZeroAsBlank: false }).find('input');
+
+  await input.setValue('0');
+  expect(input.element.value).toBe('0.00');
+
+  input.element.setSelectionRange(input.element.value.length, input.element.value.length);
+  await input.trigger('keydown', { code: 'Backspace' });
+
+  expect(input.element.value).toBe('0.00');
+});
+
+test('Backspace on zero clears input when treat-zero-as-blank=true (default)', async () => {
+  const input = mountComponent({ allowBlank: true }).find('input');
+
+  await input.setValue('0.01');
+  await input.setValue('0');
+
+  input.element.setSelectionRange(input.element.value.length, input.element.value.length);
+  await input.trigger('keydown', { code: 'Backspace' });
+
+  expect(input.element.value).toBe('');
+});
+
 test('Change event is emitted', async () => {
   const component = mountComponent();
   const input = component.find('input');

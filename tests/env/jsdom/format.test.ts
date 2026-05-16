@@ -56,3 +56,19 @@ test('format function should parse numbers and strings', () => {
   // code coverage on debug console.log instructions
   expect(format('12345.67', { ...defaults, debug: true })).toBe('12,345.67');
 });
+
+test('treatZeroAsBlank=true (default) coalesces zero to blank when allowBlank=true', () => {
+  expect(format(0, { ...defaults, allowBlank: true })).toBe('');
+  expect(format('0', { ...defaults, allowBlank: true })).toBe('');
+  expect(format('0.00', { ...defaults, allowBlank: true })).toBe('');
+});
+
+test('treatZeroAsBlank=false preserves zero when allowBlank=true', () => {
+  expect(format(0, { ...defaults, allowBlank: true, treatZeroAsBlank: false })).toBe('0.00');
+  expect(format('0', { ...defaults, allowBlank: true, treatZeroAsBlank: false })).toBe('0.00');
+  expect(format('0.00', { ...defaults, allowBlank: true, treatZeroAsBlank: false })).toBe('0.00');
+});
+
+test('treatZeroAsBlank=false still allows blank string input when allowBlank=true', () => {
+  expect(format('', { ...defaults, allowBlank: true, treatZeroAsBlank: false })).toBe('');
+});

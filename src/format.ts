@@ -20,6 +20,11 @@ export default function format(
   debug(opt, 'utils format() - caller', caller);
   debug(opt, 'utils format() - input1', input);
 
+  // preserve blank input as blank when allowBlank is enabled, even if treatZeroAsBlank is false
+  if ((input === null || input === undefined || input === '') && opt.allowBlank) {
+    return '';
+  }
+
   if (input === null || input === undefined) {
     input = '';
   } else if (typeof input === 'number') {
@@ -74,7 +79,7 @@ export default function format(
   debug(opt, 'utils format() - bigNumber2', bigNumber.toFixed(fixed(opt.precision)));
 
   // test if it is zero 0, or 0.0 or 0.00 and so on...
-  if ((/^0(\.0+)?$/g).test(currency) && opt.allowBlank) {
+  if ((/^0(\.0+)?$/g).test(currency) && opt.allowBlank && opt.treatZeroAsBlank) {
     return '';
   }
 

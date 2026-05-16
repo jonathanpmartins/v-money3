@@ -5,9 +5,10 @@ module.exports = {
     launchTimeout: 10000,
   },
   launch: {
-    headless: process.env.HEADLESS !== "false" ? "new" : false,
+    headless: process.env.HEADLESS !== "false",
     slowMo: 10,
     product: 'chrome',
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   },
   browserContext: 'default',
 };

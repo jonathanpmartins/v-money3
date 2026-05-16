@@ -114,6 +114,7 @@ app.directive('money3', Money3Directive)
           min: null,
           max: null,
           allowBlank: false,
+          treatZeroAsBlank: true,
           minimumNumberOfCharacters: 0,
           shouldRound: true,
           focusOnRight: false,
@@ -178,6 +179,7 @@ To ensure proper functionality, you must use `v-model.lazy` for binding.
           min: null,
           max: null,
           allowBlank: false,
+          treatZeroAsBlank: true,
           minimumNumberOfCharacters: 0,
           shouldRound: true,
           focusOnRight: false,
@@ -218,6 +220,7 @@ If you directly bind it, you're perfectly fine as well:
 | min                          | false    | Number   | null    | The min value allowed                                      |
 | max                          | false    | Number   | null    | The max value allowed                                      |
 | allow-blank                  | false    | Boolean  | false   | If the field can start blank and be cleared out by user    |
+| treat-zero-as-blank          | false    | Boolean  | true    | When `allow-blank` is true, controls whether zero is rendered as blank. Set to `false` to distinguish zero from blank (e.g. show `0.00` and only blank on empty input). Has no effect when `allow-blank` is false |
 | minimum-number-of-characters | false    | Number   | 0       | The minimum number of characters that the mask should show |
 | should-round                 | false    | Boolean  | true    | Should default values be rounded or sliced                 |
 | focus-on-right               | false    | Boolean  | false   | When focus, set the cursor to the far right                |
@@ -267,6 +270,7 @@ const config = {
     min: null,
     max: null,
     allowBlank: false,
+    treatZeroAsBlank: true,
     minimumNumberOfCharacters: 0,
     modelModifiers: {
         number: false,
