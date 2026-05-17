@@ -116,6 +116,17 @@ test('format should clamp when min or max is zero (number or string)', () => {
   expect(format(-5, { ...defaults, min: '0', max: '10' })).toBe('0.00');
 });
 
+test('format should clamp precision via fixed() at every call site', () => {
+  // bug: numbersToCurrency() inside format() is called with the raw
+  // opt.precision, while every other site (input.toFixed, BigNumber.toFixed,
+  // the directive's onInput pre-format) routes precision through fixed().
+  // A negative precision makes numbersToCurrency emit 'N.' which the BigNumber
+  // constructor then rejects as an invalid format and throws.
+  expect(() => format('5', { ...defaults, precision: -1 })).not.toThrow();
+  expect(format('5', { ...defaults, precision: -1 })).toBe('5');
+  expect(format(5, { ...defaults, precision: -1 })).toBe('5');
+});
+
 test('format should pad negative integers correctly with minimumNumberOfCharacters', () => {
   // bug: padStart counts the leading '-' as a character, so '-5'.padStart(3, '0')
   // yields '0-5' and the negative sign ends up in the middle of the digits.

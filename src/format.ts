@@ -20,6 +20,12 @@ export default function format(
   debug(opt, 'utils format() - caller', caller);
   debug(opt, 'utils format() - input1', input);
 
+  // Clamp precision once so every downstream call site (toFixed,
+  // numbersToCurrency, BigNumber.toFixed) sees the same value. Without this,
+  // numbersToCurrency() received a raw negative opt.precision and produced
+  // 'N.' which BigNumber rejects as an invalid format.
+  const precision = fixed(opt.precision);
+
   // preserve blank input as blank when allowBlank is enabled, even if treatZeroAsBlank is false
   if ((input === null || input === undefined || input === '') && opt.allowBlank) {
     return '';
@@ -29,12 +35,12 @@ export default function format(
     input = '';
   } else if (typeof input === 'number') {
     if (opt.shouldRound) {
-      input = input.toFixed(fixed(opt.precision));
+      input = input.toFixed(precision);
     } else {
-      input = input.toFixed(fixed(opt.precision) + 1).slice(0, -1);
+      input = input.toFixed(precision + 1).slice(0, -1);
     }
   } else if (opt.modelModifiers && opt.modelModifiers.number && isValidInteger(input)) {
-    input = Number(input).toFixed(fixed(opt.precision));
+    input = Number(input).toFixed(precision);
   } else if (!opt.disableNegative && input === '-') {
     return input;
   }
@@ -47,18 +53,18 @@ export default function format(
 
   debug(opt, 'utils format() - filtered', filtered);
 
-  if (!opt.precision && opt.thousands !== '.' && isValidFloat(filtered)) {
+  if (!precision && opt.thousands !== '.' && isValidFloat(filtered)) {
     filtered = round(filtered, 0);
-    debug(opt, 'utils format() - !opt.precision && isValidFloat()', filtered);
+    debug(opt, 'utils format() - !precision && isValidFloat()', filtered);
   }
 
   const numbers = onlyNumbers(filtered);
 
   debug(opt, 'utils format() - numbers', numbers);
 
-  debug(opt, 'utils format() - numbersToCurrency', negative + numbersToCurrency(numbers, opt.precision));
+  debug(opt, 'utils format() - numbersToCurrency', negative + numbersToCurrency(numbers, precision));
 
-  const bigNumber = new BigNumber(negative + numbersToCurrency(numbers, opt.precision));
+  const bigNumber = new BigNumber(negative + numbersToCurrency(numbers, precision));
 
   debug(opt, 'utils format() - bigNumber1', bigNumber.toString());
 
@@ -74,9 +80,9 @@ export default function format(
     }
   }
 
-  const currency = bigNumber.toFixed(fixed(opt.precision), opt.shouldRound);
+  const currency = bigNumber.toFixed(precision, opt.shouldRound);
 
-  debug(opt, 'utils format() - bigNumber2', bigNumber.toFixed(fixed(opt.precision)));
+  debug(opt, 'utils format() - bigNumber2', bigNumber.toFixed(precision));
 
   // test if it is zero 0, or 0.0 or 0.00 and so on...
   if ((/^0(\.0+)?$/g).test(currency) && opt.allowBlank && opt.treatZeroAsBlank) {
