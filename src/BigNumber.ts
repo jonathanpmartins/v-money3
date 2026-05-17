@@ -105,10 +105,10 @@ export default class BigNumber {
 
   adjustComparisonNumbers(thatNumberParam: NumberParam | BigNumber): bigint[] {
     let thatNumber: BigNumber;
-    if (thatNumberParam.constructor.name !== 'BigNumber') {
-      thatNumber = new BigNumber(thatNumberParam as NumberParam);
+    if (thatNumberParam instanceof BigNumber) {
+      thatNumber = thatNumberParam;
     } else {
-      thatNumber = thatNumberParam as BigNumber;
+      thatNumber = new BigNumber(thatNumberParam as NumberParam);
     }
 
     const diff = this.getDecimalPrecision() - thatNumber.getDecimalPrecision();
