@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 - Clamp `min` / `max` bounds when the configured bound is zero. The previous truthy check (`if (opt.max)`) silently no-op'd on `0` or `"0"`, so configurations like `max: 0` (cap positives, allow negatives) had no effect. Applied to both `format()` and `unformat()` so display and model stay in sync.
 - Clear the input on `Backspace` at the end position when `allowBlank` and `treatZeroAsBlank` are enabled, even without the `.number` model modifier. The directive's strict-equality check (`unformat(...) === 0`) failed when `unformat()` returned a string (e.g. `"0.00"`); the value is now coerced through `parseFloat(String(...))` so the branch fires in both code paths.
 - Re-run the formatter after pressing `+` to flip a negative value's sign. The previous handler wrote `String(number * -1)` directly to `el.value`, dropping the prefix, thousands separator, and trailing precision zeros, and never dispatched a `change` event so the model never updated. The handler now strips the leading `-` and routes through `setValue()`.
+- `filterOptRestrictions()` no longer throws when `decimal`, `thousands`, `prefix`, or `suffix` is passed as `null`, `undefined`, or a number through the bare directive (which bypasses Vue's prop validators). Non-string values are coerced to an empty string.
+- Corrected the typo "received and invalid format" to "received an invalid format" in the `BigNumber` constructor error message.
 
 ## [3.25.0] / 2026-05-16
 
