@@ -871,3 +871,30 @@ test('#99 — modelModifiers.number toggle reformats and switches emit type', as
   expect(component.find('input').element.value).toBe('2,22');
   // No assertion on emitted type — just that no corruption occurred.
 });
+
+test('disableNegative + .number modifier with "-" modelValue must not silently desync', async () => {
+  // bug: setup() at component.vue:165 evaluates `disableNegative || value !== '-'`,
+  // which is true when disableNegative=true AND value='-'. It then runs
+  // `Number('-').toFixed(2)` -> 'NaN' (string). format('NaN') defensively yields
+  // '0.00', so the displayed value is sanitized — but no update:model-value is
+  // emitted, leaving the parent's modelValue stuck at '-' while the view shows
+  // '0.00'. v-model contract broken: source-of-truth diverges from display.
+  const component = mount(Money3Component, {
+    props: {
+      modelValue: '-',
+      disableNegative: true,
+      modelModifiers: { number: true },
+    } as never,
+    global: { directives: { money3: Money3Directive } },
+  });
+
+  await component.vm.$nextTick();
+
+  const display = component.find('input').element.value;
+  expect(display).toBe('0.00');
+
+  // Display was sanitized; parent must be told so it can reconcile.
+  const updates = component.emitted<number[]>()['update:model-value'];
+  expect(updates).toBeDefined();
+  expect(updates![updates!.length - 1][0]).toBe(0);
+});

@@ -31,6 +31,7 @@
 import {
   computed,
   getCurrentInstance,
+  onMounted,
   ref,
   toRefs,
   useAttrs,
@@ -242,6 +243,22 @@ watch(
   reformatOnOptsChange,
   { deep: true },
 );
+
+onMounted(() => {
+  // If the initial modelValue can't be coerced to a number (e.g. '-' with
+  // disableNegative+`.number` modifier, or other non-numeric strings), the
+  // display is silently sanitized to '0.00' via a NaN intermediary inside
+  // setup(). Emit once on mount so the parent reconciles its v-model state
+  // with what was actually rendered.
+  const opt = filterOptRestrictions({ ...props });
+  const reUnformatted = unformat(formattedValue.value, opt, 'component mounted reconcile');
+  const a = Number(modelValue.value);
+  const b = Number(reUnformatted);
+  if (Number.isNaN(a) && !Number.isNaN(b) && b !== lastValue) {
+    lastValue = b;
+    emit('update:model-value', reUnformatted);
+  }
+});
 
 function change(evt: Event) {
   // eslint-disable-next-line prefer-destructuring
