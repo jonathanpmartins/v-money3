@@ -125,7 +125,11 @@ export function round(string: string, precision: number): string {
 
 export function setCursor(el: HTMLInputElement, position: number): void {
   const setSelectionRange = () => {
-    el.setSelectionRange(position, position);
+    // Re-check at fire time: focus may have moved (or the element detached)
+    // between scheduling and the deferred Android-fix tick below.
+    if (el === document.activeElement) {
+      el.setSelectionRange(position, position);
+    }
   };
   if (el === document.activeElement) {
     setSelectionRange();

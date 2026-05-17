@@ -10,6 +10,7 @@ import {
   removeLeadingZeros, replaceAt,
   RESTRICTED_CHARACTERS,
   RESTRICTED_OPTIONS, round,
+  setCursor,
   validateRestrictedInput,
   validateRestrictedOptions,
 } from '../../../src/Utils';
@@ -107,6 +108,47 @@ test('test filterOptRestrictions function', () => {
 
       expect(result[option]).toBe(item.target);
     }
+  }
+});
+
+test('setCursor should not call setSelectionRange after focus moves away (Android fix should re-check)', () => {
+  // The Android-fix `setTimeout(setSelectionRange, 1)` inside setCursor() does
+  // not re-check `el === document.activeElement` before firing, so if the
+  // user tabs to another element within ~1ms (or the element is detached)
+  // setSelectionRange still runs on a now-inactive element. This can move
+  // the caret on an unrelated field or, in some hosts, throw.
+  jest.useFakeTimers();
+  try {
+    const a = document.createElement('input');
+    const b = document.createElement('input');
+    a.value = 'abcdefg';
+    b.value = 'xyz';
+    document.body.appendChild(a);
+    document.body.appendChild(b);
+
+    a.focus();
+    expect(document.activeElement).toBe(a);
+
+    const spy = jest.spyOn(a, 'setSelectionRange');
+    setCursor(a, 3);
+
+    // Synchronous call happened once.
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    // User moves focus elsewhere before the deferred Android-fix fires.
+    b.focus();
+    expect(document.activeElement).toBe(b);
+
+    jest.advanceTimersByTime(2);
+
+    // Buggy behavior: spy called a second time on the no-longer-active element.
+    // Expected behavior: deferred callback re-checks active element and skips.
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    document.body.removeChild(a);
+    document.body.removeChild(b);
+  } finally {
+    jest.useRealTimers();
   }
 });
 

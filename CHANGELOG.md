@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Re-run the formatter after pressing `+` to flip a negative value's sign. The previous handler wrote `String(number * -1)` directly to `el.value`, dropping the prefix, thousands separator, and trailing precision zeros, and never dispatched a `change` event so the model never updated. The handler now strips the leading `-` and routes through `setValue()`.
 - `filterOptRestrictions()` no longer throws when `decimal`, `thousands`, `prefix`, or `suffix` is passed as `null`, `undefined`, or a number through the bare directive (which bypasses Vue's prop validators). Non-string values are coerced to an empty string.
 - Corrected the typo "received and invalid format" to "received an invalid format" in the `BigNumber` constructor error message.
+- `setCursor()` re-checks `document.activeElement` inside its deferred Android-fix `setTimeout` so it no longer calls `setSelectionRange()` on an input the user has tabbed away from (which could move the caret on the now-focused field).
 
 ## [3.25.0] / 2026-05-16
 
