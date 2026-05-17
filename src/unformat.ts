@@ -33,7 +33,8 @@ export default function unformat(
   debug(opt, 'utils unformat() - bigNumber1', numbers.toString());
 
   /// min and max must be a valid float or integer
-  if (opt.max !== null && opt.max !== undefined && opt.max !== '') {
+  if (opt.setMaxIfBigger !== false
+    && opt.max !== null && opt.max !== undefined && opt.max !== '') {
     if (bigNumber.biggerThan(opt.max)) {
       bigNumber.setNumber(opt.max);
     }

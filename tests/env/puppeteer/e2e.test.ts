@@ -255,6 +255,27 @@ describe('Puppeteer Component Tests', () => {
     expect(await getValue()).toBe('10.00');
   });
 
+  it(`#96 — setMaxIfBigger=false stops keystrokes that exceed max ${target}`, async () => {
+    // Issue scenario from #96: max=100, precision=0. Typing "99" is valid;
+    // the next digit would push the value past max. Default clamps to 100;
+    // with setMaxIfBigger=false the display should retain "99" instead.
+    await page.goto(`${serverUrlWithTarget}&max=100&precision=0&setMaxIfBigger=false`);
+
+    await page.focus(target);
+    await page.type(target, '99');
+    expect(await getValue()).toBe('99');
+
+    await page.type(target, '3');
+    expect(await getValue()).toBe('99');
+
+    // Regression: default (omit flag) still clamps.
+    await page.goto(`${serverUrlWithTarget}&max=100&precision=0`);
+
+    await page.focus(target);
+    await page.type(target, '993');
+    expect(await getValue()).toBe('100');
+  });
+
   it(`Test allow-blank attribute ${target}`, async () => {
     await page.goto(`${serverUrlWithTarget}&allowBlank=true`);
 

@@ -113,6 +113,7 @@ app.directive('money3', Money3Directive)
           disabled: false,
           min: null,
           max: null,
+          setMaxIfBigger: true,
           allowBlank: false,
           treatZeroAsBlank: true,
           minimumNumberOfCharacters: 0,
@@ -178,6 +179,7 @@ To ensure proper functionality, you must use `v-model.lazy` for binding.
           disabled: false,
           min: null,
           max: null,
+          setMaxIfBigger: true,
           allowBlank: false,
           treatZeroAsBlank: true,
           minimumNumberOfCharacters: 0,
@@ -219,6 +221,7 @@ If you directly bind it, you're perfectly fine as well:
 | disabled                     | false    | Boolean  | false   | Disable the inner input tag                                |
 | min                          | false    | Number   | null    | The min value allowed                                      |
 | max                          | false    | Number   | null    | The max value allowed                                      |
+| set-max-if-bigger            | false    | Boolean  | true    | When `true` (default), values above `max` are clamped down to `max`. Set to `false` to reject keystrokes that would exceed `max` — the input keeps its last valid value instead of jumping to the ceiling. No effect when `max` is `null` |
 | allow-blank                  | false    | Boolean  | false   | If the field can start blank and be cleared out by user    |
 | treat-zero-as-blank          | false    | Boolean  | true    | When `allow-blank` is true, controls whether zero is rendered as blank. Set to `false` to distinguish zero from blank (e.g. show `0.00` and only blank on empty input). Has no effect when `allow-blank` is false |
 | minimum-number-of-characters | false    | Number   | 0       | The minimum number of characters that the mask should show |
@@ -269,6 +272,7 @@ const config = {
     disabled: false,
     min: null,
     max: null,
+    setMaxIfBigger: true,
     allowBlank: false,
     treatZeroAsBlank: true,
     minimumNumberOfCharacters: 0,
