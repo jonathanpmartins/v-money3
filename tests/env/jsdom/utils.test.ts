@@ -110,6 +110,24 @@ test('test filterOptRestrictions function', () => {
   }
 });
 
+test('filterOptRestrictions should tolerate non-string values for restricted options', () => {
+  // The directive's mounted/updated hooks merge user-supplied binding.value
+  // over defaults without enforcing prop validators. If a caller passes a
+  // non-string (null, undefined, number) for decimal/thousands/prefix/suffix,
+  // the function currently throws because it calls .replace() on the value.
+  // It should coerce the value to a safe empty string instead.
+  for (const option of RESTRICTED_OPTIONS) {
+    for (const badValue of [null, undefined, 0, 5]) {
+      const opt = { ...defaults };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (opt as any)[option] = badValue;
+
+      expect(() => filterOptRestrictions(opt)).not.toThrow();
+      expect(opt[option]).toBe('');
+    }
+  }
+});
+
 test('test guessFloatPrecision function', () => {
   const tests = [
     { is: '1.1', target: 1 },

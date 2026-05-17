@@ -51,6 +51,14 @@ export function validateRestrictedOptions(opt: VMoneyOptions | ExtractPropTypes<
 // eslint-disable-next-line max-len
 export function filterOptRestrictions(opt: VMoneyOptions | ExtractPropTypes<never>): VMoneyOptions | ExtractPropTypes<never> {
   for (const option of RESTRICTED_OPTIONS) {
+    // Coerce non-string values (null, undefined, number) to empty string so
+    // the directive path — which bypasses Vue prop validators — does not
+    // crash on .replace().
+    if (typeof opt[option] !== 'string') {
+      opt[option] = '';
+      // eslint-disable-next-line no-continue
+      continue;
+    }
     // Remove numbers from option prop
     opt[option] = opt[option].replace(/\d+/g, '');
     for (const character of RESTRICTED_CHARACTERS) {
