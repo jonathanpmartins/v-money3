@@ -208,6 +208,20 @@ function reformatOnOptsChange(): void {
     formattedValue.value = formatted;
   }
 
+  // In masked mode without .number, change() emits the formatted string
+  // verbatim, so the parent's modelValue is a formatted string that doesn't
+  // coerce to a number. Mirror that emit shape here: when the new display
+  // differs from the parent's stored string, reconcile by emitting the new
+  // formatted string. Without this, opts changes (e.g. precision) reformat
+  // the display but the parent's v-model stays stale.
+  if (masked.value && !(modelModifiers.value && modelModifiers.value.number)) {
+    if (formatted !== current && formatted !== lastValue) {
+      lastValue = formatted;
+      emit('update:model-value', formatted);
+    }
+    return;
+  }
+
   // Detect whether new opts changed the effective numeric value
   // (e.g. min/max clamp, precision decrease with rounding).
   const reUnformatted = unformat(formatted, opt, 'component opts watch reunformat');

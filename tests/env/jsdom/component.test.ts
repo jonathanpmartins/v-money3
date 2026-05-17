@@ -898,3 +898,43 @@ test('disableNegative + .number modifier with "-" modelValue must not silently d
   expect(updates).toBeDefined();
   expect(updates![updates!.length - 1][0]).toBe(0);
 });
+
+test('masked mode reconciles parent on format-affecting opts change', async () => {
+  // bug: in masked mode (masked=true, no .number modifier), change() emits the
+  // formatted display string (e.g. "1,234.56"), so the parent's modelValue is
+  // also that string. When a format-affecting prop changes, reformatOnOptsChange
+  // recomputes formattedValue and updates the display — but the NaN guard at
+  // (Number("1,234.56") === NaN) early-returns before emit, so the parent is
+  // never told. Display says "123.456", modelValue stays "1,234.56".
+  const component = mount(Money3Component, {
+    props: {
+      modelValue: '0',
+      masked: true,
+      precision: 2,
+      thousands: ',',
+      decimal: '.',
+    } as never,
+    global: { directives: { money3: Money3Directive } },
+  });
+  const input = component.find('input');
+
+  // Drive a real change so masked emits the formatted string and parent syncs.
+  await input.setValue('1234.56');
+  const updates0 = component.emitted<unknown[]>()['update:model-value']!;
+  const afterChange = updates0[updates0.length - 1][0];
+  expect(afterChange).toBe('1,234.56');
+  await component.setProps({ modelValue: afterChange as never });
+  const emitCountBefore = updates0.length;
+
+  // Change a format-affecting prop. Display reinterprets digits under the new
+  // precision; parent must be reconciled, not silently desynced.
+  await component.setProps({ precision: 3 });
+  await component.vm.$nextTick();
+
+  expect(input.element.value).toBe('123.456');
+
+  const updates1 = component.emitted<unknown[]>()['update:model-value']!;
+  expect(updates1.length).toBeGreaterThan(emitCountBefore);
+  // Newest emit must match the actually-displayed value so parent stays in sync.
+  expect(updates1[updates1.length - 1][0]).toBe('123.456');
+});
