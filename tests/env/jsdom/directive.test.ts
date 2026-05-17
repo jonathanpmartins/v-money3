@@ -494,3 +494,254 @@ test('directive — beforeUnmount clears event listeners on nested input (non-in
   expect(input.oninput).toBeNull();
   expect(input.onfocus).toBeNull();
 });
+
+// ---- #78: wrapper component v-model off-by-10 ----
+
+// Vuetify <v-text-field> renders its inner <input> with an `@input` listener
+// attached at template-render time — i.e. BEFORE the parent's v-money3
+// directive mounts. DOM listener-order = registration-order at the target
+// phase, so the wrapper's listener captured the pre-reformat keystroke value,
+// leaving the host's v-model one character behind.
+//
+// We simulate the wrapper without pulling Vuetify into the test deps: any
+// component that wraps an <input> and re-emits its raw value on `@input`
+// reproduces the exact ordering.
+
+const VuetifyLikeInput = {
+  template: '<div class="v-input"><div class="v-field"><input class="v-field__input" :value="modelValue" @input="onInput" /></div></div>',
+  props: ['modelValue'],
+  emits: ['update:modelValue'],
+  methods: {
+    onInput(e: Event) {
+      (this as unknown as { $emit: (n: string, v: string) => void })
+        .$emit('update:modelValue', (e.target as HTMLInputElement).value);
+    },
+  },
+};
+
+const NuxtUInputLike = {
+  // UInput from Nuxt UI wraps the <input> behind extra DOM (icon slot,
+  // helper text, etc.). Same emit shape — re-emit raw value on @input.
+  template: '<div class="u-input"><span class="u-icon" /><input :value="modelValue" @input="onInput" /><span class="u-helper" /></div>',
+  props: ['modelValue'],
+  emits: ['update:modelValue'],
+  methods: {
+    onInput(e: Event) {
+      (this as unknown as { $emit: (n: string, v: string) => void })
+        .$emit('update:modelValue', (e.target as HTMLInputElement).value);
+    },
+  },
+};
+
+test('#78 directive — Vuetify-like wrapper v-model captures formatted (not pre-format) value', async () => {
+  const parent = {
+    components: { VuetifyLikeInput },
+    template: '<VuetifyLikeInput v-money3="opts" v-model="model" />',
+    props: ['opts'],
+    data() { return { model: '' }; },
+  };
+
+  const wrapper = mount(parent, {
+    props: { opts: { ...baseOpts } } as never,
+    global: { directives },
+  });
+
+  const input = wrapper.find('input').element as HTMLInputElement;
+  await wrapper.find('input').setValue('789');
+
+  // The directive reformats the DOM value to "7.89".
+  expect(input.value).toBe('7.89');
+  // Without the fix, the wrapper's @input listener fires first and emits
+  // "789", so the parent's v-model captures the raw pre-format value and
+  // stays off-by-10 forever. After the fix, the directive re-dispatches an
+  // input event with the formatted value and the wrapper re-emits "7.89".
+  expect((wrapper.vm as unknown as { model: string }).model).toBe('7.89');
+});
+
+test('#78 directive — Nuxt UInput-like wrapper v-model captures formatted value', async () => {
+  const parent = {
+    components: { NuxtUInputLike },
+    template: '<NuxtUInputLike v-money3="opts" v-model="model" />',
+    props: ['opts'],
+    data() { return { model: '' }; },
+  };
+
+  const wrapper = mount(parent, {
+    props: { opts: { ...baseOpts } } as never,
+    global: { directives },
+  });
+
+  const input = wrapper.find('input').element as HTMLInputElement;
+  await wrapper.find('input').setValue('1234');
+
+  expect(input.value).toBe('12.34');
+  expect((wrapper.vm as unknown as { model: string }).model).toBe('12.34');
+});
+
+test('#78 directive — wrapper synth re-fire is guarded against recursion', async () => {
+  // The directive emits a synthetic `input` event after reformatting on a
+  // wrapper host. If the SYNTH_FLAG guard were missing, our own oninput
+  // would re-enter setValue and re-dispatch indefinitely. Cap dispatches
+  // and assert we stay below the recursion threshold.
+  let synthDispatched = 0;
+  const wrapper = mount(makeFlexibleHost('<div v-money3="opts"><input /></div>'), {
+    props: { opts: { ...baseOpts } } as never,
+    global: { directives },
+  });
+
+  const inputEl = wrapper.find('input').element as HTMLInputElement;
+  inputEl.addEventListener('input', (e: Event) => {
+    if ((e as Event & Record<string, unknown>).__v_money3_synth__) synthDispatched += 1;
+  });
+
+  await wrapper.find('input').setValue('500');
+
+  expect(inputEl.value).toBe('5.00');
+  // Exactly one synth `input` event per setValue call. >1 means the
+  // SYNTH_FLAG guard regressed and onInput re-entered setValue.
+  expect(synthDispatched).toBe(1);
+});
+
+const ElementPlusLikeInput = {
+  // el-input shape: <div class="el-input"><input … @input /></div>. Same emit
+  // contract — re-emit raw value on @input.
+  template: '<div class="el-input"><div class="el-input__wrapper"><input :value="modelValue" @input="onInput" /></div></div>',
+  props: ['modelValue'],
+  emits: ['update:modelValue'],
+  methods: {
+    onInput(e: Event) {
+      (this as unknown as { $emit: (n: string, v: string) => void })
+        .$emit('update:modelValue', (e.target as HTMLInputElement).value);
+    },
+  },
+};
+
+test('#78 directive — Element Plus-like wrapper v-model captures formatted value', async () => {
+  const parent = {
+    components: { ElementPlusLikeInput },
+    template: '<ElementPlusLikeInput v-money3="opts" v-model="model" />',
+    props: ['opts'],
+    data() { return { model: '' }; },
+  };
+
+  const wrapper = mount(parent, {
+    props: { opts: { ...baseOpts } } as never,
+    global: { directives },
+  });
+
+  const input = wrapper.find('input').element as HTMLInputElement;
+  await wrapper.find('input').setValue('5000');
+
+  expect(input.value).toBe('50.00');
+  expect((wrapper.vm as unknown as { model: string }).model).toBe('50.00');
+});
+
+test('#78 directive — synth input event does NOT bubble to ancestor listeners', async () => {
+  // bubbles: false on the synth event means an @input listener on the wrapper
+  // host (or any ancestor) only sees the original user-driven event, not the
+  // directive's re-dispatch. Without this, userland code listening on a parent
+  // <div> / <form> would receive a duplicate event with no obvious reason to
+  // filter it out.
+  let ancestorCount = 0;
+  const parent = {
+    components: { VuetifyLikeInput },
+    template: '<div @input="onAncestor"><VuetifyLikeInput v-money3="opts" v-model="model" /></div>',
+    props: ['opts'],
+    data() { return { model: '' }; },
+    methods: {
+      onAncestor() { ancestorCount += 1; },
+    },
+  };
+
+  const wrapper = mount(parent, {
+    props: { opts: { ...baseOpts } } as never,
+    global: { directives },
+  });
+
+  await wrapper.find('input').setValue('250');
+
+  // The original user-driven input event bubbles up (counted once). The synth
+  // event from the directive's re-dispatch is bubbles:false → not counted.
+  expect(ancestorCount).toBe(1);
+  expect((wrapper.vm as unknown as { model: string }).model).toBe('2.50');
+});
+
+test('#78 directive — wrapper v-model tracks value across backspace (shorter input)', async () => {
+  // Hardens the wrapper path against value-shortening inputs. Browser backspace
+  // is simulated by setValue() rewriting to a shorter string and dispatching
+  // input — the directive must still reformat and re-emit so the wrapper's
+  // v-model lands on the shorter formatted value, not stale prior state.
+  const parent = {
+    components: { VuetifyLikeInput },
+    template: '<VuetifyLikeInput v-money3="opts" v-model="model" />',
+    props: ['opts'],
+    data() { return { model: '' }; },
+  };
+
+  const wrapper = mount(parent, {
+    props: { opts: { ...baseOpts } } as never,
+    global: { directives },
+  });
+
+  const input = wrapper.find('input');
+  await input.setValue('12345');
+  expect((input.element as HTMLInputElement).value).toBe('123.45');
+  expect((wrapper.vm as unknown as { model: string }).model).toBe('123.45');
+
+  // Backspace-like shortening — user deleted trailing digit(s).
+  await input.setValue('1234');
+  expect((input.element as HTMLInputElement).value).toBe('12.34');
+  expect((wrapper.vm as unknown as { model: string }).model).toBe('12.34');
+
+  // Further deletion down to a single digit.
+  await input.setValue('1');
+  expect((input.element as HTMLInputElement).value).toBe('0.01');
+  expect((wrapper.vm as unknown as { model: string }).model).toBe('0.01');
+});
+
+test('#78 directive — wrapper v-model tracks value across paste (large input)', async () => {
+  // Paste replaces the value in one shot. The synth re-fire must still
+  // propagate the formatted value to the wrapper's v-model regardless of
+  // jump magnitude.
+  const parent = {
+    components: { VuetifyLikeInput },
+    template: '<VuetifyLikeInput v-money3="opts" v-model="model" />',
+    props: ['opts'],
+    data() { return { model: '' }; },
+  };
+
+  const wrapper = mount(parent, {
+    props: { opts: { ...baseOpts } } as never,
+    global: { directives },
+  });
+
+  const input = wrapper.find('input');
+  // Simulated paste of a long pre-formatted string. The dot is stripped along
+  // with any other non-digit, and precision 2 anchors the last two digits as
+  // the fractional part, so "1234567.89" → digits "123456789" → "1,234,567.89".
+  await input.setValue('1234567.89');
+  expect((input.element as HTMLInputElement).value).toBe('1,234,567.89');
+  expect((wrapper.vm as unknown as { model: string }).model).toBe('1,234,567.89');
+});
+
+test('#78 directive — native <input> host does NOT re-fire input event', async () => {
+  // Regression guard: native hosts must keep current behavior — Vue's
+  // vModelText listener already sees the formatted value, no synth event
+  // needed, and emitting one would surface duplicate `@input` handlers
+  // to userland code. Verify zero synth dispatches happen on a plain
+  // <input> host.
+  const synthCount = { n: 0 };
+  const wrapper = mount(makeHost(), {
+    props: { opts: { ...baseOpts } },
+    global: { directives },
+  });
+
+  const inputEl = wrapper.find('input').element as HTMLInputElement;
+  inputEl.addEventListener('input', (e: Event) => {
+    if ((e as Event & Record<string, unknown>).__v_money3_synth__) synthCount.n += 1;
+  });
+
+  await wrapper.find('input').setValue('250');
+  expect(inputEl.value).toBe('2.50');
+  expect(synthCount.n).toBe(0);
+});

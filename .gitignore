@@ -8,3 +8,4 @@ src/*.js
 tests/**/*.map
 tests/**/*.js
 v-money3*.tgz
+.claude/scheduled_tasks.lock

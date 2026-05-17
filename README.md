@@ -207,6 +207,34 @@ If you directly bind it, you're perfectly fine as well:
 <input :model-modifiers="{ number: true }" v-model.lazy="amount" v-money3="config" />
 ```
 
+### Use with wrapper components (Vuetify, Nuxt UI, Element Plus, …)
+
+The directive works on any component that renders a single inner `<input>`. Apply it to the wrapper and it walks the host's DOM to find the inner input and attach its listeners there.
+
+```html
+<template>
+  <!-- Vuetify -->
+  <v-text-field v-money3="config" v-model="amount" label="Amount" />
+
+  <!-- Nuxt UI -->
+  <UInput v-money3="config" v-model="amount" />
+
+  <!-- Element Plus -->
+  <el-input v-money3="config" v-model="amount" />
+</template>
+```
+
+Wrapper components attach their own `@input` listener to the inner input during render, before the directive's `mounted()` runs. Because DOM listener-order is registration-order, the wrapper's handler would otherwise fire on the raw pre-reformat keystroke value, leaving the host's `v-model` one character behind the displayed value (reported as an "off-by-10" in [#78](https://github.com/jonathanpmartins/v-money3/issues/78)). To fix this without framework-specific detection, the directive re-dispatches an `input` event after each reformat so the wrapper re-reads the post-format value. The re-dispatch only happens when the directive sits on a wrapper (`host !== <input>`); bare `<input v-money3>` is unaffected.
+
+The synthetic event is dispatched with `bubbles: false`, so it only reaches listeners attached directly to the inner `<input>` (the wrapper's own `@input` handler). Ancestor listeners — e.g. an `@input` on a parent `<div>` or `<form>` — do not see it. If you do attach a listener directly to the inner input and want to skip the directive's re-dispatch, filter on the marker:
+
+```js
+function onInput(e) {
+  if (e.__v_money3_synth__) return; // skip the directive's re-dispatch
+  // …your handler…
+}
+```
+
 ## Properties
 
 | property                     | Required | Type     | Default | Description                                                |

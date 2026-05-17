@@ -23,8 +23,15 @@ const FORMAT_AFFECTING_KEYS = [
 ] as const;
 
 const LAST_VALID_KEY = '__v_money3_last_valid__';
+const IS_WRAPPER_KEY = '__v_money3_is_wrapper__';
+const SYNTH_FLAG = '__v_money3_synth__';
 
-type InputWithLastValid = HTMLInputElement & { [LAST_VALID_KEY]?: string };
+type InputWithLastValid = HTMLInputElement & {
+  [LAST_VALID_KEY]?: string;
+  [IS_WRAPPER_KEY]?: boolean;
+};
+
+type SynthEvent = Event & { [SYNTH_FLAG]?: boolean };
 
 const setValue = (
   el: HTMLInputElement,
@@ -75,6 +82,30 @@ const setValue = (
   setCursor(el, positionFromEnd);
 
   el.dispatchEvent(event('change')); // v-model.lazy or not
+
+  // Wrapper components (Vuetify <v-text-field>, Nuxt UI <UInput>, Element Plus
+  // <el-input>, …) attach their own `@input` listener on the inner <input>
+  // during render — i.e. before the directive's mounted() runs. DOM listener
+  // order is registration order, so the wrapper handler fires BEFORE ours and
+  // captures the pre-reformat keystroke value, leaving the host's v-model one
+  // character behind the displayed value (off-by-10 in issue #78).
+  //
+  // After reformatting, re-emit `input` so the wrapper's listener re-reads the
+  // post-format value. The SYNTH_FLAG guard prevents recursion through our own
+  // onInput. Native <input> hosts (host === el) skip this — Vue's vModelText
+  // listener attaches AFTER our oninput in that case and already sees the
+  // formatted value.
+  if ((el as InputWithLastValid)[IS_WRAPPER_KEY]) {
+    // bubbles: false — the synth event must only reach listeners attached
+    // directly on the inner <input> (the target-phase wrapper handler).
+    // Ancestor listeners on the host or its parents are unrelated to the
+    // formatting pipeline; bubbling the synth event up would surface a
+    // duplicate `input` to userland code outside the wrapper, which they'd
+    // have no reason to filter on SYNTH_FLAG.
+    const synth: SynthEvent = new Event('input', { bubbles: false });
+    synth[SYNTH_FLAG] = true;
+    el.dispatchEvent(synth);
+  }
 };
 
 const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<never>) => {
@@ -107,6 +138,7 @@ const onKeyDown = (e: KeyboardEvent, opt: VMoneyOptions | ExtractPropTypes<never
 };
 
 const onInput = (e: Event, opt: VMoneyOptions | ExtractPropTypes<never>) => {
+  if ((e as SynthEvent)[SYNTH_FLAG]) return; // re-entry guard for wrapper re-fire
   const el = e.currentTarget as HTMLInputElement;
   debug(opt, 'directive oninput()', el.value);
   if (/^[1-9]$/.test(el.value)) {
@@ -194,6 +226,7 @@ export default {
     debug(opt, 'directive mounted() - opt', opt);
 
     const el = resolveInner(host);
+    (el as InputWithLastValid)[IS_WRAPPER_KEY] = host !== el;
 
     registerListeners(el, opt);
 
@@ -214,6 +247,7 @@ export default {
     debug(opt, 'directive updated() - host.value', (host as HTMLInputElement).value);
 
     const el = resolveInner(host);
+    (el as InputWithLastValid)[IS_WRAPPER_KEY] = host !== el;
 
     // If the would-be reformat already matches the input, the component layer
     // has already pre-synced the display via its format-prop watcher. No-op.
@@ -245,6 +279,7 @@ export default {
     el.onkeydown = null;
     el.oninput = null;
     el.onfocus = null;
+    delete (el as InputWithLastValid)[IS_WRAPPER_KEY];
     delete (host as HostWithInner)[INNER_INPUT_KEY];
   },
 };
