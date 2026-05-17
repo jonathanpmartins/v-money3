@@ -88,9 +88,10 @@ export default function format(
 
   const decimalLength = decimal !== undefined ? decimal.length : 0;
 
-  integer = integer.padStart(opt.minimumNumberOfCharacters - decimalLength, '0');
-
-  integer = addThousandSeparator(integer, opt.thousands);
+  const isNegative = integer.charAt(0) === '-';
+  const digits = isNegative ? integer.slice(1) : integer;
+  const padded = digits.padStart(opt.minimumNumberOfCharacters - decimalLength, '0');
+  integer = (isNegative ? '-' : '') + addThousandSeparator(padded, opt.thousands);
 
   const output = opt.prefix
         + joinIntegerAndDecimal(integer, decimal, opt.decimal)

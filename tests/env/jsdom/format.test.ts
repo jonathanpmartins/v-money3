@@ -115,3 +115,12 @@ test('format should clamp when min or max is zero (number or string)', () => {
   expect(format(5, { ...defaults, min: '-10', max: '0' })).toBe('0.00');
   expect(format(-5, { ...defaults, min: '0', max: '10' })).toBe('0.00');
 });
+
+test('format should pad negative integers correctly with minimumNumberOfCharacters', () => {
+  // bug: padStart counts the leading '-' as a character, so '-5'.padStart(3, '0')
+  // yields '0-5' and the negative sign ends up in the middle of the digits.
+  // minimumNumberOfCharacters counts digits only (see positive case above).
+  expect(format(-5, { ...defaults, minimumNumberOfCharacters: 5 })).toBe('-005.00');
+  expect(format(-1, { ...defaults, minimumNumberOfCharacters: 5 })).toBe('-001.00');
+  expect(format(-123.45, { ...defaults, minimumNumberOfCharacters: 7 })).toBe('-00,123.45');
+});
