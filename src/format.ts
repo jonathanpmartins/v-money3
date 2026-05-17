@@ -70,7 +70,8 @@ export default function format(
   debug(opt, 'utils format() - bigNumber1', bigNumber.toString());
 
   // min and max must be a valid float or integer
-  if (opt.max !== null && opt.max !== undefined && opt.max !== '') {
+  if (opt.setMaxIfBigger !== false
+    && opt.max !== null && opt.max !== undefined && opt.max !== '') {
     if (bigNumber.biggerThan(opt.max)) {
       bigNumber.setNumber(opt.max);
     }

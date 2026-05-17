@@ -10,6 +10,7 @@ export interface VMoneyOptions {
   disabled: boolean;
   min: number | string | null;
   max: number | string | null;
+  setMaxIfBigger: boolean;
   allowBlank: boolean;
   treatZeroAsBlank: boolean;
   minimumNumberOfCharacters: number;
@@ -34,6 +35,7 @@ export default {
   disabled: false,
   min: null,
   max: null,
+  setMaxIfBigger: true,
   allowBlank: false,
   treatZeroAsBlank: true,
   minimumNumberOfCharacters: 0,

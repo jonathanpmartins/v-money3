@@ -957,3 +957,39 @@ test('component setup path tolerates precision > 100 (no RangeError)', async () 
     shouldRound: true,
   })).not.toThrow();
 });
+
+test('#96 — setMaxIfBigger=false keeps last valid display when typing past max', async () => {
+  // Issue scenario: max=100, precision=0. User types "99" (valid), then a
+  // third digit '3' making it 993. Default behavior auto-clamps to 100. With
+  // setMaxIfBigger=false the input should retain the previous valid value
+  // ("99") rather than snap to the ceiling.
+  const component = mountComponent({
+    max: 100,
+    precision: 0,
+    setMaxIfBigger: false,
+  });
+  const input = component.find('input');
+
+  await input.setValue('99');
+  expect(input.element.value).toBe('99');
+
+  await input.setValue('993');
+
+  expect(input.element.value).toBe('99');
+});
+
+test('#96 — setMaxIfBigger default (true) still clamps to max', async () => {
+  // Regression guard: omitting the flag preserves the historical clamp.
+  const component = mountComponent({
+    max: 100,
+    precision: 0,
+  });
+  const input = component.find('input');
+
+  await input.setValue('99');
+  expect(input.element.value).toBe('99');
+
+  await input.setValue('993');
+
+  expect(input.element.value).toBe('100');
+});

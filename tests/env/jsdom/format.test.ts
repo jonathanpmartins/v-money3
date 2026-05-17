@@ -116,6 +116,22 @@ test('format should clamp when min or max is zero (number or string)', () => {
   expect(format(-5, { ...defaults, min: '0', max: '10' })).toBe('0.00');
 });
 
+test('#96 — setMaxIfBigger=false disables max clamping in format()', () => {
+  // default (setMaxIfBigger=true, implicit) clamps to max
+  expect(format(11, { ...defaults, max: 10 })).toBe('10.00');
+
+  // setMaxIfBigger=false: value over max is preserved, not snapped to max
+  expect(format(11, { ...defaults, max: 10, setMaxIfBigger: false })).toBe('11.00');
+  expect(format(99.99, { ...defaults, max: 10, setMaxIfBigger: false })).toBe('99.99');
+  expect(format('990.03', { ...defaults, max: 100, setMaxIfBigger: false, precision: 0 })).toBe('990');
+
+  // min still clamps even when setMaxIfBigger is false (flag scoped to max)
+  expect(format(5, { ...defaults, min: 10, max: 100, setMaxIfBigger: false })).toBe('10.00');
+
+  // values within bounds unaffected
+  expect(format(5, { ...defaults, max: 10, setMaxIfBigger: false })).toBe('5.00');
+});
+
 test('format should clamp precision via fixed() at every call site', () => {
   // bug: numbersToCurrency() inside format() is called with the raw
   // opt.precision, while every other site (input.toFixed, BigNumber.toFixed,

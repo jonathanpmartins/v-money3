@@ -11,15 +11,20 @@ import {
 import format from './format';
 import unformat from './unformat';
 import defaults, { VMoneyOptions } from './options';
+import BigNumber from './BigNumber';
 
 // this option is used for ALL directive instances
 // let opt: VMoneyOptions = defaults;
 
 const FORMAT_AFFECTING_KEYS = [
   'precision', 'decimal', 'thousands', 'prefix', 'suffix',
-  'min', 'max', 'allowBlank', 'treatZeroAsBlank',
+  'min', 'max', 'setMaxIfBigger', 'allowBlank', 'treatZeroAsBlank',
   'minimumNumberOfCharacters', 'shouldRound', 'modelModifiers',
 ] as const;
+
+const LAST_VALID_KEY = '__v_money3_last_valid__';
+
+type InputWithLastValid = HTMLInputElement & { [LAST_VALID_KEY]?: string };
 
 const setValue = (
   el: HTMLInputElement,
@@ -37,9 +42,31 @@ const setValue = (
 
   const formatted = format(el.value, opt, caller);
 
-  if (formatted === el.value) return; // prevent unnecessary updates
+  // setMaxIfBigger=false: format() returns the un-clamped value. Reject the
+  // keystroke that pushed the numeric value past max by restoring the last
+  // valid display so the input "stays at" the previous in-bounds state.
+  if (
+    opt.setMaxIfBigger === false
+    && opt.max !== null && opt.max !== undefined && opt.max !== ''
+  ) {
+    const unformatted = unformat(formatted, opt, 'directive setValue overflow check');
+    const bn = new BigNumber(String(unformatted));
+    if (bn.biggerThan(opt.max)) {
+      const lastValid = (el as InputWithLastValid)[LAST_VALID_KEY];
+      if (typeof lastValid === 'string' && lastValid !== el.value) {
+        el.value = lastValid;
+      }
+      return;
+    }
+  }
+
+  if (formatted === el.value) {
+    (el as InputWithLastValid)[LAST_VALID_KEY] = formatted;
+    return; // prevent unnecessary updates
+  }
 
   el.value = formatted;
+  (el as InputWithLastValid)[LAST_VALID_KEY] = formatted;
 
   positionFromEnd = Math.max(positionFromEnd, opt.suffix.length); // right
   positionFromEnd = el.value.length - positionFromEnd;

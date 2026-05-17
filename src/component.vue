@@ -11,6 +11,7 @@
       disableNegative: props.disableNegative,
       min: props.min,
       max: props.max,
+      setMaxIfBigger: props.setMaxIfBigger,
       allowBlank: props.allowBlank,
       treatZeroAsBlank: props.treatZeroAsBlank,
       minimumNumberOfCharacters: props.minimumNumberOfCharacters,
@@ -134,6 +135,10 @@ const props = defineProps({
     type: [Number, String],
     default: () => defaults.min,
   },
+  setMaxIfBigger: {
+    type: Boolean,
+    default: () => defaults.setMaxIfBigger,
+  },
   allowBlank: {
     type: Boolean,
     default: () => defaults.allowBlank,
@@ -244,6 +249,7 @@ watch(
     props.suffix,
     props.min,
     props.max,
+    props.setMaxIfBigger,
     props.allowBlank,
     props.treatZeroAsBlank,
     props.minimumNumberOfCharacters,
