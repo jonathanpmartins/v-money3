@@ -451,3 +451,24 @@ test('directive — beforeUnmount clears event listeners', async () => {
   expect(input.oninput).toBeNull();
   expect(input.onfocus).toBeNull();
 });
+
+test('directive — beforeUnmount clears event listeners on nested input (non-input host)', async () => {
+  const wrapper = mount(makeFlexibleHost('<div v-money3="opts"><input /></div>'), {
+    props: { opts: { ...baseOpts } } as never,
+    global: { directives },
+  });
+
+  const input = wrapper.find('input').element;
+  // listeners were attached to the inner <input>, not the <div> host
+  expect(input.onkeydown).not.toBeNull();
+  expect(input.oninput).not.toBeNull();
+  expect(input.onfocus).not.toBeNull();
+
+  wrapper.unmount();
+
+  // bug: beforeUnmount receives the <div> host and nulls listeners on the wrong
+  // node, so the inner <input> keeps its handlers attached after unmount.
+  expect(input.onkeydown).toBeNull();
+  expect(input.oninput).toBeNull();
+  expect(input.onfocus).toBeNull();
+});

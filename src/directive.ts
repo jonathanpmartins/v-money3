@@ -139,8 +139,22 @@ function someFormatKeyChanged(
   );
 }
 
+// Stash the inner <input> on the host so beforeUnmount() can clear listeners
+// on the same node mounted() attached them to, even when the host is a wrapper.
+const INNER_INPUT_KEY = '__v_money3_input__';
+
+type HostWithInner = HTMLElement & { [INNER_INPUT_KEY]?: HTMLInputElement };
+
+function resolveInner(host: HTMLInputElement): HTMLInputElement {
+  const stashed = (host as HostWithInner)[INNER_INPUT_KEY];
+  if (stashed) return stashed;
+  const inner = getValidatedInputElement(host);
+  (host as HostWithInner)[INNER_INPUT_KEY] = inner;
+  return inner;
+}
+
 export default {
-  mounted(el: HTMLInputElement, binding: DirectiveBinding): void {
+  mounted(host: HTMLInputElement, binding: DirectiveBinding): void {
     if (!binding.value) {
       return;
     }
@@ -152,14 +166,14 @@ export default {
 
     debug(opt, 'directive mounted() - opt', opt);
 
-    el = getValidatedInputElement(el);
+    const el = resolveInner(host);
 
     registerListeners(el, opt);
 
     debug(opt, 'directive mounted() - el.value', el.value);
     setValue(el, opt, 'directive mounted');
   },
-  updated(el: HTMLInputElement, binding: DirectiveBinding): void {
+  updated(host: HTMLInputElement, binding: DirectiveBinding): void {
     if (!binding.value) {
       return;
     }
@@ -170,9 +184,9 @@ export default {
     });
 
     debug(opt, 'directive updated() - opt', opt);
-    debug(opt, 'directive updated() - el.value', el.value);
+    debug(opt, 'directive updated() - host.value', (host as HTMLInputElement).value);
 
-    el = getValidatedInputElement(el);
+    const el = resolveInner(host);
 
     // If the would-be reformat already matches the input, the component layer
     // has already pre-synced the display via its format-prop watcher. No-op.
@@ -199,9 +213,11 @@ export default {
 
     setValue(el, opt, 'directive updated');
   },
-  beforeUnmount(el: HTMLInputElement): void {
+  beforeUnmount(host: HTMLInputElement): void {
+    const el = (host as HostWithInner)[INNER_INPUT_KEY] || host;
     el.onkeydown = null;
     el.oninput = null;
     el.onfocus = null;
+    delete (host as HostWithInner)[INNER_INPUT_KEY];
   },
 };

@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - Corrected the typo "received and invalid format" to "received an invalid format" in the `BigNumber` constructor error message.
 - `setCursor()` re-checks `document.activeElement` inside its deferred Android-fix `setTimeout` so it no longer calls `setSelectionRange()` on an input the user has tabbed away from (which could move the caret on the now-focused field).
 - `minimumNumberOfCharacters` no longer corrupts negative values. `padStart()` was counting the leading `-` toward the target length, so `format(-5, { minimumNumberOfCharacters: 5 })` produced `0-5.00` (sign in the middle of the digits). The sign is now stripped before padding and reattached after, treating `minimumNumberOfCharacters` as a digit count consistent with the positive case.
+- `beforeUnmount` no longer leaks event listeners when `v-money3` is used on a non-`<input>` host (e.g. a wrapper `<div>` containing an `<input>`). `mounted()` reassigned its local `el` to the inner input and attached listeners there, but `beforeUnmount()` received the original host and nulled handlers on the wrong node. The inner input is now stashed on the host so `beforeUnmount()` clears listeners on the same element they were registered on.
 
 ## [3.25.0] / 2026-05-16
 
