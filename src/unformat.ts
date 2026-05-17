@@ -44,6 +44,13 @@ export default function unformat(
     }
   }
 
+  // disableNegative strips the sign at parse time but a negative min/max can
+  // pull the BigNumber back below zero. Re-clamp so unformat() agrees with
+  // format() on the contract.
+  if (opt.disableNegative && bigNumber.lessThan(0)) {
+    bigNumber.setNumber(0);
+  }
+
   let output: string | number = bigNumber.toFixed(fixed(opt.precision), opt.shouldRound);
 
   if (opt.modelModifiers && opt.modelModifiers.number) {

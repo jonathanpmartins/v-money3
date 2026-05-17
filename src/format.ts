@@ -81,6 +81,13 @@ export default function format(
     }
   }
 
+  // disableNegative strips the sign at parse time but a negative min/max can
+  // pull the BigNumber back below zero via setNumber(opt.min|max). Re-clamp
+  // here so the contract — "no negative output" — holds end-to-end.
+  if (opt.disableNegative && bigNumber.lessThan(0)) {
+    bigNumber.setNumber(0);
+  }
+
   const currency = bigNumber.toFixed(precision, opt.shouldRound);
 
   debug(opt, 'utils format() - bigNumber2', bigNumber.toFixed(precision));
