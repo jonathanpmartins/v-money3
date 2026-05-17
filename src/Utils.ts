@@ -5,7 +5,11 @@ export const RESTRICTED_CHARACTERS: string[] = ['+', '-']; // and number [0-9]
 export const RESTRICTED_OPTIONS: string[] = ['decimal', 'thousands', 'prefix', 'suffix'];
 
 export function fixed(precision: number): number {
-  return Math.max(0, Math.min(precision, 1000));
+  // Cap at 100 to match the ECMAScript limit on Number.prototype.toFixed,
+  // which throws RangeError past that. Custom precision paths
+  // (BigNumber.toFixed, numbersToCurrency) tolerate any value but never
+  // see more than what fixed() returns.
+  return Math.max(0, Math.min(precision, 100));
 }
 
 export function numbersToCurrency(numbers: string, precision: number): string {

@@ -37,7 +37,8 @@ export default function format(
     if (opt.shouldRound) {
       input = input.toFixed(precision);
     } else {
-      input = input.toFixed(precision + 1).slice(0, -1);
+      // Number.toFixed maxes out at 100; clamp the +1 truncation step too.
+      input = input.toFixed(Math.min(precision + 1, 100)).slice(0, -1);
     }
   } else if (opt.modelModifiers && opt.modelModifiers.number && isValidInteger(input)) {
     input = Number(input).toFixed(precision);

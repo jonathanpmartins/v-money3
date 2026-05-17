@@ -127,6 +127,31 @@ test('format should clamp precision via fixed() at every call site', () => {
   expect(format(5, { ...defaults, precision: -1 })).toBe('5');
 });
 
+test('format does not throw RangeError for precision > 100 (clamped to 100)', () => {
+  // Number.prototype.toFixed throws RangeError for digits > 100. Every site
+  // that called .toFixed with raw opt.precision (or precision+1 for the
+  // truncate-without-round path) used to crash. fixed() now caps at 100 and
+  // the +1 sites min() against 100 too.
+
+  // numeric input path: format.ts line 38 (shouldRound:true)
+  expect(() => format(1.5, { ...defaults, precision: 200 })).not.toThrow();
+  expect(() => format(1.5, { ...defaults, precision: 101 })).not.toThrow();
+
+  // numeric input path with shouldRound:false uses precision+1 — format.ts:40
+  expect(() => format(1.5, { ...defaults, precision: 100, shouldRound: false })).not.toThrow();
+  expect(() => format(1.5, { ...defaults, precision: 200, shouldRound: false })).not.toThrow();
+
+  // modelModifiers.number on integer string — format.ts:43
+  expect(() => format('5', {
+    ...defaults,
+    precision: 200,
+    modelModifiers: { number: true },
+  })).not.toThrow();
+
+  // values pass through the BigNumber path; sanity check we still get a string
+  expect(typeof format(1.5, { ...defaults, precision: 200 })).toBe('string');
+});
+
 test('format should pad negative integers correctly with minimumNumberOfCharacters', () => {
   // bug: padStart counts the leading '-' as a character, so '-5'.padStart(3, '0')
   // yields '0-5' and the negative sign ends up in the middle of the digits.

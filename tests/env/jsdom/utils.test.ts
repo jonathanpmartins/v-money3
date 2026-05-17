@@ -4,6 +4,7 @@
 
 import {
   filterOptRestrictions,
+  fixed,
   guessFloatPrecision,
   isValidFloat,
   isValidInteger,
@@ -296,4 +297,14 @@ test('test round function', () => {
     const result = round(item.number, item.precision);
     expect(result).toBe(item.target);
   }
+});
+
+test('fixed() clamps precision to [0, 100] to match Number.toFixed limit', () => {
+  expect(fixed(-1)).toBe(0);
+  expect(fixed(0)).toBe(0);
+  expect(fixed(50)).toBe(50);
+  expect(fixed(100)).toBe(100);
+  expect(fixed(101)).toBe(100);
+  expect(fixed(1000)).toBe(100);
+  expect(fixed(Number.MAX_SAFE_INTEGER)).toBe(100);
 });

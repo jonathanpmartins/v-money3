@@ -938,3 +938,22 @@ test('masked mode reconciles parent on format-affecting opts change', async () =
   // Newest emit must match the actually-displayed value so parent stays in sync.
   expect(updates1[updates1.length - 1][0]).toBe('123.456');
 });
+
+test('component setup path tolerates precision > 100 (no RangeError)', async () => {
+  // component.vue used Number(modelValue).toFixed(fixed(precision)+1) in the
+  // .number + shouldRound:false initial-value path. fixed() capped at 1000,
+  // so any precision > 99 threw RangeError from Number.toFixed.
+  expect(() => mountComponent({
+    modelValue: 1.5,
+    precision: 200,
+    modelModifiers: { number: true },
+    shouldRound: false,
+  })).not.toThrow();
+
+  expect(() => mountComponent({
+    modelValue: 1.5,
+    precision: 200,
+    modelModifiers: { number: true },
+    shouldRound: true,
+  })).not.toThrow();
+});

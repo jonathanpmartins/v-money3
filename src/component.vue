@@ -169,7 +169,7 @@ if (props.disableNegative || value !== '-') {
       value = Number(modelValue.value).toFixed(fixed(precision.value));
     } else {
       value = Number(modelValue.value)
-        .toFixed(fixed(precision.value) + 1)
+        .toFixed(Math.min(fixed(precision.value) + 1, 100))
         .slice(0, -1);
     }
   }
