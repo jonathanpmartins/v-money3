@@ -397,6 +397,28 @@ test('directive — updated with non-format-affecting opts change re-runs setVal
   expect(warnSpy).not.toHaveBeenCalled();
 });
 
+test('#100 directive — updated on non-input host resolves inner input before setValue', async () => {
+  // Regression for #100: Nuxt UI's UInput renders a wrapper element with the
+  // <input> inside. In v3.24.1 updated() called setValue() with the host (a
+  // <div>) instead of the inner input, so el.value was undefined and the
+  // positionFromEnd line threw "Cannot read properties of undefined (reading
+  // 'length')". resolveInner() must run on the update path too.
+  const wrapper = mount(makeFlexibleHost('<div v-money3="opts"><input /></div>'), {
+    props: { opts: { ...baseOpts } } as never,
+    global: { directives },
+  });
+
+  const input = wrapper.find('input');
+  await input.setValue('-150');
+  expect(input.element.value).toBe('-1.50');
+
+  // Non-format-affecting opt change → updated() falls through to setValue().
+  // Without the fix this throws on the wrapper <div>.
+  await wrapper.setProps({ opts: { ...baseOpts, disableNegative: true } } as never);
+
+  expect(input.element.value).toBe('1.50');
+});
+
 test('directive — updated transitions from null binding to real opts without warn', async () => {
   const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
   const wrapper = mount(makeFlexibleHost('<input v-money3="opts" />'), {
