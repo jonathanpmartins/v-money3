@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [3.26.0] / 2026-05-17
 
 ### Feature
 - New property `setMaxIfBigger` (default `true`) gives developers control over the auto-clamp-to-`max` behavior. When set to `false`, a keystroke that would push the value past `max` is rejected and the display reverts to the last valid value — instead of jumping to the over-max digit sequence and snapping down to `max`. Applied to both `format()` / `unformat()` (which skip the max clamp under the flag) and the directive (which tracks the last in-bounds display and restores it on overflow). Closes issue [#96](https://github.com/jonathanpmartins/v-money3/issues/96).
