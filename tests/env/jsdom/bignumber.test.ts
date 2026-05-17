@@ -274,3 +274,16 @@ test('test adjustComparisonNumbers function', () => {
     expect(adjusted[1]).toBe(item.target2);
   }
 });
+
+test('toFixed(precision, shouldRound=false) leaves trailing dot when truncating to fewer decimals', () => {
+  // Bug: BigNumber.toFixed slices the digits but not the separator, so any
+  // value with more decimals than the target precision returns 'N.' instead
+  // of 'N' (precision=0) or 'N.D' instead of 'N.D' with the right length.
+  // format() masks this via joinIntegerAndDecimal()'s falsy-empty guard, but
+  // direct callers (and unformat() in some configurations) see the raw 'N.'.
+  expect(new BigNumber('1.5').toFixed(0, false)).toBe('1');
+  expect(new BigNumber('1.99').toFixed(0, false)).toBe('1');
+  expect(new BigNumber('-1.99').toFixed(0, false)).toBe('-1');
+  expect(new BigNumber('1.567').toFixed(1, false)).toBe('1.5');
+  expect(new BigNumber('1.99').toFixed(1, false)).toBe('1.9');
+});

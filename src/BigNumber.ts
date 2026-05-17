@@ -50,7 +50,10 @@ export default class BigNumber {
         // ... and rounded
         return round(string, precision);
       }
-      return string.slice(0, diff);
+      // precision=0 leaves the '.' as the last slice char ('1.5' -> '1.');
+      // strip it so callers don't see a malformed number.
+      const sliced = string.slice(0, diff);
+      return sliced.endsWith('.') ? sliced.slice(0, -1) : sliced;
     }
     return string;
   }
