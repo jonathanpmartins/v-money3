@@ -1,4 +1,8 @@
 ![workflow](https://github.com/jonathanpmartins/v-money3/actions/workflows/main.yml/badge.svg)
+[![npm version](https://img.shields.io/npm/v/v-money3.svg)](https://www.npmjs.com/package/v-money3)
+[![npm downloads](https://img.shields.io/npm/dm/v-money3.svg)](https://www.npmjs.com/package/v-money3)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/v-money3)](https://bundlephobia.com/package/v-money3)
+[![license](https://img.shields.io/npm/l/v-money3.svg)](./LICENCE)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
 
 # Money Mask for Vue 3
@@ -44,6 +48,8 @@ Can I use `bigInt`? https://caniuse.com/bigint
 More information: [#66](https://github.com/jonathanpmartins/v-money3/issues/66), [#70](https://github.com/jonathanpmartins/v-money3/issues/70), [#89](https://github.com/jonathanpmartins/v-money3/issues/89)
 
 ## Installation
+
+Requires `vue >= 3.2.0` (declared as a peer dependency).
 
 ```bash
 npm i v-money3 --save
@@ -197,7 +203,7 @@ By default, directives are only compatible with `v-model`. It's important to not
 If you need to work with `float` or `integer` on directives, you'll need to manually configure the number modifier.
 
 Using config:
-```javascipt
+```javascript
 modelModifiers: {
   number: true,
 }
@@ -278,7 +284,7 @@ Restricted inputs will be filtered out of the final mask, and a console warning 
 Use it directly in the browser! 
 
 ```html
-<script src="https://unpkg.com/v-money3@3.24.1/dist/v-money3.umd.js"></script>
+<script src="https://unpkg.com/v-money3@latest/dist/v-money3.umd.js"></script>
 ```
 
 Take a look at issue [#15](https://github.com/jonathanpmartins/v-money3/issues/15#issuecomment-830988807) and also this [codesandbox](https://codesandbox.io/s/mystifying-paper-bpfyn?file=/index.html) working example.
@@ -289,12 +295,11 @@ Take a look at issue [#15](https://github.com/jonathanpmartins/v-money3/issues/1
 import { format, unformat } from 'v-money3';
 
 const config = {
-    debug: false,
     masked: false,
-    prefix: '',
-    suffix: '',
-    thousands: ',',
-    decimal: '.',
+    prefix: 'R$ ',
+    suffix: ' #',
+    thousands: '.',
+    decimal: ',',
     precision: 2,
     disableNegative: false,
     disabled: false,
@@ -315,21 +320,30 @@ const formatted = format(12345.67, config);
 console.log(formatted);
 // output string: 'R$ 12.345,67 #'
 
-const unformatted = unformat(formatted, config);
-console.log(unformatted);
+const unformattedString = unformat(formatted, config);
+console.log(unformattedString);
 // output fixed string: '12345.67'
 
 /* ----------------- or ----------------- */
 
 config.modelModifiers = { number: true };
 
-const unformatted = unformat(formatted, config);
-console.log(unformatted);
+const unformattedNumber = unformat(formatted, config);
+console.log(unformattedNumber);
 // output float number: 12345.67
 ```
 
 
-### Contribution and Feedback
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for release notes.
+
+## License
+
+[MIT](./LICENCE) © Jonathan Martins
+
+## Contribution and Feedback
+
 Your contributions and feedback are highly valued! If you encounter any issues or have suggestions for improvement, please feel free to open an issue or submit a pull request on GitHub.
 
 The previous `v-money` library has been abandoned, prompting the development of v-money3 to accommodate projects migrating to `Vue 3`.
@@ -337,7 +351,7 @@ The previous `v-money` library has been abandoned, prompting the development of 
 Happy coding with v-money3!
 
 
-### References
+## References
 
 - https://github.com/vuejs-tips/v-money (based on `v-money`)
 
