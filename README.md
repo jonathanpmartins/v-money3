@@ -11,6 +11,27 @@
 
 ![The Mask Money](https://cdn-images-1.medium.com/max/600/1*Rpc289FpghuHrnzyVpOUig.gif)
 
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Features](#features)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+  - [Register Globally](#register-globally)
+  - [Component](#use-as-component)
+  - [Directive](#use-as-directive)
+  - [Wrapper components (Vuetify, Nuxt UI, …)](#use-with-wrapper-components-vuetify-nuxt-ui-element-plus-)
+  - [Min / Max limits](#min--max-limits)
+- [TypeScript](#typescript)
+- [Properties reference](#properties)
+- [Restricted characters](#restricted-characters)
+- [BigInt / Arbitrary precision](#bigint--arbitrary-precision)
+- [Browser target](#browser-target)
+- [Use without a package manager](#use-without-a-package-manager)
+- [Internal mask functions](#use-the-internal-mask-functions)
+- [Changelog](#changelog) · [License](#license) · [Contributing](#contribution-and-feedback)
+
 ## Introduction
 
 Welcome to `v-money3`, a versatile money masking solution designed specifically for `Vue 3` applications. This library serves as a replacement for the now-abandoned [`v-money`](https://github.com/vuejs-tips/v-money) library, ensuring compatibility and functionality for projects transitioning to `Vue 3`.
@@ -25,28 +46,6 @@ Welcome to `v-money3`, a versatile money masking solution designed specifically 
 - **Copy/Paste Support:** Easily accept input via copy/paste actions.
 - **Min/Max Limits:** Set minimum and maximum limits for input values.
 
-## Arbitrary Precision
-
-In this release, some breaking changes have been introduced. Let's delve into the details:
-
-`v-money3` supports arbitrary precision through the use of `BigInt`. Arbitrary precision is only supported with `v-model`. When using `v-model`, ensure the input is provided as a string representation of a number (e.g., `'12345.67'`). If your precision is set to `2` and you provide a default `v-model` value of `'55'`, it will be interpreted as `'0.55'`. To maintain the correct format, ensure you pass `'55.00'` when using `v-model`.
-
-
-For most users, it's advisable to utilize floating-point numbers and adhere to the boundaries of [`Number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number). In such cases, employing `v-model` with the number modifier, or `v-model.number`, is recommended. However, this limits you to numbers smaller than `2^53 - 1` or `9007199254740991` (approximately nine quadrillion). Refer to [MAX_SAFE_INTEGER](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER) for more information. For users employing `v-model.number`, integers and floats are intuitively understood. If your precision is set to `2` and you input a default `v-model.number` value of `55`, it will be interpreted as `55.00`. The same applies to `5.5`, which will be rendered as `5.50`.
-
-
-[More Examples](https://github.com/jonathanpmartins/v-money3/issues/38#issuecomment-903214235)
-
-## Browser Target
-
-If you encounter the error message: `Big integer literals are not available in the configured target environment`, please ensure your browser targets are updated to include at least the following entries:
-```
-['es2020', 'safari14']
-```
-Can I use `bigInt`? https://caniuse.com/bigint
-
-More information: [#66](https://github.com/jonathanpmartins/v-money3/issues/66), [#70](https://github.com/jonathanpmartins/v-money3/issues/70), [#89](https://github.com/jonathanpmartins/v-money3/issues/89)
-
 ## Installation
 
 Requires `vue >= 3.2.0` (declared as a peer dependency).
@@ -54,6 +53,33 @@ Requires `vue >= 3.2.0` (declared as a peer dependency).
 ```bash
 npm i v-money3 --save
 ```
+
+## Configuration
+
+All component, directive, and `format`/`unformat` calls accept the same config object. Defaults shown below; every field is optional except `precision`.
+
+```js
+const config = {
+  masked: false,                // emit raw value (false) or formatted string (true) via v-model
+  prefix: '',                   // e.g. 'R$ '
+  suffix: '',                   // e.g. ' %'
+  thousands: ',',
+  decimal: '.',
+  precision: 2,
+  disableNegative: false,
+  disabled: false,
+  min: null,                    // number | string | null
+  max: null,                    // number | string | null
+  setMaxIfBigger: true,         // false to reject keystrokes above `max` instead of clamping
+  allowBlank: false,
+  treatZeroAsBlank: true,
+  minimumNumberOfCharacters: 0,
+  shouldRound: true,
+  focusOnRight: false,
+}
+```
+
+See [Properties reference](#properties) for full per-field semantics.
 
 ## Usage
 
@@ -108,24 +134,7 @@ app.directive('money3', Money3Directive)
     data () {
       return {
         amount: '12345.67',
-        config: {
-          masked: false,
-          prefix: '',
-          suffix: '',
-          thousands: ',',
-          decimal: '.',
-          precision: 2,
-          disableNegative: false,
-          disabled: false,
-          min: null,
-          max: null,
-          setMaxIfBigger: true,
-          allowBlank: false,
-          treatZeroAsBlank: true,
-          minimumNumberOfCharacters: 0,
-          shouldRound: true,
-          focusOnRight: false,
-        }
+        config: { /* see Configuration above for all fields + defaults */ }
       }
     }
   }
@@ -175,23 +184,7 @@ To ensure proper functionality, you must use `v-model.lazy` for binding.
     data () {
       return {
         amount: '12345.67',
-        config: {
-          prefix: '',
-          suffix: '',
-          thousands: ',',
-          decimal: '.',
-          precision: 2,
-          disableNegative: false,
-          disabled: false,
-          min: null,
-          max: null,
-          setMaxIfBigger: true,
-          allowBlank: false,
-          treatZeroAsBlank: true,
-          minimumNumberOfCharacters: 0,
-          shouldRound: true,
-          focusOnRight: false,
-        }
+        config: { /* see Configuration above for all fields + defaults */ }
       }
     },
     directives: { money3: Money3Directive }
@@ -230,6 +223,9 @@ The directive works on any component that renders a single inner `<input>`. Appl
 </template>
 ```
 
+<details>
+<summary>How it works (and the <code>__v_money3_synth__</code> marker)</summary>
+
 Wrapper components attach their own `@input` listener to the inner input during render, before the directive's `mounted()` runs. Because DOM listener-order is registration-order, the wrapper's handler would otherwise fire on the raw pre-reformat keystroke value, leaving the host's `v-model` one character behind the displayed value (reported as an "off-by-10" in [#78](https://github.com/jonathanpmartins/v-money3/issues/78)). To fix this without framework-specific detection, the directive re-dispatches an `input` event after each reformat so the wrapper re-reads the post-format value. The re-dispatch only happens when the directive sits on a wrapper (`host !== <input>`); bare `<input v-money3>` is unaffected.
 
 The synthetic event is dispatched with `bubbles: false`, so it only reaches listeners attached directly to the inner `<input>` (the wrapper's own `@input` handler). Ancestor listeners — e.g. an `@input` on a parent `<div>` or `<form>` — do not see it. If you do attach a listener directly to the inner input and want to skip the directive's re-dispatch, filter on the marker:
@@ -240,6 +236,50 @@ function onInput(e) {
   // …your handler…
 }
 ```
+
+</details>
+
+### Min / Max limits
+
+Constrain input to a numeric range. Both bounds are optional.
+
+```html
+<money3
+  v-model="amount"
+  :min="0"
+  :max="1000"
+  :precision="2"
+/>
+```
+
+- `max` defaults to **clamping** values above the ceiling down to `max`.
+- Set `:set-max-if-bigger="false"` to **reject** keystrokes that would exceed `max` instead — the input keeps its last valid value rather than jumping to the ceiling.
+- `min` rejects values below the floor; combine with `:disable-negative="true"` to forbid the `-` sign entirely.
+
+## TypeScript
+
+Types ship with the package — no separate `@types/` install needed.
+
+```ts
+import {
+  Money3Component,
+  Money3Directive,
+  format,
+  unformat,
+  type VMoneyOptions,
+} from 'v-money3';
+
+const config: Partial<VMoneyOptions> = {
+  prefix: 'R$ ',
+  decimal: ',',
+  thousands: '.',
+  precision: 2,
+};
+
+const display: string = format(12345.67, config as VMoneyOptions);
+```
+
+`VMoneyOptions` covers every config field used by the component, directive, and the standalone `format` / `unformat` helpers.
 
 ## Properties
 
@@ -263,25 +303,42 @@ function onInput(e) {
 | focus-on-right               | false    | Boolean  | false   | When focus, set the cursor to the far right                |
 
 
-## Restricted Characters
+## Restricted characters
 
-Numbers `0-9` and the following characters...
+The following config fields may **not** contain digits (`0-9`) or sign characters (`+`, `-`):
 
-- `+`
-- `-`
-
-...are restricted on following properties: 
 - `decimal`
 - `thousands`
 - `prefix`
 - `suffix`
 
-Restricted inputs will be filtered out of the final mask, and a console warning with more information will be displayed.
+Any restricted character found in these fields is stripped from the final mask, and a `console.warn` is emitted with the offending value. This prevents ambiguity when parsing user input — e.g. a `prefix` of `"-$"` would collide with the negative-sign detection.
 
 
-## Don't want to use a package manager?
+## BigInt / Arbitrary precision
 
-Use it directly in the browser! 
+`v-money3` supports arbitrary precision through the use of `BigInt`. Arbitrary precision is only supported with `v-model`. When using `v-model`, ensure the input is provided as a string representation of a number (e.g., `'12345.67'`). If your precision is set to `2` and you provide a default `v-model` value of `'55'`, it will be interpreted as `'0.55'`. To maintain the correct format, ensure you pass `'55.00'` when using `v-model`.
+
+For most users, it's advisable to utilize floating-point numbers and adhere to the boundaries of [`Number`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number). In such cases, employing `v-model` with the number modifier, or `v-model.number`, is recommended. However, this limits you to numbers smaller than `2^53 - 1` or `9007199254740991` (approximately nine quadrillion). Refer to [MAX_SAFE_INTEGER](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER) for more information. For users employing `v-model.number`, integers and floats are intuitively understood. If your precision is set to `2` and you input a default `v-model.number` value of `55`, it will be interpreted as `55.00`. The same applies to `5.5`, which will be rendered as `5.50`.
+
+[More examples](https://github.com/jonathanpmartins/v-money3/issues/38#issuecomment-903214235)
+
+## Browser target
+
+If you encounter the error message: `Big integer literals are not available in the configured target environment`, please ensure your browser targets are updated to include at least the following entries:
+
+```
+['es2020', 'safari14']
+```
+
+Can I use `bigInt`? https://caniuse.com/bigint
+
+More information: [#66](https://github.com/jonathanpmartins/v-money3/issues/66), [#70](https://github.com/jonathanpmartins/v-money3/issues/70), [#89](https://github.com/jonathanpmartins/v-money3/issues/89)
+
+
+## Use without a package manager
+
+Drop the UMD build straight into a `<script>` tag:
 
 ```html
 <script src="https://unpkg.com/v-money3@latest/dist/v-money3.umd.js"></script>
