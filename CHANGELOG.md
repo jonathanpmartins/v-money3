@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [3.26.1] / 2026-05-29
 
 ### Fix
 - The `Money3` component (and the bare directive) again emits `update:model-value` on every keystroke for identity-format configurations — `precision: 0` with no `prefix` / `suffix` / `thousands` / `decimal` grouping, where the formatted string is byte-identical to the raw typed value. A no-op optimization shipped in 3.26.0 short-circuited `setValue()` whenever `format(el.value) === el.value`, skipping the synthetic `change` event that drives the component's emit. For identity-format fields that condition holds on every keystroke, so `v-model` went stale while the field was focused and only synced on the browser's native `change` at blur — any code reading the model on `keydown` / `keyup` / Enter saw the previous value. The early return now keys the no-op off the value actually changing since the last set (the stashed last-valid display) rather than off the formatted string, so a genuine redundant reformat stays silent while live typing dispatches `change` as it did in 3.24.1. Covered by a jsdom test (input-only, no synthetic `change`) and a puppeteer test (real keystrokes in Chrome) that assert the model stays live while the field is focused.
