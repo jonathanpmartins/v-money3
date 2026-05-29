@@ -539,6 +539,36 @@ test('Event count', async () => {
   expect(updates.length).toBe(2); // Starting 0.00 plus 1 changes
 });
 
+// Regression (#88 / v3.26.0): identity-format configs — where the formatted
+// string is byte-identical to the raw input (precision 0, no
+// prefix/suffix/thousands/decimal) — stopped emitting update:model-value while
+// typing because setValue() early-returns when `formatted === el.value`,
+// skipping the synthetic `change`. The model only synced on blur. v3.24.1
+// emitted on every input. See issue: model stale while focused.
+test('Identity-format config emits update:model-value on input', async () => {
+  const component = mountComponent({
+    precision: 0,
+    prefix: '',
+    suffix: '',
+    thousands: '',
+    decimal: '',
+  });
+  const input = component.find('input');
+
+  // Simulate real typing: only the native `input` event fires while the field
+  // is focused — the `change` event is dispatched by the browser on blur.
+  // (VTU's setValue() also fires `change`, which would mask this bug.)
+  // formatted('25') === '25', so setValue()'s `formatted === el.value` guard
+  // early-returns and never dispatches the synthetic `change` → no emit.
+  input.element.value = '25';
+  await input.trigger('input');
+
+  const updates = component.emitted<string[]>()['update:model-value'];
+  expect(updates).toBeTruthy(); // must have emitted while typing, not only on blur
+  expect(updates[updates.length - 1][0]).toBe('25');
+  expect(input.element.value).toBe('25');
+});
+
 test('Leading zeroes', async () => {
   const component = mountComponent({
     decimal: 'd',

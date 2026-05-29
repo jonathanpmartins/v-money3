@@ -401,6 +401,45 @@ describe('Puppeteer Component Tests', () => {
     expect(await getValue()).toBe('123.456.789');
   });
 
+  // Regression (#88 / v3.26.0): for identity-format configs — where the
+  // formatted string equals the raw typed value (precision 0, no
+  // prefix/suffix/thousands/decimal) — v-model went stale while the field was
+  // focused and only synced on blur. Real keystrokes fire only `input` (the
+  // browser fires `change` on blur), so this path can't be reproduced with
+  // VTU's setValue() helper, which also fires `change`. Here we type, then read
+  // the live v-model (the harness renders `model: [<modelValue>]`) WITHOUT
+  // blurring first.
+  it(`Identity-format config keeps v-model live while typing ${target}`, async () => {
+    await page.goto(
+      `${serverUrlWithTarget}&precision=0&prefix=empty&suffix=empty&thousands=empty&decimal=empty&modelValue=31`,
+    );
+
+    expect(await getValue()).toBe('31');
+
+    await page.focus(target);
+    // select-all so the typed value replaces the initial '31'
+    await page.keyboard.down('Control');
+    await page.keyboard.press('KeyA');
+    await page.keyboard.up('Control');
+    await page.type(target, '25');
+
+    // still focused — no blur. Live v-model must already reflect '25'.
+    const stillFocused = await page.$eval(
+      target,
+      (input: Element) => document.activeElement === input,
+    );
+    expect(stillFocused).toBe(true);
+
+    const modelText = await page.evaluate(() => {
+      const divs = Array.from(document.querySelectorAll('li div'));
+      const d = divs.find((el) => (el.textContent || '').trim().startsWith('model:'));
+      return d ? (d.textContent || '').trim() : null;
+    });
+
+    expect(await getValue()).toBe('25');
+    expect(modelText).toBe('model: [25]'); // buggy: stays 'model: [31]' until blur
+  });
+
   it('Test if first digit is correctly recognized with v-model.number modifier with puppeteer', async () => {
     await page.goto(`${serverUrlWithTarget}&useModelNumberModifier=true`);
 

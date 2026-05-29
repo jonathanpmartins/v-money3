@@ -68,8 +68,27 @@ const setValue = (
   }
 
   if (formatted === el.value) {
+    const lastValid = (el as InputWithLastValid)[LAST_VALID_KEY];
     (el as InputWithLastValid)[LAST_VALID_KEY] = formatted;
-    return; // prevent unnecessary updates
+
+    // The display already equals format()'s output, but that does NOT mean the
+    // model is unchanged: for identity-format configs (precision 0, no
+    // prefix/suffix/thousands/decimal) the formatted string is byte-identical
+    // to the raw typed value on every keystroke. Keying the no-op off the
+    // formatted string alone (the #88 / v3.26.0 regression) suppressed the
+    // synthetic `change` here, so update:model-value never fired while typing
+    // and v-model only synced on blur.
+    //
+    // Dispatch `change` when the value actually changed since the last set
+    // (lastValid differs). A genuine redundant reformat — e.g. updated()
+    // re-running on an already-formatted value, or the initial mounted() set
+    // (lastValid === undefined) — leaves the value unchanged and stays silent,
+    // preserving the #88 de-dup. The component's own `next !== lastValue`
+    // guard dedups any extra emit. Restores v3.24.1 live-typing behavior.
+    if (lastValid !== undefined && lastValid !== formatted) {
+      el.dispatchEvent(event('change'));
+    }
+    return;
   }
 
   el.value = formatted;
